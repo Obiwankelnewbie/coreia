@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Core-IA · Alexandre Nourrissat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #03040b;
+    --bg-card: rgba(13, 15, 43, 0.4);
+    --blue: #3b5bff;
+    --violet: #7c5cfc;
+    --cyan: #4fc3f7;
+    --text: #e8eaff;
+    --muted: #7b82c0;
+    --border: rgba(124, 92, 252, 0.2);
+    --mono: 'Space Mono', monospace;
+    --sans: 'Inter', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { 
+    background: var(--bg); 
+    color: var(--text); 
+    font-family: var(--sans); 
+    line-height: 1.6;
+    background-image: radial-gradient(circle at 50% -20%, #1a1c3d 0%, transparent 50%);
+    overflow-x: hidden;
+  }
+
+  /* NAVBAR GLASS */
+  nav { 
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100; 
+    display: flex; align-items: center; justify-content: space-between; 
+    padding: 1.2rem 4rem; background: rgba(3, 4, 11, 0.7); 
+    backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); 
+  }
+  .nav-logo { font-family: var(--mono); font-weight: 700; color: var(--violet); }
+  .nav-logo span { color: var(--blue); }
+
+  /* HERO SECTION */
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 4rem; position: relative; }
+  .hero-name { font-size: clamp(3rem, 8vw, 6rem); font-weight: 800; line-height: 1; letter-spacing: -0.04em; margin-bottom: 1.5rem; }
+  .hero-name span { color: var(--blue); }
+
+  /* BENTO GRID SYSTEM */
+  .bento-container { padding: 4rem; max-width: 1400px; margin: 0 auto; }
+  .section-label { font-family: var(--mono); color: var(--cyan); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem; }
+  
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 220px;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .card {
+    position: relative;
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 2rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+  }
+
+  /* L'effet de lumière qui suit la souris */
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(59, 91, 255, 0.2), transparent 40%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+  .card:hover::before { opacity: 1; }
+  .card:hover { transform: translateY(-5px); border-color: rgba(59, 91, 255, 0.5); }
+
+  /* Variantes Bento */
+  .card-lg { grid-column: span 2; grid-row: span 2; }
+  .card-wide { grid-column: span 2; }
+
+  /* STYLE ÉLÉMENTS INTERNES */
+  .tech-tag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 0.65rem; color: var(--cyan); background: rgba(79, 195, 247, 0.1); padding: 4px 10px; border-radius: 100px; margin-bottom: 1rem; }
+  .card-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .card-desc { color: var(--muted); font-size: 0.9rem; font-weight: 300; }
+  .pill { font-family: var(--mono); font-size: 0.6rem; padding: 2px 8px; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); margin-right: 5px; }
+
+  /* FORUM TEASER */
+  .forum-teaser { grid-column: span 4; background: linear-gradient(90deg, rgba(59, 91, 255, 0.1), rgba(124, 92, 252, 0.1)); border: 1px dashed var(--violet); display: flex; align-items: center; justify-content: center; text-align: center; }
+  .btn-forum { background: var(--violet); color: white; padding: 12px 24px; border-radius: 100px; text-decoration: none; font-weight: 700; margin-top: 1rem; display: inline-block; transition: 0.3s; }
+  .btn-forum:hover { box-shadow: 0 0 20px var(--violet); }
+
+  @media (max-width: 1024px) {
+    .bento-grid { grid-template-columns: repeat(2, 1fr); }
+    .card-lg, .card-wide, .forum-teaser { grid-column: span 2; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><span>&lt;</span>AN<span>&gt;</span> Core-IA</div>
+</nav>
+
+<section class="hero">
+  <div class="bento-container">
+    <div class="section-label">// System Status: Online</div>
+    <h1 class="hero-name">L'IA de proximité,<br><span>Souveraine & Humaine.</span></h1>
+    <p style="max-width: 600px; color: var(--muted);">Data Marketing, Automatisation n8n et Intelligence Artificielle locale pour les entreprises qui exigent la maîtrise totale de leurs données.</p>
+  </div>
+</section>
+
+<div class="bento-container">
+  <div class="section-label">// 01 - Écosystème Technique</div>
+  
+  <div class="bento-grid">
+    <div class="card card-lg">
+      <div>
+        <div class="tech-tag">BI & ANALYTICS</div>
+        <h3 class="card-title" style="font-size: 2rem;">Dashboard VNI Santé</h3>
+        <p class="card-desc">Pilotage des flux logistiques et prévision des ruptures de stock pour les dispositifs médicaux critiques.</p>
+      </div>
+      <div style="background: rgba(255,255,255,0.03); height: 150px; border-radius: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--mono); color: var(--blue);">[ VISUALISATION DATA ]</div>
+    </div>
+
+    <div class="card">
+      <div class="tech-tag">AUTOMATION</div>
+      <h3 class="card-title">n8n Factory</h3>
+      <p class="card-desc">Production automatisée de contenu vidéo via Creatomate.</p>
+      <div><span class="pill">n8n</span><span class="pill">Groq</span></div>
+    </div>
+
+    <div class="card">
+      <div class="tech-tag">PRIVACY</div>
+      <h3 class="card-title">IA On-Premise</h3>
+      <p class="card-desc">Llama 3 & Gemma déployés localement. 0% Cloud.</p>
+      <div><span class="pill">Llama</span><span class="pill">RGPD</span></div>
+    </div>
+
+    <div class="card card-wide">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+        <div>
+          <div class="tech-tag">ACQUISITION</div>
+          <h3 class="card-title">SEO & Croissance</h3>
+          <p class="card-desc">Audit technique et stratégie de domination locale.</p>
+        </div>
+        <div style="font-size: 3rem; font-weight: 800; color: var(--blue); opacity: 0.5;">A+</div>
+      </div>
+    </div>
+
+    <div class="card forum-teaser">
+      <div>
+        <h2 style="font-size: 1.5rem;">Rejoignez la Communauté Core-IA</h2>
+        <p class="card-desc">Le premier forum dédié à l'IA souveraine pour les PME.</p>
+        <a href="#" class="btn-forum">Bientôt disponible</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Script pour l'effet de spotlight sur les cartes
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
+</script>
+
+</body>
+</html>
