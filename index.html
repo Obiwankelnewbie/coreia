@@ -34,7 +34,44 @@
   --r:          10px;
   --r2:         16px;
   --glow:       0 0 40px rgba(37,99,255,0.18);
+  --header-bg:  rgba(5,6,15,0.92);
+  --body-bg:    #05060f;
 }
+/* ── LIGHT MODE ── */
+body.light {
+  --ink:        #f8f9ff;
+  --ink2:       #eef0f8;
+  --ink3:       #e4e7f4;
+  --surface:    rgba(0,0,0,0.03);
+  --surface2:   rgba(0,0,0,0.06);
+  --text:       #0f1130;
+  --text2:      #505880;
+  --text3:      #9098c0;
+  --rule:       rgba(0,0,0,0.07);
+  --rule2:      rgba(0,0,0,0.12);
+  --header-bg:  rgba(248,249,255,0.95);
+  --body-bg:    #f8f9ff;
+  --acid-dim:   rgba(0,180,130,0.1);
+}
+body.light .glow-orb { opacity: .4; }
+body.light .site-header { background: var(--header-bg); }
+body.light .cat-bar { background: rgba(238,240,248,0.9); }
+body.light .hero-scrim { background: linear-gradient(105deg,rgba(248,249,255,.96) 0%,rgba(248,249,255,.75) 45%,rgba(248,249,255,.05) 100%); }
+body.light .hero h1 { color: #0f1130; }
+body.light .ticker-bar { opacity: 1; }
+body.light .widget { background: #fff; box-shadow: 0 1px 12px rgba(0,0,0,.06); }
+body.light .nl-widget { background: linear-gradient(135deg,rgba(37,99,255,.07),rgba(0,229,160,.04)); }
+body.light .topics-card { background: #fff; box-shadow: 0 1px 12px rgba(0,0,0,.06); }
+body.light .post-card { background: #fff; }
+body.light .overlay-box, body.light .modal-box { background: #f8f9ff; }
+body.light .f-stat { background: #fff; box-shadow: 0 1px 8px rgba(0,0,0,.05); }
+body.light body::after { opacity: .01; }
+
+/* Theme toggle button */
+.theme-toggle { background: var(--surface); border: 1px solid var(--rule2); border-radius: 20px; padding: 5px 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all .2s; flex-shrink: 0; }
+.theme-toggle:hover { background: var(--surface2); }
+.theme-toggle span { font-size: .7rem; line-height: 1; }
+.theme-toggle .th-label { font-family: var(--mono); font-size: .5rem; letter-spacing: .08em; color: var(--text2); }
 
 /* ═══════════════════════════════════════
    RESET & BASE
@@ -325,18 +362,30 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   .cat-bar-inner::-webkit-scrollbar{display:none}
 }
 
+/* ═══ MOBILE HAMBURGER NAV ═══ */
+.mob-nav-overlay{position:fixed;inset:0;background:rgba(5,6,15,.97);backdrop-filter:blur(20px);z-index:500;display:flex;flex-direction:column;padding:1.5rem;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.mob-nav-overlay.open{transform:translateX(0)}
+.mob-nav-close{align-self:flex-end;background:none;border:1px solid var(--rule2);color:var(--text);border-radius:8px;padding:8px 14px;font-family:var(--mono);font-size:.65rem;cursor:pointer;margin-bottom:2rem}
+.mob-nav-logo{font-family:var(--mono);font-size:.75rem;font-weight:700;letter-spacing:.3em;color:#fff;margin-bottom:2rem;display:flex;align-items:center;gap:10px}
+.mob-nav-item{font-family:var(--mono);font-size:1.1rem;font-weight:700;letter-spacing:.1em;color:var(--text2);padding:1rem 0;border-bottom:1px solid var(--rule);cursor:pointer;transition:color .2s;background:none;border-left:none;border-right:none;border-top:none;text-align:left;width:100%}
+.mob-nav-item:last-of-type{border-bottom:none}
+.mob-nav-item.active,.mob-nav-item:hover{color:var(--acid)}
+.mob-auth{margin-top:2rem}
+.hamburger{display:none;background:none;border:1px solid var(--rule2);border-radius:7px;padding:7px 10px;cursor:pointer;flex-direction:column;gap:4px;flex-shrink:0}
+.hamburger span{display:block;width:18px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+
 /* ═══ RESPONSIVE MOBILE ═══ */
 @media(max-width:640px){
-  /* Header */
+  /* Header — hamburger layout */
   .site-header{height:auto}
-  .header-inner{padding:0 1rem;height:52px;gap:0}
-  .logo{font-size:.62rem;letter-spacing:.15em;gap:6px}
-  .logo-mark{width:24px;height:24px;font-size:.48rem}
+  .header-inner{padding:0 1rem;height:52px;gap:8px}
+  .logo{font-size:.65rem;letter-spacing:.15em;gap:7px}
+  .logo-mark{width:26px;height:26px;font-size:.5rem}
   .logo-beta{display:none}
-  .header-nav{gap:0;margin-left:.6rem}
-  .nav-item{font-size:.52rem;letter-spacing:.08em;padding:5px 8px}
-  .header-right{margin-left:auto}
-  .btn-primary{padding:6px 10px;font-size:.5rem;letter-spacing:.06em}
+  .header-nav{display:none} /* hidden — replaced by hamburger */
+  .header-right .btn-primary{display:none} /* hidden — in mob menu */
+  .header-right .theme-toggle{display:flex}
+  .hamburger{display:flex;margin-left:auto}
 
   /* Ticker */
   .ticker-bar{height:28px}
@@ -344,63 +393,69 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   .ticker-label span{font-size:.48rem;letter-spacing:.12em}
   .ticker-track span{font-size:.55rem}
 
-  /* Cat tabs */
+  /* Cat tabs — horizontal scroll */
   .cat-bar-inner{padding:0 1rem;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
   .cat-bar-inner::-webkit-scrollbar{display:none}
-  .cat-tab{padding:10px 12px;font-size:.52rem;white-space:nowrap}
+  .cat-tab{padding:10px 12px;font-size:.52rem;white-space:nowrap;flex-shrink:0}
 
   /* Media page */
-  .media-wrap{padding:1rem;gap:1.4rem}
-  .hero{height:300px;border-radius:10px}
-  .hero-content{padding:1.2rem 1.4rem}
-  .hero h1{font-size:1.35rem;margin:.5rem 0 .7rem}
-  .hero-summary{font-size:.58rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .hero-footer{gap:.6rem;margin-top:.8rem}
+  .media-wrap{padding:.9rem;gap:1.2rem}
+  .hero{height:280px;border-radius:10px}
+  .hero-content{padding:1rem 1.2rem}
+  .hero h1{font-size:1.25rem;margin:.4rem 0 .6rem}
+  .hero-summary{font-size:.56rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .hero-footer{gap:.5rem;margin-top:.8rem;flex-wrap:wrap}
   .hero-meta-item{font-size:.5rem}
-  .hero-cta{padding:7px 14px;font-size:.52rem}
-  .hero-arrow{width:34px;height:34px;font-size:1rem}
-  .hero-dots{bottom:.7rem}
-  .hero-dot{width:6px;height:6px}
-  .hero-dot.on{width:16px}
+  .hero-cta{padding:6px 12px;font-size:.5rem;letter-spacing:.06em}
+  .hero-arrow{width:32px;height:32px;font-size:.9rem}
+  .hero-dots{bottom:.6rem}
+  .hero-dot{width:5px;height:5px}
+  .hero-dot.on{width:14px}
 
-  /* Feed */
-  .source-pills{gap:4px}
-  .pill{padding:3px 9px;font-size:.48rem}
-  .art-card{grid-template-columns:80px 1fr;gap:.8rem;padding:.9rem 0}
-  .art-thumb{width:80px;height:56px}
-  .art-body h3{font-size:.88rem}
-  .art-body p{display:none}
-
-  /* Sidebar — collapse tendances sur mobile */
-  .sidebar{gap:.9rem}
-  .widget{padding:1rem}
-  .trend-n{font-size:.9rem;min-width:20px}
-  .trend-body h4{font-size:.82rem}
-
-  /* Forum */
-  .forum-wrap{padding:1rem;gap:1rem}
-  .f-header{flex-direction:column;gap:.7rem;align-items:flex-start}
-  .f-header h1{font-size:1.5rem}
-  .f-stats{grid-template-columns:repeat(2,1fr);gap:.6rem}
-  .f-stat{padding:.7rem}
-  .f-stat-n{font-size:1.1rem}
-  .topic-row{padding:10px 1rem}
-  .t-body h4{font-size:.85rem}
-
-  /* Auth overlay */
-  .overlay-box{margin:2vh 1rem;padding:1.5rem}
-  .overlay-title{font-size:1.3rem}
-  .modal-box{margin:0 1rem;padding:1.5rem}
-
-  /* Forum filters pills scroll */
-  .f-filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
-  .f-filters::-webkit-scrollbar{display:none}
-  .f-filters .pill{white-space:nowrap}
-
-  /* Source pills scroll on mobile */
+  /* Source pills — scroll */
   .source-pills{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
   .source-pills::-webkit-scrollbar{display:none}
   .pill-sep{flex-shrink:0}
+  .pill{padding:3px 9px;font-size:.48rem;flex-shrink:0}
+
+  /* Feed cards */
+  .art-card{grid-template-columns:76px 1fr;gap:.7rem;padding:.85rem 0}
+  .art-thumb{width:76px;height:54px}
+  .art-body h3{font-size:.85rem}
+  .art-body p{display:none}
+
+  /* Sidebar */
+  .sidebar{gap:.8rem}
+  .widget{padding:.9rem}
+  .trend-n{font-size:.85rem;min-width:18px}
+  .trend-body h4{font-size:.78rem}
+
+  /* Forum */
+  .forum-wrap{padding:.9rem;gap:.9rem}
+  .f-header{flex-direction:column;gap:.6rem;align-items:flex-start}
+  .f-header h1{font-size:1.4rem}
+  .f-stats{grid-template-columns:repeat(2,1fr);gap:.5rem}
+  .f-stat{padding:.65rem}
+  .f-stat-n{font-size:1rem}
+  .topic-row{padding:9px .9rem}
+  .t-body h4{font-size:.82rem}
+
+  /* Overlays full screen */
+  .overlay{align-items:flex-end}
+  .overlay-box{margin:0;border-radius:var(--r2) var(--r2) 0 0;max-height:90vh;overflow-y:auto;max-width:100%}
+  .overlay-title{font-size:1.25rem}
+  .modal{align-items:flex-end}
+  .modal-box{margin:0;border-radius:var(--r2) var(--r2) 0 0;max-height:90vh;overflow-y:auto;max-width:100%}
+
+  /* Forum filters */
+  .f-filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+  .f-filters::-webkit-scrollbar{display:none}
+  .f-filters .pill{white-space:nowrap;flex-shrink:0}
+
+  /* Pages content */
+  .content-section{padding:1.2rem .9rem}
+  .content-section h1{font-size:1.6rem}
+  .content-section h2{font-size:1.2rem}
 }
 </style>
 </head>
@@ -441,24 +496,31 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     </a>
     <nav class="header-nav">
       <button class="nav-item active" id="nav-media"    onclick="showPage('media')">ACTUS</button>
-      <button class="nav-item"        id="nav-dossiers" onclick="showPage('media')">DOSSIERS</button>
+      <button class="nav-item"        id="nav-dossiers" onclick="showPage('dossiers')">DOSSIERS</button>
       <button class="nav-item"        id="nav-forum"    onclick="showPage('forum')">FORUM</button>
     </nav>
-    <div class="header-right" id="auth-area">
+    <div class="header-right" id="auth-area" style="display:flex;align-items:center;gap:8px">
+      <button class="theme-toggle" onclick="toggleTheme()" title="Mode clair / sombre">
+        <span id="theme-icon">🌙</span>
+        <span class="th-label" id="theme-label">SOMBRE</span>
+      </button>
       <a href="#" class="btn-primary" onclick="openAuth('login');return false">CONNEXION</a>
     </div>
+    <button class="hamburger" onclick="openMobNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
 
 <!-- Cat tabs (media only) -->
 <div class="cat-bar" id="cat-bar">
   <div class="cat-bar-inner">
-    <button class="cat-tab active">Tout</button>
-    <button class="cat-tab">IA Locale</button>
-    <button class="cat-tab">Santé</button>
-    <button class="cat-tab">BI & Data</button>
-    <button class="cat-tab">Réglementation</button>
-    <button class="cat-tab">Tutoriels</button>
+    <button class="cat-tab active" onclick="filterMedia('all',this)">Tout</button>
+    <button class="cat-tab" onclick="showPage('ia-locale')">IA Locale</button>
+    <button class="cat-tab" onclick="showPage('sante')">Santé</button>
+    <button class="cat-tab" onclick="filterMedia('bi-data',this)">BI & Data</button>
+    <button class="cat-tab" onclick="showPage('automation')">Automation</button>
+    <button class="cat-tab" onclick="showPage('dossiers')">Dossiers</button>
   </div>
 </div>
 
@@ -548,6 +610,203 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════
+     PAGE : DOSSIERS
+═══════════════════════════════════════ -->
+<div class="page" id="page-dossiers">
+  <div style="max-width:1440px;margin:0 auto;padding:2.5rem 2.5rem;position:relative;z-index:1">
+    <div style="margin-bottom:2rem">
+      <div class="label label-acid" style="margin-bottom:.8rem">DOSSIERS EXCLUSIFS</div>
+      <h1 style="font-family:var(--serif);font-size:2.4rem;font-weight:900;line-height:1.1">Analyses & Dossiers <em style="color:var(--electric2);font-style:italic">approfondis</em></h1>
+      <p style="font-family:var(--mono);font-size:.65rem;color:var(--text2);margin-top:.8rem;max-width:600px;line-height:1.8">Des analyses techniques de fond sur l'IA souveraine, l'automatisation et la transformation numérique des entreprises françaises.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem">
+      <div class="widget" style="border-color:rgba(37,99,255,.25);cursor:pointer" onclick="">
+        <span class="art-tag t-violet" style="margin-bottom:.8rem;display:inline-block">DOSSIER · 12 MIN</span>
+        <h2 style="font-family:var(--serif);font-size:1.3rem;font-weight:700;line-height:1.25;margin-bottom:.8rem">IA Locale vs Cloud : le guide décisif pour les PME en 2026</h2>
+        <p style="font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.75;margin-bottom:1rem">Analyse complète des enjeux de souveraineté, coûts TCO, RGPD et performances. Tout ce qu'il faut savoir avant de déployer un LLM en entreprise.</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.55rem;color:var(--text2)"><span>Par Alexandre N. · 24 Mars 2026</span><span style="color:var(--acid)">LIRE →</span></div>
+      </div>
+      <div class="widget" style="border-color:rgba(0,229,160,.2);cursor:pointer">
+        <span class="art-tag t-green" style="margin-bottom:.8rem;display:inline-block">DOSSIER · 9 MIN</span>
+        <h2 style="font-family:var(--serif);font-size:1.3rem;font-weight:700;line-height:1.25;margin-bottom:.8rem">n8n & Mistral : construire un agent IA souverain en 2026</h2>
+        <p style="font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.75;margin-bottom:1rem">De la théorie à la production : pipeline d'automatisation complet, hébergement on-premise, gestion des secrets et monitoring.</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.55rem;color:var(--text2)"><span>Par Alexandre N. · 18 Mars 2026</span><span style="color:var(--acid)">LIRE →</span></div>
+      </div>
+      <div class="widget" style="border-color:rgba(245,158,11,.2);cursor:pointer">
+        <span class="art-tag t-amber" style="margin-bottom:.8rem;display:inline-block">DOSSIER · 15 MIN</span>
+        <h2 style="font-family:var(--serif);font-size:1.3rem;font-weight:700;line-height:1.25;margin-bottom:.8rem">IA Act : guide de conformité pour les entreprises françaises</h2>
+        <p style="font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.75;margin-bottom:1rem">Obligations, délais, niveaux de risque, sanctions. Un panorama complet pour anticiper la mise en conformité avant juin 2026.</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.55rem;color:var(--text2)"><span>Rédaction Core-IA · 12 Mars 2026</span><span style="color:var(--acid)">LIRE →</span></div>
+      </div>
+      <div class="widget" style="border-color:rgba(244,63,94,.2);cursor:pointer">
+        <span class="art-tag t-rose" style="margin-bottom:.8rem;display:inline-block">DOSSIER · 11 MIN</span>
+        <h2 style="font-family:var(--serif);font-size:1.3rem;font-weight:700;line-height:1.25;margin-bottom:.8rem">RAG médical : déployer un assistant IA conforme RGPD</h2>
+        <p style="font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.75;margin-bottom:1rem">Architecture RAG on-premise, vectorisation des données patients, isolation réseau et journalisation — le playbook complet pour le secteur santé.</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.55rem;color:var(--text2)"><span>Par Alexandre N. · 8 Mars 2026</span><span style="color:var(--acid)">LIRE →</span></div>
+      </div>
+      <div class="widget" style="cursor:pointer">
+        <span class="art-tag t-blue" style="margin-bottom:.8rem;display:inline-block">DOSSIER · 8 MIN</span>
+        <h2 style="font-family:var(--serif);font-size:1.3rem;font-weight:700;line-height:1.25;margin-bottom:.8rem">Power BI & IA : 5 KPIs pour transformer votre logistique</h2>
+        <p style="font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.75;margin-bottom:1rem">Connecter WMS, OMS et ERP en temps réel. Les dashboards qui font la différence en supply chain avec l'augmentation par LLM.</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.55rem;color:var(--text2)"><span>Par Alexandre N. · 2 Mars 2026</span><span style="color:var(--acid)">LIRE →</span></div>
+      </div>
+      <div class="widget" style="border-color:rgba(124,58,237,.2);cursor:pointer">
+        <span class="art-tag t-violet" style="margin-bottom:.8rem;display:inline-block">DOSSIER · 10 MIN</span>
+        <h2 style="font-family:var(--serif);font-size:1.3rem;font-weight:700;line-height:1.25;margin-bottom:.8rem">Ollama en production : sécurité, scalabilité et monitoring</h2>
+        <p style="font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.75;margin-bottom:1rem">Au-delà du mode développement : reverse proxy, authentification, rate limiting, observabilité avec Prometheus et Grafana.</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.55rem;color:var(--text2)"><span>Par r_leconte · 28 Fév 2026</span><span style="color:var(--acid)">LIRE →</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE : IA LOCALE
+═══════════════════════════════════════ -->
+<div class="page" id="page-ia-locale">
+  <div style="max-width:900px;margin:0 auto;padding:2.5rem 2.5rem;position:relative;z-index:1">
+    <div style="margin-bottom:2.5rem">
+      <div class="label label-acid" style="margin-bottom:.8rem">DOSSIER FONDAMENTAL</div>
+      <h1 style="font-family:var(--serif);font-size:2.4rem;font-weight:900;line-height:1.1;margin-bottom:1rem">L'IA Locale : <em style="font-style:italic;color:var(--electric2)">reprendre le contrôle</em> de vos données</h1>
+      <p style="font-family:var(--mono);font-size:.68rem;color:var(--text2);line-height:1.85">Déployer un modèle de langage directement sur vos serveurs ou votre infrastructure n'est plus réservé aux GAFAM. En 2026, des outils comme <strong style="color:var(--text)">Ollama</strong>, <strong style="color:var(--text)">LM Studio</strong> ou <strong style="color:var(--text)">vLLM</strong> permettent à n'importe quelle PME de faire tourner des LLMs open-source en local, sans envoyer une seule donnée vers un serveur distant.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2rem">
+      <div class="widget" style="border-color:rgba(0,229,160,.2)">
+        <div class="widget-head">🔐 POURQUOI LA SOUVERAINETÉ DES DONNÉES ?</div>
+        <p style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85;margin-bottom:1rem">Chaque requête envoyée à ChatGPT, Claude ou Gemini transite par les serveurs de ses éditeurs américains. Pour une entreprise traitant des données médicales, juridiques ou industrielles, c'est une fuite de données potentielle et un risque RGPD réel.</p>
+        <p style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85">Avec une IA locale, vos données ne quittent jamais votre réseau. Vous gardez la maîtrise complète : qui accède au modèle, quelles données sont traitées, comment les logs sont stockés.</p>
+      </div>
+      <div class="widget">
+        <div class="widget-head">⚡ LES ATOUTS CONCRETS</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.5rem">
+          <div style="background:var(--surface2);border-radius:var(--r);padding:.9rem">
+            <div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.12em;color:var(--acid);margin-bottom:.5rem">COÛT</div>
+            <p style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7">Zéro coût par token après l'investissement initial. Un modèle Llama 3.1 8B tourne sur un GPU grand public (RTX 3060, 12 Go VRAM).</p>
+          </div>
+          <div style="background:var(--surface2);border-radius:var(--r);padding:.9rem">
+            <div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.12em;color:var(--electric2);margin-bottom:.5rem">LATENCE</div>
+            <p style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7">Pas de latence réseau. Les modèles quantifiés (GGUF Q4) génèrent 30 à 80 tokens/s sur CPU seul — largement suffisant pour du traitement documentaire.</p>
+          </div>
+          <div style="background:var(--surface2);border-radius:var(--r);padding:.9rem">
+            <div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.12em;color:var(--amber);margin-bottom:.5rem">CONFORMITÉ</div>
+            <p style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7">RGPD, HDS (santé), NIS2 : les exigences réglementaires poussent naturellement vers le traitement local des données sensibles.</p>
+          </div>
+          <div style="background:var(--surface2);border-radius:var(--r);padding:.9rem">
+            <div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.12em;color:var(--rose);margin-bottom:.5rem">PERSONNALISATION</div>
+            <p style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7">Fine-tuning sur vos propres données métier, RAG avec vos documents internes, prompt system fixe — un niveau de contrôle impossible avec les APIs cloud.</p>
+          </div>
+        </div>
+      </div>
+      <div class="widget" style="border-color:rgba(37,99,255,.2)">
+        <div class="widget-head">🛠️ PAR OÙ COMMENCER ?</div>
+        <div style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85">
+          <p style="margin-bottom:.8rem"><strong style="color:var(--electric2)">1. Ollama</strong> — Le moyen le plus simple. Une commande <code style="background:var(--surface2);padding:1px 6px;border-radius:3px;color:var(--acid)">ollama run mistral</code> suffit à lancer un modèle. Compatible macOS, Linux, Windows. Interface OpenAI-compatible.</p>
+          <p style="margin-bottom:.8rem"><strong style="color:var(--electric2)">2. LM Studio</strong> — Interface graphique pour les non-développeurs. Idéal pour tester des modèles GGUF depuis Hugging Face sans ligne de commande.</p>
+          <p style="margin-bottom:.8rem"><strong style="color:var(--electric2)">3. vLLM</strong> — Pour la production à fort volume. Optimisé GPU, supporte le batching continu et la quantification AWQ. Déploiement via Docker.</p>
+          <p><strong style="color:var(--electric2)">4. Modèles recommandés</strong> — <span style="color:var(--text)">Mistral 7B</span> (équilibre perf/taille), <span style="color:var(--text)">Llama 3.1 8B</span> (meilleur open-source 2025), <span style="color:var(--text)">Phi-3 Mini</span> (CPU uniquement), <span style="color:var(--text)">CodeLlama 13B</span> (code).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE : SANTÉ
+═══════════════════════════════════════ -->
+<div class="page" id="page-sante">
+  <div style="max-width:900px;margin:0 auto;padding:2.5rem 2.5rem;position:relative;z-index:1">
+    <div style="margin-bottom:2.5rem">
+      <div class="label" style="color:var(--acid);margin-bottom:.8rem">THÉMATIQUE SANTÉ & IA</div>
+      <h1 style="font-family:var(--serif);font-size:2.4rem;font-weight:900;line-height:1.1;margin-bottom:1rem">IA & Santé : <em style="font-style:italic;color:var(--acid)">soigner mieux</em>, sans compromis sur la vie privée</h1>
+      <p style="font-family:var(--mono);font-size:.68rem;color:var(--text2);line-height:1.85">Le secteur de la santé est l'un des plus porteurs pour l'IA — et l'un des plus contraints réglementairement. Données HDS, secret médical, exigences de traçabilité : voici comment allier innovation et conformité.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2rem">
+      <div class="widget" style="border-color:rgba(0,229,160,.2)">
+        <div class="widget-head">💊 AUTOMATISATION DES DONNÉES : UN ENJEU CRITIQUE</div>
+        <p style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85;margin-bottom:1rem">Un professionnel de santé passe en moyenne <strong style="color:var(--text)">35% de son temps</strong> sur des tâches administratives — saisie de comptes rendus, codage PMSI, préparation de synthèses. C'est autant de temps volé au soin direct.</p>
+        <p style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85">L'automatisation par IA des flux documentaires (transcription vocale, structuration automatique des CR, aide au codage) peut réduire cette charge de <strong style="color:var(--acid)">40 à 60%</strong> — sans jamais exfiltrer les données vers le cloud grâce aux modèles locaux.</p>
+      </div>
+      <div class="widget">
+        <div class="widget-head">📊 CAS D'USAGE VALIDÉS EN 2026</div>
+        <div style="display:flex;flex-direction:column;gap:.8rem;margin-top:.5rem">
+          <div style="border-left:2px solid var(--electric);padding-left:1rem">
+            <div style="font-family:var(--mono);font-size:.58rem;color:var(--electric2);margin-bottom:.3rem">VNI / RÉANIMATION</div>
+            <p style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7">Modèles LSTM entraînés sur les données de monitoring prédisent les besoins en oxygène 2h avant le déclenchement de l'alarme. Réduction de 23% des épisodes critiques non anticipés.</p>
+          </div>
+          <div style="border-left:2px solid var(--acid);padding-left:1rem">
+            <div style="font-family:var(--mono);font-size:.58rem;color:var(--acid);margin-bottom:.3rem">IMAGERIE MÉDICALE</div>
+            <p style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7">Détection assistée sur scanners et IRM (tumeurs, fractures occultes). Les modèles de vision comme MedSAM ou BioViL tournent sur GPU local, sans envoyer les images DICOM en dehors de l'établissement.</p>
+          </div>
+          <div style="border-left:2px solid var(--amber);padding-left:1rem">
+            <div style="font-family:var(--mono);font-size:.58rem;color:var(--amber);margin-bottom:.3rem">DOSSIER PATIENT AUGMENTÉ</div>
+            <p style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7">RAG sur le DPI : l'assistant répond aux questions du praticien en langage naturel ("Quels médicaments pour ce patient avec insuffisance rénale ?") en consultant uniquement les données du dossier local.</p>
+          </div>
+        </div>
+      </div>
+      <div class="widget" style="border-color:rgba(244,63,94,.2)">
+        <div class="widget-head">🔒 RGPD & HDS : LES RÈGLES DU JEU</div>
+        <p style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85;margin-bottom:.8rem">Les données de santé sont des données sensibles au sens de l'<strong style="color:var(--text)">article 9 du RGPD</strong>. Leur traitement par IA nécessite une DPIA (analyse d'impact), un hébergeur certifié HDS, et le consentement explicite ou une base légale démontrée.</p>
+        <p style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85">La solution la plus simple pour rester conforme : <strong style="color:var(--acid)">traitement 100% local</strong>. Aucun flux de données vers l'extérieur, aucun sous-traitant américain à déclarer, aucune DPIA complexe sur des transferts hors UE.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE : AUTOMATION
+═══════════════════════════════════════ -->
+<div class="page" id="page-automation">
+  <div style="max-width:900px;margin:0 auto;padding:2.5rem 2.5rem;position:relative;z-index:1">
+    <div style="margin-bottom:2.5rem">
+      <div class="label" style="color:var(--amber);margin-bottom:.8rem">AUTOMATISATION & WORKFLOWS</div>
+      <h1 style="font-family:var(--serif);font-size:2.4rem;font-weight:900;line-height:1.1;margin-bottom:1rem">Automatiser avec l'IA : <em style="font-style:italic;color:var(--amber)">travailler moins,</em> produire plus</h1>
+      <p style="font-family:var(--mono);font-size:.68rem;color:var(--text2);line-height:1.85">n8n, Make, Zapier augmentés par des LLMs locaux : la combinaison qui permet aux entreprises de 10 à 500 personnes d'automatiser des tâches qui nécessitaient jusqu'ici des équipes entières.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2rem">
+      <div class="widget" style="border-color:rgba(245,158,11,.2)">
+        <div class="widget-head">⚙️ N8N + MISTRAL : LA STACK SOUVERAINE</div>
+        <p style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85;margin-bottom:1rem">n8n est un outil d'automatisation open-source auto-hébergeable. Combiné à Mistral via Ollama, il forme un <strong style="color:var(--text)">agent IA souverain</strong> capable de traiter emails, documents, données CRM et notifications — sans aucun abonnement SaaS et sans exfiltration de données.</p>
+        <div style="font-family:var(--mono);font-size:.62rem;background:var(--surface2);border-radius:var(--r);padding:1rem;color:var(--acid);line-height:1.9">
+          <div>📥 Trigger : email entrant → extraction des infos clés (LLM)</div>
+          <div>📋 Action : création de ticket CRM + résumé automatique</div>
+          <div>📤 Notification : Slack / Teams avec priorité suggérée par l'IA</div>
+          <div>📁 Archivage : classification documentaire automatique</div>
+        </div>
+      </div>
+      <div class="widget">
+        <div class="widget-head">🏆 10 TÂCHES À AUTOMATISER EN PRIORITÉ</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:.5rem">
+          <div style="font-family:var(--mono);font-size:.6rem;background:var(--surface2);border-radius:var(--r);padding:.8rem;line-height:1.75">
+            <span style="color:var(--acid)">01</span> Triage et réponse aux emails entrants<br>
+            <span style="color:var(--acid)">02</span> Extraction de données depuis des PDFs<br>
+            <span style="color:var(--acid)">03</span> Génération de rapports hebdomadaires<br>
+            <span style="color:var(--acid)">04</span> Qualification des leads entrants<br>
+            <span style="color:var(--acid)">05</span> Onboarding documentaire RH
+          </div>
+          <div style="font-family:var(--mono);font-size:.6rem;background:var(--surface2);border-radius:var(--r);padding:.8rem;line-height:1.75">
+            <span style="color:var(--electric2)">06</span> Veille concurrentielle automatisée<br>
+            <span style="color:var(--electric2)">07</span> Traduction et adaptation de contenus<br>
+            <span style="color:var(--electric2)">08</span> Alertes anomalies sur données métier<br>
+            <span style="color:var(--electric2)">09</span> Synthèse de réunions (transcription)<br>
+            <span style="color:var(--electric2)">10</span> Mise à jour CRM depuis les échanges
+          </div>
+        </div>
+      </div>
+      <div class="widget" style="border-color:rgba(37,99,255,.2)">
+        <div class="widget-head">📈 ROI : LES CHIFFRES QUI CONVAINQUENT</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:.5rem;text-align:center">
+          <div style="background:var(--surface2);border-radius:var(--r);padding:1rem"><div style="font-family:var(--mono);font-size:1.8rem;font-weight:700;color:var(--acid)">-40%</div><div style="font-family:var(--mono);font-size:.52rem;color:var(--text2);margin-top:.3rem">temps tâches répétitives</div></div>
+          <div style="background:var(--surface2);border-radius:var(--r);padding:1rem"><div style="font-family:var(--mono);font-size:1.8rem;font-weight:700;color:var(--electric2)">3.2x</div><div style="font-family:var(--mono);font-size:.52rem;color:var(--text2);margin-top:.3rem">volume traité sans recruter</div></div>
+          <div style="background:var(--surface2);border-radius:var(--r);padding:1rem"><div style="font-family:var(--mono);font-size:1.8rem;font-weight:700;color:var(--amber)">< 6 mois</div><div style="font-family:var(--mono);font-size:.52rem;color:var(--text2);margin-top:.3rem">retour sur investissement</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE : FORUM
 <!-- ═══════════════════════════════════════
      PAGE : FORUM
 ═══════════════════════════════════════ -->
@@ -685,6 +944,21 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   </div>
 </div>
 
+<!-- ═══ MOBILE NAV ═══ -->
+<div class="mob-nav-overlay" id="mob-nav">
+  <button class="mob-nav-close" onclick="closeMobNav()">✕ FERMER</button>
+  <div class="mob-nav-logo"><div class="logo-mark">CI</div>CORE-IA HUB</div>
+  <button class="mob-nav-item active" id="mob-nav-media" onclick="showPage('media');closeMobNav()">ACTUS</button>
+  <button class="mob-nav-item" id="mob-nav-dossiers" onclick="showPage('dossiers');closeMobNav()">DOSSIERS</button>
+  <button class="mob-nav-item" id="mob-nav-forum" onclick="showPage('forum');closeMobNav()">FORUM</button>
+  <button class="mob-nav-item" onclick="showPage('ia-locale');closeMobNav()">IA LOCALE</button>
+  <button class="mob-nav-item" onclick="showPage('sante');closeMobNav()">SANTÉ</button>
+  <button class="mob-nav-item" onclick="showPage('automation');closeMobNav()">AUTOMATION</button>
+  <div class="mob-auth" id="mob-auth-area">
+    <button class="btn-primary" style="width:100%;justify-content:center;padding:12px" onclick="openAuth('login');closeMobNav()">CONNEXION / INSCRIPTION</button>
+  </div>
+</div>
+
 <script>
 /* ═══════════════════════════════════════
    ⚙️  SUPABASE CONFIG
@@ -765,6 +1039,15 @@ async function logout(){
 }
 
 function renderAuthArea(){
+  // Update mobile nav auth too
+  const mobAuth = document.getElementById('mob-auth-area');
+  if(mobAuth && currentUser){
+    const uname = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
+    mobAuth.innerHTML = `<div style="font-family:var(--mono);font-size:.6rem;color:var(--text2);margin-bottom:.8rem">${currentUser.email}</div><button class="btn-ghost" style="width:100%" onclick="logout();closeMobNav()">Déconnexion</button>`;
+  } else if(mobAuth){
+    mobAuth.innerHTML = `<button class="btn-primary" style="width:100%;justify-content:center;padding:12px" onclick="openAuth('login');closeMobNav()">CONNEXION / INSCRIPTION</button>`;
+  }
+  const area = document.getElementById('auth-area');
   const area = document.getElementById('auth-area');
   if(currentUser){
     const uname = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
@@ -1193,18 +1476,48 @@ function heroRebuildDots(){
 /* ═══════════════════════════════════════
    NAVIGATION
 ═══════════════════════════════════════ */
+const MEDIA_FAMILY = ['media','dossiers','ia-locale','sante','automation'];
+
 function showPage(n){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(l=>l.classList.remove('active'));
-  document.getElementById('page-'+n).classList.add('active');
-  document.getElementById('nav-'+n).classList.add('active');
-  document.getElementById('cat-bar').style.display=n==='media'?'block':'none';
+  const pg = document.getElementById('page-'+n);
+  if(pg) pg.classList.add('active');
+  const nav = document.getElementById('nav-'+n);
+  if(nav) nav.classList.add('active');
+  const isMedia = MEDIA_FAMILY.includes(n);
+  document.getElementById('cat-bar').style.display = isMedia ? 'block' : 'none';
+  if(isMedia) document.getElementById('nav-media')?.classList.add('active');
   if(n==='forum'){ loadTopics(); loadStats(); if(sb) sb.auth.getSession().then(({data:{session}})=>{ currentUser=session?.user??null; renderAuthArea(); showReplyArea?.(); }); }
+  window.scrollTo(0,0);
 }
 
-document.querySelectorAll('.cat-tab').forEach(b=>b.addEventListener('click',function(){
-  document.querySelectorAll('.cat-tab').forEach(x=>x.classList.remove('active')); this.classList.add('active');
-}));
+function filterMedia(cat, btn){
+  showPage('media');
+  document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+
+/* ═══ THEME TOGGLE ═══ */
+function toggleTheme(){
+  const isLight = document.body.classList.toggle('light');
+  document.getElementById('theme-icon').textContent = isLight ? '☀️' : '🌙';
+  document.getElementById('theme-label').textContent = isLight ? 'CLAIR' : 'SOMBRE';
+  try{ localStorage.setItem('cia-theme', isLight ? 'light' : 'dark'); }catch(e){}
+}
+try{
+  if(localStorage.getItem('cia-theme')==='light'){
+    document.body.classList.add('light');
+    document.getElementById('theme-icon').textContent='☀️';
+    document.getElementById('theme-label').textContent='CLAIR';
+  }
+}catch(e){}
+
+/* ═══ HAMBURGER MOBILE NAV ═══ */
+function openMobNav(){ document.getElementById('mob-nav').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeMobNav(){ document.getElementById('mob-nav').classList.remove('open'); document.body.style.overflow=''; }
+// Close on outside tap
+document.getElementById('mob-nav').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeMobNav(); });
 
 /* ═══════════════════════════════════════
    INIT
@@ -1212,11 +1525,25 @@ document.querySelectorAll('.cat-tab').forEach(b=>b.addEventListener('click',func
 // Load session silently
 if(sb) sb.auth.getSession().then(({data:{session}})=>{ currentUser=session?.user??null; renderAuthArea(); });
 
-// Load FR sources for hero (staggered to avoid rate-limiting)
+// Load primary source immediately, others lazily after hero is stable
 loadRSS(0);
-setTimeout(()=>loadRSS(1),800);
-setTimeout(()=>loadRSS(2),1600);
-setTimeout(()=>loadRSS(3),2400);
+// Additional FR sources load silently in background after hero renders
+setTimeout(()=>{ if(heroLoaded) loadHeroBackground(1); },3000);
+setTimeout(()=>{ if(heroLoaded) loadHeroBackground(2); },5000);
+setTimeout(()=>{ if(heroLoaded) loadHeroBackground(3); },7000);
+
+// Background loader — enriches hero pool without touching the feed UI
+async function loadHeroBackground(idx){
+  const src = SOURCES[idx];
+  try{
+    const r = await fetch(PROXY+encodeURIComponent(src.url)+'&count=6');
+    const d = await r.json();
+    if(d.status==='ok'&&d.items?.length){
+      heroPool.push(...d.items.slice(0,4).map((it,j)=>({...it,_src:src,_img:getI(it,j)})));
+      heroRebuildDots(); // silently add dots, no restart
+    }
+  }catch(e){}
+}
 </script>
 </body>
 </html>
