@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Core-IA Hub · Le Média de l'IA Souveraine</title>
-<!-- ⚙️ SUPABASE SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
@@ -33,18 +31,17 @@
   html { scroll-behavior: smooth; }
   body { background: var(--bg); color: var(--text); font-family: var(--mono); font-size: 13px; line-height: 1.65; overflow-x: hidden; }
 
+  /* ── BG EFFECTS ── */
   body::before {
-    content: '';
-    position: fixed; inset: 0;
+    content: ''; position: fixed; inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
     pointer-events: none; z-index: 9999; opacity: 0.35;
   }
-
   .orb { position: fixed; border-radius: 50%; filter: blur(130px); pointer-events: none; z-index: 0; }
   .orb1 { width: 700px; height: 700px; background: radial-gradient(circle, rgba(59,91,255,0.1) 0%, transparent 70%); top: -250px; left: -250px; }
   .orb2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(124,92,252,0.09) 0%, transparent 70%); bottom: -100px; right: -100px; }
 
-  /* TICKER */
+  /* ── TICKER ── */
   .breaking-bar { background: linear-gradient(90deg, var(--blue), var(--violet)); padding: 7px 0; overflow: hidden; position: relative; z-index: 10; }
   .breaking-bar::before { content: 'LIVE'; position: absolute; left: 0; top: 0; bottom: 0; padding: 0 14px; background: rgba(0,0,0,0.4); display: flex; align-items: center; font-family: var(--mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 3px; color: #fff; z-index: 2; border-right: 1px solid rgba(255,255,255,0.18); }
   .ticker { display: flex; white-space: nowrap; padding-left: 72px; animation: tick 38s linear infinite; }
@@ -52,188 +49,62 @@
   .ticker .sep { color: rgba(255,255,255,0.3) !important; padding-right: 1.5rem !important; }
   @keyframes tick { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 
-  /* HEADER */
+  /* ── HEADER ── */
   header { padding: 1rem 3rem; border-bottom: 1px solid var(--border); background: rgba(3,4,11,0.88); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
-  .logo { font-family: var(--mono); font-size: 0.95rem; font-weight: 700; color: #fff; text-decoration: none; letter-spacing: 4px; display: flex; align-items: center; gap: 10px; }
-  .logo-badge { background: var(--blue); color: #fff; font-family: var(--mono); font-size: 0.48rem; padding: 2px 6px; border-radius: 3px; letter-spacing: 2px; }
-  nav { display: flex; gap: 4px; align-items: center; }
-  .nav-link { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 2px; padding: 6px 14px; border-radius: 5px; text-decoration: none; color: var(--muted); transition: all 0.2s; }
-  .nav-link:hover { color: #fff; background: var(--blue-dim); }
-  .nav-link.active { color: var(--cyan); }
-  .nav-cta { background: var(--blue); color: #fff !important; padding: 7px 16px; border-radius: 6px; margin-left: 8px; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 1px; text-decoration: none; transition: all 0.2s; }
-  .nav-cta:hover { background: var(--violet); transform: translateY(-1px); }
+  .logo { font-family: var(--mono); font-size: 0.95rem; font-weight: 700; color: #fff; text-decoration: none; letter-spacing: 4px; }
+  .logo span { color: var(--blue); }
+  .nav-link { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 2px; padding: 6px 14px; border-radius: 5px; text-decoration: none; color: var(--muted); transition: 0.2s; }
+  .nav-link:hover, .nav-link.active { color: #fff; background: var(--blue-dim); }
+  .nav-cta { background: var(--blue); color: #fff; padding: 7px 16px; border-radius: 6px; margin-left: 8px; font-size: 0.6rem; text-decoration: none; }
 
-  /* TABS */
-  .page-tabs { border-bottom: 1px solid var(--border); background: rgba(7,10,24,0.85); backdrop-filter: blur(10px); display: flex; padding: 0 3rem; position: relative; z-index: 1; }
-  .tab-btn { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 2px; padding: 13px 18px; background: none; border: none; color: var(--muted); cursor: pointer; transition: all 0.2s; border-bottom: 2px solid transparent; position: relative; top: 1px; }
-  .tab-btn:hover { color: var(--text); }
-  .tab-btn.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+  /* ── HERO CAROUSEL ── */
+  .hero { grid-column: span 2; position: relative; border-radius: 16px; overflow: hidden; height: 500px; border: 1px solid var(--border); }
+  .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: opacity 0.6s ease, transform 0.7s ease; }
+  .hero:hover .hero-bg { transform: scale(1.02); }
+  .hero-content { position: absolute; bottom: 0; padding: 2.5rem 3rem; max-width: 800px; z-index: 2; }
+  .hero-content h1 { font-family: var(--serif); font-size: 2.8rem; font-weight: 800; line-height: 1.1; margin: 0.8rem 0; }
+  .read-btn { background: var(--blue); color: #fff; padding: 8px 20px; border-radius: 6px; text-decoration: none; display: inline-block; margin-top: 1rem; }
+  
+  .hero-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); border: none; color: white; padding: 15px; cursor: pointer; z-index: 5; border-radius: 50%; margin: 0 10px; }
+  .hero-next { right: 0; }
+  .hero-dots { position: absolute; bottom: 20px; right: 30px; display: flex; gap: 8px; z-index: 5; }
+  .hero-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); border: none; cursor: pointer; }
+  .hero-dot.active { background: var(--cyan); width: 20px; border-radius: 4px; }
+  .hero-progress { position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: rgba(255,255,255,0.1); }
+  .hero-progress-bar { height: 100%; background: var(--cyan); width: 0%; }
 
-  /* PAGES */
+  /* ── LAYOUT ── */
+  .media-layout { max-width: 1400px; margin: 0 auto; padding: 2.5rem 3rem; display: grid; grid-template-columns: 1fr 310px; gap: 2.5rem; }
+  main { min-width: 0; }
+  .source-bar { margin: 2rem 0 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .src-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--muted); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.55rem; font-family: var(--mono); }
+  .src-btn.active { border-color: var(--blue); color: var(--cyan); background: var(--blue-dim); }
+
+  /* ── CARDS ── */
+  .article-card { display: grid; grid-template-columns: 140px 1fr; gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--border); text-decoration: none; color: inherit; transition: 0.2s; }
+  .article-card:hover { opacity: 0.8; background: rgba(255,255,255,0.02); }
+  .card-thumb { width: 140px; height: 95px; border-radius: 8px; background-size: cover; background-position: center; border: 1px solid var(--border); }
+  .card-body h3 { font-family: var(--serif); font-size: 1.1rem; margin-bottom: 5px; }
+  .card-body p { color: var(--muted); font-size: 0.7rem; }
+
+  /* ── WIDGETS ── */
+  aside { display: flex; flex-direction: column; gap: 1.5rem; }
+  .widget { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.3rem; }
+  .widget-title { font-size: 0.6rem; letter-spacing: 2px; color: var(--cyan); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; }
+  .trend-item { display: block; text-decoration: none; color: inherit; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .trend-item h4 { font-family: var(--serif); font-size: 0.9rem; }
+
+  /* ── SKELETON ── */
+  .skeleton-card { height: 100px; background: var(--bg-card); border-radius: 8px; margin-bottom: 1rem; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 0.8; } 100% { opacity: 0.5; } }
+
   .page { display: none; }
   .page.active { display: block; }
-
-  /* MEDIA LAYOUT */
-  .media-layout { max-width: 1400px; margin: 0 auto; padding: 2.5rem 3rem; display: grid; grid-template-columns: 1fr 310px; gap: 2.5rem; position: relative; z-index: 1; }
-
-  /* HERO */
-  .hero { grid-column: span 2; position: relative; border-radius: 16px; overflow: hidden; height: 500px; border: 1px solid var(--border); display: block; text-decoration: none; color: inherit; }
-  .hero-bg { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(3,4,11,0.05) 0%, rgba(3,4,11,0.75) 55%, var(--bg) 100%), url('https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1260') center/cover; transition: transform 0.7s ease; }
-  .hero:hover .hero-bg { transform: scale(1.03); }
-  .hero-content { position: absolute; bottom: 0; padding: 2.5rem 3rem; max-width: 800px; }
-  /* ★ SERIF HERO TITLE */
-  .hero-content h1 { font-family: var(--serif); font-size: 3.2rem; font-weight: 800; line-height: 1.08; margin: 0.8rem 0 1rem; text-shadow: 0 2px 40px rgba(3,4,11,0.9); }
-  .hero-content h1 em { font-style: italic; color: var(--cyan); }
-  .hero-content p { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); max-width: 560px; line-height: 1.75; }
-  .hero-meta { display: flex; align-items: center; gap: 1rem; margin-top: 1.4rem; flex-wrap: wrap; }
-  .hero-meta span { font-family: var(--mono); font-size: 0.58rem; color: var(--muted); }
-  .read-btn { background: var(--blue); color: #fff; padding: 8px 20px; border-radius: 6px; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 2px; margin-left: auto; }
-
-  /* SECTION LABEL */
-  .section-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; display: flex; align-items: center; gap: 12px; margin-bottom: 1.4rem; }
-  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-  /* SOURCE BUTTONS */
-  .source-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.4rem; flex-wrap: wrap; gap: 8px; }
-  .src-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--muted); border-radius: 4px; padding: 5px 11px; font-family: var(--mono); font-size: 0.56rem; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-  .src-btn:hover { border-color: var(--blue); color: var(--text); }
-  .src-btn.active { background: var(--blue-dim); border-color: var(--blue); color: var(--cyan); }
-
-  /* ARTICLE CARDS */
-  .article-card { display: grid; grid-template-columns: 130px 1fr; gap: 1.2rem; padding: 1.2rem 0; border-bottom: 1px solid var(--border); text-decoration: none; color: inherit; transition: opacity 0.2s; }
-  .article-card:hover { opacity: 0.8; }
-  .card-thumb { width: 130px; height: 88px; border-radius: 6px; background-size: cover; background-position: center; border: 1px solid var(--border); position: relative; overflow: hidden; flex-shrink: 0; }
-  .card-thumb::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(59,91,255,0.08), transparent); }
-  .card-body { display: flex; flex-direction: column; justify-content: space-between; }
-  /* ★ SERIF ARTICLE TITLES */
-  .card-body h3 { font-family: var(--serif); font-size: 1.02rem; font-weight: 700; line-height: 1.25; margin: 5px 0 4px; }
-  .card-body p { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); line-height: 1.65; }
-  .card-footer { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
-  .card-footer span { font-family: var(--mono); font-size: 0.56rem; color: var(--muted); }
-
-  /* SKELETON */
-  @keyframes shimmer { 0%,100%{opacity:.3} 50%{opacity:.65} }
-  .skeleton-card { display: grid; grid-template-columns: 130px 1fr; gap: 1.2rem; padding: 1.2rem 0; border-bottom: 1px solid var(--border); animation: shimmer 1.6s ease infinite; }
-  .sk-thumb { width: 130px; height: 88px; border-radius: 6px; background: var(--bg-card); }
-  .sk-lines { display: flex; flex-direction: column; gap: 9px; padding-top: 4px; }
-  .sk-line { height: 11px; border-radius: 3px; background: var(--bg-card); }
-
-  /* TAGS */
-  .tag { display: inline-block; padding: 2px 9px; border-radius: 3px; font-family: var(--mono); font-size: 0.53rem; font-weight: 700; letter-spacing: 1px; }
-  .tag-blue   { background: rgba(59,91,255,0.18);  color: var(--cyan);  border: 1px solid rgba(59,91,255,0.3); }
-  .tag-violet { background: rgba(124,92,252,0.18); color: #c4b5fd;      border: 1px solid rgba(124,92,252,0.3); }
-  .tag-green  { background: rgba(0,255,136,0.1);   color: var(--green); border: 1px solid rgba(0,255,136,0.25); }
-  .tag-red    { background: rgba(255,71,87,0.14);  color: #ff8a96;      border: 1px solid rgba(255,71,87,0.28); }
-  .tag-cyan   { background: rgba(79,195,247,0.1);  color: var(--cyan);  border: 1px solid rgba(79,195,247,0.25); }
-
-  /* SIDEBAR */
-  aside { display: flex; flex-direction: column; gap: 1.4rem; }
-  .widget { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.3rem; backdrop-filter: blur(10px); }
-  .widget-title { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 3px; color: var(--cyan); margin-bottom: 1.1rem; padding-bottom: 0.7rem; border-bottom: 1px solid var(--border); text-transform: uppercase; }
-  .trend-item { display: flex; align-items: flex-start; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); text-decoration: none; color: inherit; transition: opacity 0.2s; }
-  .trend-item:last-child { border-bottom: none; padding-bottom: 0; }
-  .trend-item:hover { opacity: 0.75; }
-  .trend-num { font-family: var(--mono); font-size: 1.2rem; font-weight: 700; color: var(--border-bright); line-height: 1; min-width: 26px; }
-  /* ★ SERIF SIDEBAR TITLES */
-  .trend-text h4 { font-family: var(--serif); font-size: 0.9rem; font-weight: 700; line-height: 1.3; }
-  .trend-text span { font-family: var(--mono); font-size: 0.56rem; color: var(--muted); }
-
-  .nl-widget { background: linear-gradient(135deg, rgba(59,91,255,0.14), rgba(124,92,252,0.09)); border-color: rgba(59,91,255,0.28); }
-  .nl-widget p { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); margin-bottom: 1rem; line-height: 1.7; }
-  .nl-input { width: 100%; background: rgba(3,4,11,0.85); border: 1px solid var(--border); border-radius: 5px; padding: 9px 12px; color: var(--text); font-family: var(--mono); font-size: 0.62rem; margin-bottom: 8px; outline: none; transition: border 0.2s; }
-  .nl-input:focus { border-color: var(--blue); }
-  .nl-btn { width: 100%; background: var(--blue); color: #fff; border: none; border-radius: 5px; padding: 9px; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 1px; cursor: pointer; transition: 0.2s; }
-  .nl-btn:hover { background: var(--violet); }
-
-  /* FORUM LAYOUT */
-  .forum-layout { max-width: 1200px; margin: 0 auto; padding: 2.5rem 3rem; display: grid; grid-template-columns: 230px 1fr; gap: 2rem; position: relative; z-index: 1; }
-  .forum-nav { display: flex; flex-direction: column; gap: 4px; position: sticky; top: 80px; height: fit-content; }
-  .forum-nav-title { font-family: var(--mono); font-size: 0.53rem; letter-spacing: 3px; color: var(--muted); padding: 0 12px 8px; text-transform: uppercase; }
-  .forum-nav-link { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 6px; text-decoration: none; color: var(--muted); font-family: var(--mono); font-size: 0.62rem; transition: all 0.2s; border: 1px solid transparent; }
-  .forum-nav-link:hover { color: var(--text); background: var(--blue-dim); }
-  .forum-nav-link.active { color: var(--cyan); background: rgba(79,195,247,0.07); border-color: rgba(79,195,247,0.18); }
-  .forum-nav-link .icon { min-width: 18px; text-align: center; }
-  .forum-nav-link .count { margin-left: auto; font-family: var(--mono); font-size: 0.53rem; background: var(--blue-dim); padding: 2px 6px; border-radius: 8px; color: var(--cyan); }
-  .forum-divider { height: 1px; background: var(--border); margin: 6px 0; }
-
-  .forum-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.5rem; gap: 1rem; }
-  /* ★ SERIF FORUM TITLE */
-  .forum-header h2 { font-family: var(--serif); font-size: 1.9rem; font-weight: 800; line-height: 1.1; }
-  .forum-header p { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); margin-top: 5px; }
-  .new-topic-btn { background: var(--blue); color: #fff; border: none; border-radius: 6px; padding: 9px 16px; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
-  .new-topic-btn:hover { background: var(--violet); transform: translateY(-1px); }
-
-  .forum-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 1.5rem; }
-  .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; text-align: center; }
-  .stat-card .stat-num { font-family: var(--mono); font-size: 1.3rem; font-weight: 700; color: var(--cyan); }
-  .stat-card .stat-lbl { font-family: var(--mono); font-size: 0.53rem; color: var(--muted); letter-spacing: 2px; margin-top: 4px; text-transform: uppercase; }
-
-  .online-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); display: inline-block; }
-  .user-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .user-chip { display: flex; align-items: center; gap: 5px; background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px 3px 5px; font-family: var(--mono); font-size: 0.6rem; }
-  .user-avatar { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--violet)); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 0.5rem; color: #fff; flex-shrink: 0; }
-
-  .category-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 1rem; overflow: hidden; transition: border-color 0.2s; }
-  .category-card:hover { border-color: var(--border-bright); }
-  .category-header { display: flex; align-items: center; gap: 14px; padding: 1rem 1.4rem; cursor: pointer; border-bottom: 1px solid var(--border); }
-  .cat-icon { font-size: 1.4rem; min-width: 30px; text-align: center; }
-  .cat-info { flex: 1; }
-  /* ★ SERIF CATEGORY NAMES */
-  .cat-info h3 { font-family: var(--serif); font-size: 1.02rem; font-weight: 700; }
-  .cat-info p { font-family: var(--mono); font-size: 0.58rem; color: var(--muted); margin-top: 3px; }
-  .cat-counts { display: flex; gap: 14px; text-align: center; }
-  .cat-count-item .num { font-family: var(--mono); font-size: 0.9rem; font-weight: 700; }
-  .cat-count-item .lbl { font-family: var(--mono); font-size: 0.5rem; color: var(--muted); display: block; letter-spacing: 1px; }
-
-  .topic-row { display: grid; grid-template-columns: 1fr auto; gap: 1rem; padding: 11px 1.4rem; border-bottom: 1px solid var(--border); text-decoration: none; color: inherit; transition: background 0.15s; align-items: center; }
-  .topic-row:last-child { border-bottom: none; }
-  .topic-row:hover { background: rgba(59,91,255,0.04); }
-  .topic-left { display: flex; align-items: flex-start; gap: 10px; }
-  .topic-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--violet)); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 0.58rem; font-weight: 700; color: #fff; flex-shrink: 0; }
-  /* ★ SERIF TOPIC TITLES */
-  .topic-body h4 { font-family: var(--serif); font-size: 0.94rem; font-weight: 700; line-height: 1.28; margin-bottom: 5px; }
-  .topic-meta { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
-  .topic-meta span { font-family: var(--mono); font-size: 0.56rem; color: var(--muted); }
-  .topic-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-  .topic-replies { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); }
-  .topic-replies strong { color: var(--text); }
-
-  /* MODAL */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(3,4,11,0.88); backdrop-filter: blur(10px); z-index: 200; display: none; align-items: center; justify-content: center; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: #080b1a; border: 1px solid var(--border-bright); border-radius: 14px; padding: 2rem; width: 100%; max-width: 580px; position: relative; animation: slideUp 0.22s ease; }
-  @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
-  /* ★ SERIF MODAL TITLE */
-  .modal-title { font-family: var(--serif); font-size: 1.5rem; font-weight: 800; margin-bottom: 1.5rem; }
-  .modal-close { position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.1rem; transition: color 0.2s; }
-  .modal-close:hover { color: var(--text); }
-  .form-group { margin-bottom: 1.1rem; }
-  .form-label { font-family: var(--mono); font-size: 0.56rem; color: var(--muted); letter-spacing: 2px; display: block; margin-bottom: 6px; }
-  .form-input, .form-select, .form-textarea { width: 100%; background: rgba(3,4,11,0.9); border: 1px solid var(--border); border-radius: 6px; padding: 9px 12px; color: var(--text); font-family: var(--mono); font-size: 0.65rem; outline: none; transition: border 0.2s; }
-  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--blue); }
-  .form-textarea { resize: vertical; min-height: 110px; }
-  .form-select option { background: #080b1a; }
-  .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1.4rem; }
-  .btn-cancel { background: none; border: 1px solid var(--border); color: var(--muted); border-radius: 6px; padding: 8px 16px; font-family: var(--mono); font-size: 0.6rem; cursor: pointer; transition: 0.2s; }
-  .btn-cancel:hover { color: var(--text); border-color: var(--muted); }
-  .btn-submit { background: var(--blue); color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 1px; cursor: pointer; transition: 0.2s; }
-  .btn-submit:hover { background: var(--violet); }
-
-  /* ANIMATIONS */
-  @keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-  .fade-in { animation: fadeInUp 0.45s ease both; }
-  .fade-in:nth-child(1){animation-delay:.05s} .fade-in:nth-child(2){animation-delay:.1s}
-  .fade-in:nth-child(3){animation-delay:.15s} .fade-in:nth-child(4){animation-delay:.2s}
-
-  #rss-error { padding: 2rem; text-align: center; color: var(--muted); font-size: 0.7rem; }
-
-  @media(max-width:1024px){
-    header{padding:1rem 1.5rem}
-    .media-layout,.forum-layout{padding:1.5rem;grid-template-columns:1fr}
-    .hero{grid-column:span 1;height:360px}
-    .hero-content h1{font-size:2rem}
-    .forum-nav{display:none}
-    .forum-stats{grid-template-columns:repeat(2,1fr)}
+  
+  @media(max-width: 1024px) {
+    .media-layout { grid-template-columns: 1fr; padding: 1rem; }
+    .hero { height: 400px; }
+    .hero-content h1 { font-size: 1.8rem; }
   }
 </style>
 </head>
@@ -242,65 +113,33 @@
 <div class="orb orb1"></div>
 <div class="orb orb2"></div>
 
-<!-- TICKER -->
 <div class="breaking-bar">
-  <div class="ticker">
-    <span>L'IA Act officiellement adopté par l'UE</span><span class="sep">◆</span>
-    <span>Mistral Large 2 disponible en local</span><span class="sep">◆</span>
-    <span>NVIDIA franchit les 3 000 Mds de capitalisation</span><span class="sep">◆</span>
-    <span>DeepSeek R2 annoncé pour Q2 2026</span><span class="sep">◆</span>
-    <span>Llama 4 Scout disponible en open-source</span><span class="sep">◆</span>
-    <span>Le forum Core-IA est maintenant ouvert !</span><span class="sep">◆</span>
-    <span>L'IA Act officiellement adopté par l'UE</span><span class="sep">◆</span>
-    <span>Mistral Large 2 disponible en local</span><span class="sep">◆</span>
-    <span>NVIDIA franchit les 3 000 Mds de capitalisation</span><span class="sep">◆</span>
-    <span>DeepSeek R2 annoncé pour Q2 2026</span><span class="sep">◆</span>
-    <span>Llama 4 Scout disponible en open-source</span><span class="sep">◆</span>
-    <span>Le forum Core-IA est maintenant ouvert !</span><span class="sep">◆</span>
+  <div class="ticker" id="ticker-feed">
+    <span>Chargement des dernières brèves IA...</span>
   </div>
 </div>
 
-<!-- HEADER -->
 <header>
-  <a href="#" class="logo" onclick="showPage('media');return false;">
-    CORE-IA HUB <span class="logo-badge">BETA</span>
-  </a>
+  <a href="#" class="logo" onclick="location.reload()">CORE-IA <span>HUB</span></a>
   <nav>
-    <a href="#" class="nav-link active" id="nav-media"    onclick="showPage('media'); return false;">ACTUS</a>
-    <a href="#" class="nav-link"        id="nav-dossiers" onclick="showPage('media'); return false;">DOSSIERS</a>
-    <a href="#" class="nav-link"        id="nav-forum"    onclick="showPage('forum'); return false;">FORUM</a>
-    <!-- Auth button — swaps based on session -->
-    <div class="user-menu" id="auth-area">
-      <a href="#" class="nav-cta" id="btn-login" onclick="openAuth('login');return false;">CONNEXION</a>
-    </div>
+    <a href="#" class="nav-link active">ACTUS</a>
+    <a href="#" class="nav-link">DOSSIERS</a>
+    <a href="#" class="nav-link">FORUM</a>
+    <a href="#" class="nav-cta">S'INSCRIRE</a>
   </nav>
 </header>
 
-<div class="page-tabs" id="tabs-media" style="display:none">
-  <button class="tab-btn active">Tout</button>
-  <button class="tab-btn">IA Locale</button>
-  <button class="tab-btn">Santé</button>
-  <button class="tab-btn">BI & Data</button>
-  <button class="tab-btn">Réglementation</button>
-  <button class="tab-btn">Tutoriels</button>
-</div>
-
-<!-- ═══════ PAGE MÉDIA ═══════ -->
-<div class="page active" id="page-media">
-  <div class="media-layout">
-
-    <!-- HERO CAROUSEL -->
+<div class="media-layout">
+  <main>
     <div class="hero fade-in" id="hero-carousel">
-      <div class="hero-bg" id="hero-bg" style="background-image:linear-gradient(to bottom,rgba(3,4,11,0.1),rgba(3,4,11,0.85)),url('https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1260')"></div>
-      <div class="hero-content" id="hero-content">
-        <span class="tag tag-green" id="hero-tag">NUMERAMA</span>
-        <h1 id="hero-title" style="margin:.8rem 0 1rem">Chargement des actualités…</h1>
-        <p id="hero-desc" style="font-family:var(--mono);font-size:.68rem;color:var(--muted);max-width:560px;line-height:1.75"></p>
-        <div class="hero-meta" id="hero-meta">
-          <span id="hero-author"></span>
-          <span id="hero-dot-sep" style="display:none">·</span>
+      <div class="hero-bg" id="hero-bg"></div>
+      <div class="hero-content">
+        <span class="tag tag-green" id="hero-tag">CORE-IA</span>
+        <h1 id="hero-title">Prêt pour la veille stratégique ?</h1>
+        <p id="hero-desc">Sélectionnez une source pour explorer les actualités.</p>
+        <div id="hero-meta">
           <span id="hero-date"></span>
-          <a href="#" id="hero-link" target="_blank" rel="noopener" class="read-btn" style="margin-left:auto">LIRE →</a>
+          <a href="#" id="hero-link" class="read-btn" target="_blank">LIRE L'ARTICLE</a>
         </div>
       </div>
       <div class="hero-dots" id="hero-dots"></div>
@@ -309,721 +148,167 @@
       <div class="hero-progress"><div class="hero-progress-bar" id="hero-progress-bar"></div></div>
     </div>
 
-    <main>
-      <div class="source-bar">
-        <div class="section-label" style="margin-bottom:0;flex:none;">VEILLE IA EN DIRECT</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;" id="source-btns">
-          <span style="font-family:var(--mono);font-size:0.52rem;color:var(--muted);letter-spacing:2px;">🇫🇷</span>
-          <button class="src-btn active" data-src="0">Numerama</button>
-          <button class="src-btn" data-src="1">Le Monde Info</button>
-          <button class="src-btn" data-src="2">01net</button>
-          <button class="src-btn" data-src="3">Journal du Net</button>
-          <span style="font-family:var(--mono);font-size:0.52rem;color:var(--muted);letter-spacing:2px;margin-left:4px;">🌍</span>
-          <button class="src-btn" data-src="4">Hugging Face</button>
-          <button class="src-btn" data-src="5">MIT Tech</button>
-          <button class="src-btn" data-src="6">VentureBeat AI</button>
-          <button class="src-btn" data-src="7">OpenAI</button>
-        </div>
+    <div class="source-bar">
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <span style="font-size:0.6rem; color:var(--muted);">FR 🇫🇷</span>
+        <button class="src-btn active" data-src="0">Numerama</button>
+        <button class="src-btn" data-src="1">L'Usine Digitale</button>
+        <button class="src-btn" data-src="2">01net</button>
+        <button class="src-btn" data-src="3">JDN</button>
+        <span style="font-size:0.6rem; color:var(--muted); margin-left:10px;">INT 🌍</span>
+        <button class="src-btn" data-src="4">Hugging Face</button>
+        <button class="src-btn" data-src="5">MIT Tech</button>
+        <button class="src-btn" data-src="6">VentureBeat</button>
+        <button class="src-btn" data-src="7">OpenAI</button>
       </div>
-      <div id="rss-loading">
-        <div class="skeleton-card"><div class="sk-thumb"></div><div class="sk-lines"><div class="sk-line" style="width:28%"></div><div class="sk-line" style="width:88%"></div><div class="sk-line" style="width:68%"></div><div class="sk-line" style="width:42%"></div></div></div>
-        <div class="skeleton-card" style="animation-delay:.15s"><div class="sk-thumb"></div><div class="sk-lines"><div class="sk-line" style="width:22%"></div><div class="sk-line" style="width:80%"></div><div class="sk-line" style="width:62%"></div><div class="sk-line" style="width:35%"></div></div></div>
-        <div class="skeleton-card" style="animation-delay:.3s"><div class="sk-thumb"></div><div class="sk-lines"><div class="sk-line" style="width:32%"></div><div class="sk-line" style="width:75%"></div><div class="sk-line" style="width:55%"></div><div class="sk-line" style="width:40%"></div></div></div>
-      </div>
-      <div id="rss-feed"></div>
-      <div id="rss-error" style="display:none">⚠️ Flux indisponible — essayez une autre source.</div>
-    </main>
-
-    <aside>
-      <div class="widget fade-in">
-        <div class="widget-title">TENDANCES</div>
-        <a href="#" class="trend-item"><span class="trend-num">01</span><div class="trend-text"><h4>Mistral Large 2 vs GPT-4o : benchmark complet</h4><span>3.2k vues · IA Locale</span></div></a>
-        <a href="#" class="trend-item"><span class="trend-num">02</span><div class="trend-text"><h4>Installer Ollama sur Ubuntu 24.04 en 10 minutes</h4><span>2.8k vues · Tutoriel</span></div></a>
-        <a href="#" class="trend-item"><span class="trend-num">03</span><div class="trend-text"><h4>RGPD & LLM : où stocker vos données patients ?</h4><span>1.9k vues · Santé</span></div></a>
-        <a href="#" class="trend-item"><span class="trend-num">04</span><div class="trend-text"><h4>RAG on-premise avec LangChain et PGVector</h4><span>1.5k vues · Dev</span></div></a>
-      </div>
-      <div class="widget nl-widget fade-in">
-        <div class="widget-title">NEWSLETTER HEBDO</div>
-        <p>Chaque lundi, l'essentiel de l'IA souveraine dans votre boite mail.</p>
-        <input class="nl-input" type="email" placeholder="votre@email.com">
-        <button class="nl-btn">REJOINDRE → 1 200 ABONNÉS</button>
-      </div>
-      <div class="widget fade-in">
-        <div class="widget-title">💬 CHAUD SUR LE FORUM</div>
-        <a href="#" class="trend-item"><div class="trend-text"><span class="tag tag-violet" style="margin-bottom:5px;display:block">AUTOMATION</span><h4>Comment connecter n8n à mon CRM local sans cloud ?</h4><span>12 réponses · 2h</span></div></a>
-        <a href="#" class="trend-item"><div class="trend-text"><span class="tag tag-blue" style="margin-bottom:5px;display:block">HARDWARE</span><h4>Retour d'exp : Groq sur PC portable — résultats surprenants</h4><span>8 réponses · 5h</span></div></a>
-        <a href="#" class="trend-item"><div class="trend-text"><span class="tag tag-green" style="margin-bottom:5px;display:block">SANTÉ</span><h4>Modèle prédictif VNI — partage de code Python</h4><span>5 réponses · hier</span></div></a>
-      </div>
-    </aside>
-
-  </div>
-</div>
-
-<!-- ═══════ PAGE FORUM ═══════ -->
-<div class="page" id="page-forum">
-  <div class="forum-layout">
-    <nav class="forum-nav">
-      <div class="forum-nav-title">Catégories</div>
-      <a href="#" class="forum-nav-link active"><span class="icon">🏠</span>Accueil forum<span class="count">48</span></a>
-      <a href="#" class="forum-nav-link"><span class="icon">🤖</span>IA Locale<span class="count">31</span></a>
-      <a href="#" class="forum-nav-link"><span class="icon">⚙️</span>Automation<span class="count">19</span></a>
-      <a href="#" class="forum-nav-link"><span class="icon">💊</span>Santé & IA<span class="count">12</span></a>
-      <a href="#" class="forum-nav-link"><span class="icon">📊</span>BI & Data<span class="count">15</span></a>
-      <a href="#" class="forum-nav-link"><span class="icon">🔐</span>Souveraineté<span class="count">9</span></a>
-      <div class="forum-divider"></div>
-      <div class="forum-nav-title">Mon compte</div>
-      <a href="#" class="forum-nav-link"><span class="icon">🧑</span>Profil</a>
-      <a href="#" class="forum-nav-link"><span class="icon">🔔</span>Notifications</a>
-    </nav>
-
-    <div class="forum-main" id="forum-main">
-
-      <!-- LISTE DES TOPICS -->
-      <div id="forum-list-view">
-        <div class="forum-header">
-          <div>
-            <h2>Forum Core-IA</h2>
-            <p>Échanges techniques entre praticiens de l'IA souveraine</p>
-          </div>
-          <button class="new-topic-btn" id="btn-new-topic" onclick="openNewTopic()">✏️ &nbsp;NOUVEAU SUJET</button>
-        </div>
-
-        <!-- Stats dynamiques -->
-        <div class="forum-stats">
-          <div class="stat-card"><div class="stat-num" id="stat-members">—</div><div class="stat-lbl">Membres</div></div>
-          <div class="stat-card"><div class="stat-num" id="stat-topics">—</div><div class="stat-lbl">Sujets</div></div>
-          <div class="stat-card"><div class="stat-num" id="stat-replies">—</div><div class="stat-lbl">Réponses</div></div>
-          <div class="stat-card"><div class="stat-num" style="color:var(--green)"><span class="online-dot"></span> <span id="stat-online">—</span></div><div class="stat-lbl">En ligne</div></div>
-        </div>
-
-        <!-- Filtre catégorie -->
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.2rem;" id="cat-filters">
-          <button class="src-btn active" data-cat="all">Tout</button>
-          <button class="src-btn" data-cat="ia-locale">🤖 IA Locale</button>
-          <button class="src-btn" data-cat="automation">⚙️ Automation</button>
-          <button class="src-btn" data-cat="sante">💊 Santé</button>
-          <button class="src-btn" data-cat="bi-data">📊 BI & Data</button>
-          <button class="src-btn" data-cat="souverainete">🔐 Souveraineté</button>
-        </div>
-
-        <!-- Liste topics -->
-        <div class="category-card">
-          <div id="forum-topics-list">
-            <div class="forum-empty pulse"><span>⏳</span>Chargement des sujets…</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- VUE DÉTAIL TOPIC -->
-      <div class="topic-detail" id="forum-detail-view">
-        <div class="topic-detail-header">
-          <button class="back-btn" onclick="backToList()">← RETOUR</button>
-          <div>
-            <h2 id="detail-title" style="font-family:var(--serif);font-size:1.3rem;font-weight:800;line-height:1.2"></h2>
-            <span id="detail-tag" class="tag tag-blue" style="margin-top:6px;display:inline-block"></span>
-          </div>
-        </div>
-        <div id="detail-posts"></div>
-        <div class="reply-box" id="reply-box">
-          <div class="form-label" style="margin-bottom:6px">VOTRE RÉPONSE</div>
-          <textarea class="reply-textarea" id="reply-input" placeholder="Partagez votre expertise…"></textarea>
-          <button class="reply-submit" onclick="submitReply()">ENVOYER →</button>
-          <div style="clear:both"></div>
-        </div>
-        <div id="reply-login-prompt" style="display:none;text-align:center;padding:1rem;font-family:var(--mono);font-size:.65rem;color:var(--muted)">
-          <a href="#" onclick="openAuth('login');return false;" style="color:var(--cyan)">Connectez-vous</a> pour répondre.
-        </div>
-      </div>
-
     </div>
-  </div>
-</div>
 
-<!-- ═══════ AUTH OVERLAY ═══════ -->
-<div class="auth-overlay" id="auth-overlay" onclick="closeAuthOutside(event)">
-  <div class="auth-box">
-    <button class="auth-close modal-close" onclick="closeAuth()">✕</button>
-    <span class="auth-logo">CORE-IA HUB</span>
-    <h2 class="auth-title" id="auth-title">Bon retour !</h2>
-    <p class="auth-sub" id="auth-sub">Connectez-vous pour accéder au forum.</p>
-    <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchAuth('login')">CONNEXION</button>
-      <button class="auth-tab" onclick="switchAuth('register')">INSCRIPTION</button>
-    </div>
-    <div class="auth-err" id="auth-err"></div>
-    <div class="auth-ok"  id="auth-ok"></div>
-    <div class="form-group" id="auth-name-group" style="display:none">
-      <label class="form-label">PSEUDO</label>
-      <input class="form-input" id="auth-username" type="text" placeholder="votre_pseudo" autocomplete="username">
-    </div>
-    <div class="form-group">
-      <label class="form-label">EMAIL</label>
-      <input class="form-input" id="auth-email" type="email" placeholder="votre@email.com" autocomplete="email">
-    </div>
-    <div class="form-group">
-      <label class="form-label">MOT DE PASSE</label>
-      <input class="form-input" id="auth-password" type="password" placeholder="••••••••" autocomplete="current-password">
-    </div>
-    <div class="form-actions" style="margin-top:1rem">
-      <button class="btn-submit" style="width:100%;padding:11px" onclick="submitAuth()">CONTINUER →</button>
-    </div>
-  </div>
-</div>
+    <div id="rss-loading" style="display:none;"><div class="skeleton-card"></div><div class="skeleton-card"></div></div>
+    <div id="rss-feed"></div>
+    <div id="rss-error" style="display:none; color:var(--red);">⚠️ Erreur de chargement.</div>
+  </main>
 
-<!-- ═══════ NEW TOPIC MODAL ═══════ -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-title">Créer un nouveau sujet</div>
-    <div class="auth-err" id="topic-err"></div>
-    <div class="form-group"><label class="form-label">TITRE DU SUJET</label><input class="form-input" id="topic-title-input" type="text" placeholder="Ex : Comment déployer Ollama en production ?"></div>
-    <div class="form-group"><label class="form-label">CATÉGORIE</label>
-      <select class="form-select" id="topic-cat-input">
-        <option value="">Choisir une catégorie…</option>
-        <option value="ia-locale">🤖 IA Locale & Open Source</option>
-        <option value="automation">⚙️ Automation & Workflows</option>
-        <option value="sante">💊 Santé & IA Médicale</option>
-        <option value="bi-data">📊 BI & Data</option>
-        <option value="souverainete">🔐 Souveraineté & Réglementation</option>
-      </select>
+  <aside>
+    <div class="widget">
+      <div class="widget-title">SOUVERAINETÉ STATUS</div>
+      <div style="font-size:0.6rem; color:var(--green);"><span class="online-dot"></span> NODE L-3 : ONLINE</div>
     </div>
-    <div class="form-group"><label class="form-label">VOTRE MESSAGE</label><textarea class="form-textarea" id="topic-body-input" placeholder="Décrivez votre question ou partage en détail…"></textarea></div>
-    <div class="form-actions"><button class="btn-cancel" onclick="closeModal()">Annuler</button><button class="btn-submit" onclick="submitTopic()">PUBLIER →</button></div>
-  </div>
+    <div class="widget">
+      <div class="widget-title">TENDANCES</div>
+      <a href="#" class="trend-item"><h4>IA Locale : Le guide Llama 3</h4></a>
+      <a href="#" class="trend-item"><h4>n8n + Santé : Automatisation RGPD</h4></a>
+    </div>
+  </aside>
 </div>
 
 <script>
-  /* ══════════════════════════════════════════
-     ⚙️  CONFIG SUPABASE — remplace ces 2 lignes
-     ══════════════════════════════════════════ */
-  const SUPA_URL = 'https://VOTRE_PROJECT_ID.supabase.co';
-  const SUPA_KEY = 'VOTRE_ANON_PUBLIC_KEY';
-  /* ══════════════════════════════════════════ */
-
-  /* ── Supabase init sécurisé ── */
-  const SUPA_READY = SUPA_URL !== 'https://VOTRE_PROJECT_ID.supabase.co' && SUPA_KEY !== 'VOTRE_ANON_PUBLIC_KEY';
-  let db = null;
-  if (SUPA_READY) {
-    try { const { createClient } = supabase; db = createClient(SUPA_URL, SUPA_KEY); }
-    catch(e) { console.warn('Supabase init error:', e); }
-  } else {
-    console.info('ℹ️ Supabase non configuré — forum en mode démo');
-  }
-
-  /* ── Session courante ── */
-  let currentUser = null;
-  let currentSession = null;
-  let currentTopicId = null;
-  let activeCatFilter = 'all';
-
-  /* ── Init auth listener ── */
-  if (db) db.auth.onAuthStateChange((_event, session) => {
-    currentSession = session;
-    currentUser = session?.user ?? null;
-    renderAuthArea();
-    if (currentUser) { closeAuth(); loadForumStats(); }
-  });
-
-  /* ══════ AUTH ══════ */
-  let authMode = 'login';
-
-  function openAuth(mode = 'login') {
-    authMode = mode;
-    switchAuth(mode);
-    document.getElementById('auth-overlay').classList.add('open');
-  }
-  function closeAuth() { document.getElementById('auth-overlay').classList.remove('open'); }
-  function closeAuthOutside(e) { if (e.target.id === 'auth-overlay') closeAuth(); }
-
-  function switchAuth(mode) {
-    authMode = mode;
-    const isReg = mode === 'register';
-    document.getElementById('auth-title').textContent = isReg ? 'Créer un compte' : 'Bon retour !';
-    document.getElementById('auth-sub').textContent = isReg ? 'Rejoignez la communauté Core-IA.' : 'Connectez-vous pour accéder au forum.';
-    document.getElementById('auth-name-group').style.display = isReg ? 'block' : 'none';
-    document.querySelectorAll('.auth-tab').forEach((t,i)=> t.classList.toggle('active', (isReg && i===1)||(!isReg && i===0)));
-    document.getElementById('auth-err').style.display = 'none';
-    document.getElementById('auth-ok').style.display = 'none';
-  }
-
-  async function submitAuth() {
-    const email = document.getElementById('auth-email').value.trim();
-    const pass  = document.getElementById('auth-password').value;
-    const uname = document.getElementById('auth-username')?.value.trim();
-    const errEl = document.getElementById('auth-err');
-    const okEl  = document.getElementById('auth-ok');
-    errEl.style.display = 'none';
-    okEl.style.display  = 'none';
-
-    if (!email || !pass) { errEl.textContent = 'Email et mot de passe requis.'; errEl.style.display='block'; return; }
-
-    if (authMode === 'register') {
-      if (!db) { errEl.textContent = 'Supabase non configuré. Ajoutez vos clés.'; errEl.style.display='block'; return; }
-    const { error } = await db.auth.signUp({
-        email, password: pass,
-        options: { data: { username: uname || email.split('@')[0] } }
-      });
-      if (error) { errEl.textContent = error.message; errEl.style.display='block'; }
-      else { okEl.textContent = '✓ Vérifiez votre email pour confirmer votre compte !'; okEl.style.display='block'; }
-    } else {
-      const { error } = await db.auth.signInWithPassword({ email, password: pass });
-      if (error) { errEl.textContent = 'Email ou mot de passe incorrect.'; errEl.style.display='block'; }
-    }
-  }
-
-  async function logout() {
-    if (db) await db.auth.signOut();
-    currentUser = null;
-    renderAuthArea();
-    closeUserDropdown();
-  }
-
-  function renderAuthArea() {
-    const area = document.getElementById('auth-area');
-    if (currentUser) {
-      const uname = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
-      const initials = uname.slice(0,2).toUpperCase();
-      area.innerHTML = `
-        <div class="user-menu">
-          <button class="user-btn" onclick="toggleUserDropdown()">
-            <div class="user-avatar-sm">${initials}</div>
-            ${uname}  ▾
-          </button>
-          <div class="user-dropdown" id="user-dd">
-            <div style="padding:8px 12px;font-family:var(--mono);font-size:.58rem;color:var(--muted);border-bottom:1px solid var(--border);margin-bottom:4px">${currentUser.email}</div>
-            <button class="user-dd-item" onclick="showPage('forum')">💬 Mon forum</button>
-            <div class="user-dd-sep"></div>
-            <button class="user-dd-item danger" onclick="logout()">Déconnexion</button>
-          </div>
-        </div>`;
-    } else {
-      area.innerHTML = `<a href="#" class="nav-cta" id="btn-login" onclick="openAuth('login');return false;">CONNEXION</a>`;
-    }
-  }
-
-  function toggleUserDropdown() {
-    document.getElementById('user-dd')?.classList.toggle('open');
-  }
-  function closeUserDropdown() {
-    document.getElementById('user-dd')?.classList.remove('open');
-  }
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.user-menu')) closeUserDropdown();
-  });
-
-  /* ══════ FORUM — STATS ══════ */
-  async function loadForumStats() {
-    if (!db) {
-      document.getElementById('stat-topics').textContent  = '—';
-      document.getElementById('stat-replies').textContent = '—';
-      document.getElementById('stat-members').textContent = '—';
-      document.getElementById('stat-online').textContent  = '—';
-      return;
-    }
-    const [{ count: topics }, { count: replies }, { count: members }] = await Promise.all([
-      db.from('topics').select('*', { count:'exact', head:true }),
-      db.from('replies').select('*', { count:'exact', head:true }),
-      db.from('profiles').select('*', { count:'exact', head:true }),
-    ]);
-    document.getElementById('stat-topics').textContent  = topics  ?? '—';
-    document.getElementById('stat-replies').textContent = replies ?? '—';
-    document.getElementById('stat-members').textContent = members ?? '—';
-    document.getElementById('stat-online').textContent  = Math.floor(Math.random()*18)+4;
-  }
-
-  /* ══════ FORUM — TOPICS LIST ══════ */
-  const CAT_LABELS = {
-    'ia-locale': '🤖 IA Locale', 'automation': '⚙️ Automation',
-    'sante': '💊 Santé', 'bi-data': '📊 BI & Data', 'souverainete': '🔐 Souveraineté'
-  };
-  const CAT_CLASSES = {
-    'ia-locale':'tag-violet','automation':'tag-blue','sante':'tag-green','bi-data':'tag-cyan','souverainete':'tag-red'
-  };
-
-  function timeAgo(dateStr) {
-    const diff = (Date.now() - new Date(dateStr)) / 1000;
-    if (diff < 60) return 'à l'instant';
-    if (diff < 3600) return `il y a ${Math.floor(diff/60)}min`;
-    if (diff < 86400) return `il y a ${Math.floor(diff/3600)}h`;
-    return `il y a ${Math.floor(diff/86400)}j`;
-  }
-
-  function avatarColor(str) {
-    const colors = [
-      'linear-gradient(135deg,#3b5bff,#7c5cfc)',
-      'linear-gradient(135deg,#00c6ff,#0072ff)',
-      'linear-gradient(135deg,#43e97b,#38f9d7)',
-      'linear-gradient(135deg,#f093fb,#f5576c)',
-      'linear-gradient(135deg,#f7971e,#ffd200)',
-    ];
-    let h = 0; for (const c of str) h = (h*31 + c.charCodeAt(0)) % colors.length;
-    return colors[h];
-  }
-
-
-  /* ── DEMO topics (Supabase non configuré) ── */
-  function demoTopicsHTML() {
-    const demo = [
-      { id:'d1', title:'Mistral 7B vs Phi-3 Mini pour du RAG médical — comparatif', category:'ia-locale', uname:'alexandre_n', replies:24, ago:'il y a 1h', isNew:false },
-      { id:'d2', title:'Comment connecter n8n à mon CRM local sans cloud ?',         category:'automation', uname:'m_kaddour',   replies:12, ago:'il y a 2h', isNew:true  },
-      { id:'d3', title:'Modèle prédictif VNI — partage de code Python + dataset',   category:'sante',      uname:'alexandre_n', replies:5,  ago:'il y a 5h', isNew:true  },
-      { id:'d4', title:'Comment quantifier un modèle en GGUF sans perte de qualité ?', category:'ia-locale', uname:'r_leconte', replies:7,  ago:'il y a 3h', isNew:true  },
-      { id:'d5', title:'RAG on-premise avec LangChain et PGVector — retour terrain', category:'bi-data',    uname:'t_dupuis',   replies:9,  ago:'hier',       isNew:false },
-      { id:'d6', title:'Agent IA pour triage email RH avec Mistral — mon retour',   category:'automation', uname:'sarah_bwi',  replies:6,  ago:'hier',       isNew:false },
-    ];
-    return demo.map(t => {
-      const initials = t.uname.slice(0,2).toUpperCase();
-      const catCls   = CAT_CLASSES[t.category] || 'tag-blue';
-      const catLabel = CAT_LABELS[t.category]  || t.category;
-      return `
-        <div class="topic-row" onclick="openTopic('${t.id}','${t.title}','${t.category}')">
-          <div class="topic-left">
-            <div class="topic-avatar" style="background:${avatarColor(t.uname)}">${initials}</div>
-            <div class="topic-body">
-              <h4>${t.title}</h4>
-              <div class="topic-meta">
-                ${t.isNew ? '<span class="tag tag-green" style="font-size:.5rem">NOUVEAU</span>' : ''}
-                <span class="tag ${catCls}" style="font-size:.5rem">${catLabel}</span>
-                <span>${t.uname}</span><span>·</span><span>${t.ago}</span>
-              </div>
-            </div>
-          </div>
-          <div class="topic-right"><div class="topic-replies"><strong>${t.replies}</strong> rép.</div></div>
-        </div>`;
-    }).join('');
-  }
-
-  async function loadTopics() {
-    const list = document.getElementById('forum-topics-list');
-    if (!db) {
-      list.innerHTML = demoTopicsHTML();
-      return;
-    }
-    list.innerHTML = '<div class="forum-empty pulse"><span>⏳</span>Chargement…</div>';
-
-    let query = db.from('topics')
-      .select('*, profiles(username), reply_count:replies(count)')
-      .order('created_at', { ascending: false })
-      .limit(30);
-
-    if (activeCatFilter !== 'all') query = query.eq('category', activeCatFilter);
-
-    const { data, error } = await query;
-
-    if (error || !data?.length) {
-      list.innerHTML = '<div class="forum-empty"><span>💬</span>Aucun sujet pour l\'instant.<br>Soyez le premier à poster !</div>';
-      return;
-    }
-
-    list.innerHTML = data.map(t => {
-      const uname = t.profiles?.username || 'anonyme';
-      const initials = uname.slice(0,2).toUpperCase();
-      const replyCount = t.reply_count?.[0]?.count ?? 0;
-      const catCls = CAT_CLASSES[t.category] || 'tag-blue';
-      const catLabel = CAT_LABELS[t.category] || t.category;
-      const isNew = (Date.now() - new Date(t.created_at)) < 86400000;
-      return `
-        <div class="topic-row" onclick="openTopic('${t.id}','${t.title.replace(/'/g,"\'")}','${t.category}')">
-          <div class="topic-left">
-            <div class="topic-avatar" style="background:${avatarColor(uname)}">${initials}</div>
-            <div class="topic-body">
-              <h4>${t.title}</h4>
-              <div class="topic-meta">
-                ${isNew ? '<span class="tag tag-green" style="font-size:.5rem">NOUVEAU</span>' : ''}
-                <span class="tag ${catCls}" style="font-size:.5rem">${catLabel}</span>
-                <span>${uname}</span><span>·</span><span>${timeAgo(t.created_at)}</span>
-              </div>
-            </div>
-          </div>
-          <div class="topic-right">
-            <div class="topic-replies"><strong>${replyCount}</strong> rép.</div>
-          </div>
-        </div>`;
-    }).join('');
-  }
-
-  /* ══════ FORUM — TOPIC DETAIL ══════ */
-  async function openTopic(id, title, category) {
-    currentTopicId = id;
-    document.getElementById('forum-list-view').style.display  = 'none';
-    document.getElementById('forum-detail-view').classList.add('open');
-    document.getElementById('detail-title').textContent = title;
-    const catEl = document.getElementById('detail-tag');
-    catEl.textContent = CAT_LABELS[category] || category;
-    catEl.className = `tag ${CAT_CLASSES[category]||'tag-blue'}`;
-
-    const posts = document.getElementById('detail-posts');
-    posts.innerHTML = '<div class="forum-empty pulse"><span>⏳</span>Chargement…</div>';
-
-    // Load OP + replies
-    if (!db) { posts.innerHTML = '<div class="forum-empty"><span>💬</span>Connectez Supabase pour voir les messages.</div>'; return; }
-    const [{ data: topic }, { data: replies }] = await Promise.all([
-      db.from('topics').select('*, profiles(username)').eq('id', id).single(),
-      db.from('replies').select('*, profiles(username)').eq('topic_id', id).order('created_at')
-    ]);
-
-    const all = [];
-    if (topic) all.push({ ...topic, is_op: true });
-    if (replies) all.push(...replies);
-
-    posts.innerHTML = all.map(p => {
-      const uname = p.profiles?.username || 'anonyme';
-      const initials = uname.slice(0,2).toUpperCase();
-      return `
-        <div class="post-card ${p.is_op ? 'is-op' : ''}">
-          <div class="post-header">
-            <div class="post-avatar" style="background:${avatarColor(uname)}">${initials}</div>
-            <div class="post-meta"><strong>${uname}</strong> · ${timeAgo(p.created_at)}${p.is_op ? ' · <span style="color:var(--cyan)">OP</span>' : ''}</div>
-          </div>
-          <div class="post-body">${p.body || p.content || ''}</div>
-        </div>`;
-    }).join('');
-
-    // Show reply box or login prompt
-    if (currentUser) {
-      document.getElementById('reply-box').style.display = 'block';
-      document.getElementById('reply-login-prompt').style.display = 'none';
-    } else {
-      document.getElementById('reply-box').style.display = 'none';
-      document.getElementById('reply-login-prompt').style.display = 'block';
-    }
-  }
-
-  function backToList() {
-    document.getElementById('forum-list-view').style.display = 'block';
-    document.getElementById('forum-detail-view').classList.remove('open');
-    currentTopicId = null;
-  }
-
-  async function submitReply() {
-    if (!currentUser || !currentTopicId) return;
-    const body = document.getElementById('reply-input').value.trim();
-    if (!body) return;
-    if (!db) return;
-    const { error } = await db.from('replies').insert({
-      topic_id: currentTopicId,
-      body,
-      user_id: currentUser.id
-    });
-    if (!error) {
-      document.getElementById('reply-input').value = '';
-      openTopic(currentTopicId, document.getElementById('detail-title').textContent, '');
-    }
-  }
-
-  /* ══════ FORUM — NEW TOPIC ══════ */
-  function openNewTopic() {
-    if (!currentUser) { openAuth('login'); return; }
-    document.getElementById('modal-overlay').classList.add('open');
-  }
-  function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
-  function closeModalOutside(e) { if (e.target.id === 'modal-overlay') closeModal(); }
-
-  async function submitTopic() {
-    if (!currentUser) { openAuth('login'); return; }
-    const title    = document.getElementById('topic-title-input').value.trim();
-    const category = document.getElementById('topic-cat-input').value;
-    const body     = document.getElementById('topic-body-input').value.trim();
-    const errEl    = document.getElementById('topic-err');
-    errEl.style.display = 'none';
-    if (!title || !category || !body) {
-      errEl.textContent = 'Tous les champs sont requis.';
-      errEl.style.display = 'block'; return;
-    }
-    if (!db) { errEl.textContent = 'Supabase non configuré.'; errEl.style.display='block'; return; }
-    const { error } = await db.from('topics').insert({ title, category, body, user_id: currentUser.id });
-    if (error) { errEl.textContent = error.message; errEl.style.display='block'; }
-    else {
-      closeModal();
-      document.getElementById('topic-title-input').value = '';
-      document.getElementById('topic-cat-input').value   = '';
-      document.getElementById('topic-body-input').value  = '';
-      loadTopics();
-      loadForumStats();
-    }
-  }
-
-  /* ══════ FORUM — CAT FILTER ══════ */
-  document.getElementById('cat-filters')?.addEventListener('click', e => {
-    const btn = e.target.closest('.src-btn');
-    if (!btn) return;
-    document.querySelectorAll('#cat-filters .src-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeCatFilter = btn.dataset.cat;
-    loadTopics();
-  });
-
-  /* ══════ REALTIME — nouvelles réponses ══════ */
-  if (db) db.channel('forum-realtime')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'topics' }, () => loadTopics())
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'replies' }, payload => {
-      if (currentTopicId && payload.new.topic_id === currentTopicId)
-        openTopic(currentTopicId, document.getElementById('detail-title').textContent, '');
-    })
-    .subscribe();
-
-  /* ══════ RSS ══════ */
   const SOURCES = [
-    // 🇫🇷 FRANÇAIS
-    { url:'https://www.numerama.com/tag/intelligence-artificielle/feed/',                   tag:'NUMERAMA',      cls:'tag-green',  lang:'fr' },
-    { url:'https://www.lemondeinformatique.fr/flux-rss/intelligence-artificielle/rss.xml', tag:'LE MONDE INFO', cls:'tag-green',  lang:'fr' },
-    { url:'https://www.01net.com/rss/actualites/',                                         tag:'01NET',         cls:'tag-green',  lang:'fr' },
-    { url:'https://www.journaldunet.com/rss/',                                             tag:'JDN',           cls:'tag-green',  lang:'fr' },
-    // 🌍 INTERNATIONAL
-    { url:'https://huggingface.co/blog/feed.xml',                                          tag:'HUGGING FACE',  cls:'tag-violet', lang:'en' },
-    { url:'https://www.technologyreview.com/feed/',                                        tag:'MIT TECH',      cls:'tag-blue',   lang:'en' },
-    { url:'https://venturebeat.com/category/ai/feed/',                                     tag:'VENTUREBEAT',   cls:'tag-cyan',   lang:'en' },
-    { url:'https://openai.com/news/rss.xml',                                               tag:'OPENAI',        cls:'tag-blue',   lang:'en' },
+    { name: 'Numerama', url: 'https://www.numerama.com/tag/intelligence-artificielle/feed/', cls: 'tag-green' },
+    { name: 'Usine Digitale', url: 'https://www.usine-digitale.fr/ia/rss', cls: 'tag-green' },
+    { name: '01net', url: 'https://www.01net.com/actualites/intelligence-artificielle/feed/', cls: 'tag-green' },
+    { name: 'JDN', url: 'https://www.journaldunet.com/solutions/dsi/rss/', cls: 'tag-green' },
+    { name: 'Hugging Face', url: 'https://huggingface.co/blog/feed.xml', cls: 'tag-violet' },
+    { name: 'MIT Tech', url: 'https://www.technologyreview.com/feed/', cls: 'tag-blue' },
+    { name: 'VentureBeat', url: 'https://venturebeat.com/category/ai/feed/', cls: 'tag-cyan' },
+    { name: 'OpenAI', url: 'https://openai.com/news/rss.xml', cls: 'tag-blue' }
   ];
-  const PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
-  const IMGS = [
-    'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=400',
-    'https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=400',
-    'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=400',
-    'https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=400',
-    'https://images.pexels.com/photos/7567444/pexels-photo-7567444.jpeg?auto=compress&cs=tinysrgb&w=400',
-  ];
-  const fmtDate = s => { const d=new Date(s); return isNaN(d)?'':d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}); };
-  const getImg  = (item,i) => {
-    if (item.thumbnail?.startsWith('http')) return item.thumbnail;
-    if (item.enclosure?.link) return item.enclosure.link;
-    const m = (item.content||item.description||'').match(/<img[^>]+src=["']([^"']+)["']/i);
-    return m ? m[1] : IMGS[i % IMGS.length];
-  };
-  const strip = h => { const d=document.createElement('div'); d.innerHTML=h||''; return (d.textContent||'').trim().slice(0,108)+'…'; };
 
-  function render(items, src) {
-    const feed = document.getElementById('rss-feed');
-    feed.innerHTML = '';
-    if (!items?.length) { document.getElementById('rss-error').style.display='block'; return; }
-    items.slice(0,8).forEach((item,i) => {
-      const a = document.createElement('a');
-      a.href=item.link||'#'; a.target='_blank'; a.rel='noopener';
-      a.className='article-card fade-in'; a.style.animationDelay=(i*.07)+'s';
-      a.innerHTML=`
-        <div class="card-thumb" style="background-image:url('${getImg(item,i)}')"></div>
-        <div class="card-body">
-          <div><span class="tag ${src.cls}">${src.tag}</span><h3>${item.title||'Sans titre'}</h3><p>${strip(item.description||item.content)}</p></div>
-          <div class="card-footer"><span>${item.author||''}</span>${fmtDate(item.pubDate)?`<span>·</span><span>${fmtDate(item.pubDate)}</span>`:''}</div>
-        </div>`;
-      feed.appendChild(a);
-    });
-    const ticker = document.querySelector('.ticker');
-    if (ticker && items.length) {
-      const t = items.slice(0,6).map(x=>`<span>${x.title}</span><span class="sep">◆</span>`).join('');
-      ticker.innerHTML = t+t;
-    }
-  }
+  const PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
+  let heroPool = [];
+  let heroIdx = 0;
+  let heroTimer, progressTimer;
+
+  const strip = h => { const d = document.createElement('div'); d.innerHTML = h || ''; return d.textContent.slice(0, 120) + '...'; };
+  const fmtDate = s => new Date(s).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
 
   async function loadRSS(idx) {
     const src = SOURCES[idx];
-    if (idx === 0) { document.getElementById('rss-loading').style.display='block'; document.getElementById('rss-feed').innerHTML=''; document.getElementById('rss-error').style.display='none'; }
+    const feedEl = document.getElementById('rss-feed');
+    const loadingEl = document.getElementById('rss-loading');
+    
+    loadingEl.style.display = 'block';
+    feedEl.innerHTML = '';
+
     try {
-      const r = await fetch(PROXY+encodeURIComponent(src.url)+'&count=10');
-      const d = await r.json();
-      if (idx === 0) document.getElementById('rss-loading').style.display='none';
-      if (d.status==='ok'&&d.items?.length) {
-        if (idx === 0) render(d.items, src);
-        if (idx <= 3) {
-          heroPool.push(...d.items.slice(0,5).map(it => ({...it, _src: src})));
-          if (!heroStarted) { heroStarted = true; heroInit(); }
-          else { heroRefresh(); }
+      const resp = await fetch(PROXY + encodeURIComponent(src.url));
+      const data = await resp.json();
+      loadingEl.style.display = 'none';
+
+      if (data.status === 'ok') {
+        renderFeed(data.items, src);
+        if (idx <= 3) { // Si c'est du FR, on remplit le carousel
+          heroPool = data.items.slice(0, 6).map(item => ({ ...item, _src: src }));
+          initHero();
+          updateTicker(data.items);
         }
-      } else if (idx===0) { document.getElementById('rss-error').style.display='block'; }
-    } catch { if(idx===0){ document.getElementById('rss-loading').style.display='none'; document.getElementById('rss-error').style.display='block'; } }
+      }
+    } catch (e) {
+      loadingEl.style.display = 'none';
+      document.getElementById('rss-error').style.display = 'block';
+    }
   }
 
-  document.querySelectorAll('.src-btn:not(#cat-filters .src-btn)').forEach(b=>b.addEventListener('click',function(){
-    document.querySelectorAll('#source-btns .src-btn').forEach(x=>x.classList.remove('active'));
-    this.classList.add('active'); loadRSS(+this.dataset.src);
-  }));
-
-  /* ══════ NAV ══════ */
-  function showPage(n){
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
-    document.getElementById('page-'+n)?.classList.add('active');
-    document.getElementById('nav-'+n)?.classList.add('active');
-    const t=document.getElementById('tabs-media');
-    if(t) t.style.display=n==='media'?'flex':'none';
-    if(n==='forum'){ loadTopics(); loadForumStats(); }
-  }
-  function toggleCat(id){ const e=document.getElementById(id); e.style.display=e.style.display==='none'?'':'none'; }
-  document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',function(){
-    document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active')); this.classList.add('active');
-  }));
-
-  /* ══════ HERO CAROUSEL ══════ */
-  let heroItems = [];
-  let heroPool  = [];
-  let heroIdx   = 0;
-  let heroTimer = null;
-  let heroProgressTimer = null;
-  let heroStarted = false;
-  const HERO_INTERVAL = 6000;
-
-  function heroRender(idx) {
-    if (!heroItems.length) return;
-    const item = heroItems[idx];
-    const src  = item._src || SOURCES[0];
-    const bg = document.getElementById('hero-bg');
-    bg.style.opacity = 0;
-    setTimeout(() => {
-      bg.style.backgroundImage = `linear-gradient(to bottom,rgba(3,4,11,0.05) 0%,rgba(3,4,11,0.78) 55%,var(--bg) 100%),url('${item._img}')`;
-      bg.style.transition = 'opacity 0.6s ease'; bg.style.opacity = 1;
-    }, 100);
-    document.getElementById('hero-title').textContent = item.title || 'Sans titre';
-    document.getElementById('hero-title').className = 'hero-anim';
-    document.getElementById('hero-desc').textContent = strip(item.description || item.content);
-    document.getElementById('hero-desc').className = 'hero-anim';
-    document.getElementById('hero-tag').textContent = src.tag;
-    document.getElementById('hero-tag').className = `tag ${src.cls}`;
-    document.getElementById('hero-author').textContent = item.author ? `Par ${item.author}` : '';
-    const d = fmtDate(item.pubDate);
-    document.getElementById('hero-date').textContent = d;
-    document.getElementById('hero-dot-sep').style.display = d ? 'inline' : 'none';
-    document.getElementById('hero-link').href = item.link || '#';
-    document.querySelectorAll('.hero-dot').forEach((dot,i) => dot.classList.toggle('active', i===idx));
-    heroStartProgress();
+  function renderFeed(items, src) {
+    const feedEl = document.getElementById('rss-feed');
+    items.forEach(item => {
+      const img = item.thumbnail || 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=200';
+      feedEl.innerHTML += `
+        <a href="${item.link}" target="_blank" class="article-card">
+          <div class="card-thumb" style="background-image:url('${img}')"></div>
+          <div class="card-body">
+            <span class="tag ${src.cls}">${src.name}</span>
+            <h3>${item.title}</h3>
+            <p>${strip(item.description)}</p>
+            <div class="card-footer"><span>${fmtDate(item.pubDate)}</span></div>
+          </div>
+        </a>`;
+    });
   }
 
-  function heroStartProgress() {
-    const bar = document.getElementById('hero-progress-bar');
-    if (!bar) return;
-    bar.style.transition = 'none'; bar.style.width = '0%';
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      bar.style.transition = `width ${HERO_INTERVAL}ms linear`; bar.style.width = '100%';
-    }));
+  function updateTicker(items) {
+    const ticker = document.getElementById('ticker-feed');
+    const news = items.slice(0, 5).map(it => `<span>${it.title}</span><span class="sep">◆</span>`).join('');
+    ticker.innerHTML = news + news;
   }
 
-  function heroStep(dir) {
-    clearInterval(heroTimer);
-    heroIdx = (heroIdx + dir + heroItems.length) % heroItems.length;
-    heroRender(heroIdx); heroAutoPlay();
-  }
-  function heroGoto(i) { clearInterval(heroTimer); heroIdx=i; heroRender(i); heroAutoPlay(); }
-  function heroAutoPlay() {
-    clearInterval(heroTimer);
-    heroTimer = setInterval(() => { heroIdx=(heroIdx+1)%heroItems.length; heroRender(heroIdx); }, HERO_INTERVAL);
-  }
-  function heroInit() { heroRefresh(); }
-  function heroRefresh() {
-    const shuffled = [...heroPool].sort(()=>Math.random()-.5);
-    heroItems = shuffled.slice(0,8);
+  function initHero() {
     heroIdx = 0;
-    heroItems.forEach((item,i) => { item._img = getImg(item,i); });
-    const dotsEl = document.getElementById('hero-dots');
-    dotsEl.innerHTML = heroItems.map((_,i)=>`<button class="hero-dot${i===0?' active':''}" onclick="heroGoto(${i})"></button>`).join('');
-    heroRender(0); clearInterval(heroTimer); heroAutoPlay();
+    renderHero();
+    startHeroTimer();
   }
 
-  /* ══════ INIT ══════ */
-  [0,1,2,3].forEach(i => loadRSS(i));
-  if (db) db.auth.getSession().then(({ data: { session } }) => {
-    currentSession = session;
-    currentUser = session?.user ?? null;
-    renderAuthArea();
+  function renderHero() {
+    if (!heroPool.length) return;
+    const item = heroPool[heroIdx];
+    const bg = item.thumbnail || item.enclosure?.link || 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1260';
+    
+    document.getElementById('hero-bg').style.backgroundImage = `linear-gradient(to bottom,rgba(3,4,11,0.1),rgba(3,4,11,0.85)), url('${bg}')`;
+    document.getElementById('hero-title').textContent = item.title;
+    document.getElementById('hero-desc').textContent = strip(item.description);
+    document.getElementById('hero-tag').textContent = item._src.name;
+    document.getElementById('hero-link').href = item.link;
+    
+    const dots = document.getElementById('hero-dots');
+    dots.innerHTML = heroPool.map((_, i) => `<button class="hero-dot ${i === heroIdx ? 'active' : ''}" onclick="heroGoto(${i})"></button>`).join('');
+    
+    resetProgressBar();
+  }
+
+  function resetProgressBar() {
+    const bar = document.getElementById('hero-progress-bar');
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    setTimeout(() => {
+      bar.style.transition = 'width 6s linear';
+      bar.style.width = '100%';
+    }, 10);
+  }
+
+  function startHeroTimer() {
+    clearInterval(heroTimer);
+    heroTimer = setInterval(() => heroStep(1), 6000);
+  }
+
+  function heroStep(n) {
+    heroIdx = (heroIdx + n + heroPool.length) % heroPool.length;
+    renderHero();
+  }
+
+  function heroGoto(n) {
+    heroIdx = n;
+    renderHero();
+    startHeroTimer();
+  }
+
+  document.querySelectorAll('.src-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.src-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      loadRSS(this.dataset.src);
+    });
   });
+
+  loadRSS(0); // Charge Numerama par défaut
 </script>
 </body>
 </html>
