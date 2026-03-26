@@ -161,7 +161,7 @@
     .divider { margin: 0 1.5rem; }
     #chat-window { width: 300px !important; }
   }
-  /* --- BOUTON MÉDIA CORE-IA --- */
+  /* --- BOUTON MÉDIA CORE-IA (Visible partout) --- */
   .nav-btn-media {
     text-decoration: none;
     padding: 8px 16px;
@@ -176,7 +176,7 @@
     gap: 8px;
     box-shadow: 0 0 15px rgba(59, 91, 255, 0.2);
     transition: all 0.3s ease;
-    margin-left: 1.5rem; /* Espace par rapport aux autres liens */
+    margin-left: auto; /* Pousse le bouton à droite */
   }
 
   .pulse-dot {
@@ -200,9 +200,14 @@
     transform: translateY(-2px);
   }
 
-  /* Cache le bouton sur mobile pour ne pas casser la nav */
+  /* Ajustement spécial pour les petits écrans */
   @media (max-width: 768px) {
-    .nav-btn-media { display: none; }
+    .nav-btn-media {
+      padding: 6px 10px;
+      font-size: 0.65rem;
+      margin-left: 10px;
+    }
+    .nav-links { display: none; } /* On cache les liens texte pour laisser la place au bouton */
   }
 </style>
 </head>
