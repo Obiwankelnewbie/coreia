@@ -31,17 +31,17 @@
   html { scroll-behavior: smooth; }
   body { background: var(--bg); color: var(--text); font-family: var(--mono); font-size: 13px; line-height: 1.65; overflow-x: hidden; }
 
-  /* ── BG EFFECTS ── */
   body::before {
     content: ''; position: fixed; inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
     pointer-events: none; z-index: 9999; opacity: 0.35;
   }
+
   .orb { position: fixed; border-radius: 50%; filter: blur(130px); pointer-events: none; z-index: 0; }
   .orb1 { width: 700px; height: 700px; background: radial-gradient(circle, rgba(59,91,255,0.1) 0%, transparent 70%); top: -250px; left: -250px; }
   .orb2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(124,92,252,0.09) 0%, transparent 70%); bottom: -100px; right: -100px; }
 
-  /* ── TICKER ── */
+  /* TICKER */
   .breaking-bar { background: linear-gradient(90deg, var(--blue), var(--violet)); padding: 7px 0; overflow: hidden; position: relative; z-index: 10; }
   .breaking-bar::before { content: 'LIVE'; position: absolute; left: 0; top: 0; bottom: 0; padding: 0 14px; background: rgba(0,0,0,0.4); display: flex; align-items: center; font-family: var(--mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 3px; color: #fff; z-index: 2; border-right: 1px solid rgba(255,255,255,0.18); }
   .ticker { display: flex; white-space: nowrap; padding-left: 72px; animation: tick 38s linear infinite; }
@@ -49,266 +49,11 @@
   .ticker .sep { color: rgba(255,255,255,0.3) !important; padding-right: 1.5rem !important; }
   @keyframes tick { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 
-  /* ── HEADER ── */
+  /* HEADER */
   header { padding: 1rem 3rem; border-bottom: 1px solid var(--border); background: rgba(3,4,11,0.88); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
-  .logo { font-family: var(--mono); font-size: 0.95rem; font-weight: 700; color: #fff; text-decoration: none; letter-spacing: 4px; }
-  .logo span { color: var(--blue); }
-  .nav-link { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 2px; padding: 6px 14px; border-radius: 5px; text-decoration: none; color: var(--muted); transition: 0.2s; }
+  .logo { font-family: var(--mono); font-size: 0.95rem; font-weight: 700; color: #fff; text-decoration: none; letter-spacing: 4px; display: flex; align-items: center; gap: 10px; }
+  .logo-badge { background: var(--blue); color: #fff; font-family: var(--mono); font-size: 0.48rem; padding: 2px 6px; border-radius: 3px; letter-spacing: 2px; }
+  nav { display: flex; gap: 4px; align-items: center; }
+  .nav-link { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 2px; padding: 6px 14px; border-radius: 5px; text-decoration: none; color: var(--muted); transition: all 0.2s; }
   .nav-link:hover, .nav-link.active { color: #fff; background: var(--blue-dim); }
-  .nav-cta { background: var(--blue); color: #fff; padding: 7px 16px; border-radius: 6px; margin-left: 8px; font-size: 0.6rem; text-decoration: none; }
-
-  /* ── HERO CAROUSEL ── */
-  .hero { grid-column: span 2; position: relative; border-radius: 16px; overflow: hidden; height: 500px; border: 1px solid var(--border); }
-  .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: opacity 0.6s ease, transform 0.7s ease; }
-  .hero:hover .hero-bg { transform: scale(1.02); }
-  .hero-content { position: absolute; bottom: 0; padding: 2.5rem 3rem; max-width: 800px; z-index: 2; }
-  .hero-content h1 { font-family: var(--serif); font-size: 2.8rem; font-weight: 800; line-height: 1.1; margin: 0.8rem 0; }
-  .read-btn { background: var(--blue); color: #fff; padding: 8px 20px; border-radius: 6px; text-decoration: none; display: inline-block; margin-top: 1rem; }
-  
-  .hero-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); border: none; color: white; padding: 15px; cursor: pointer; z-index: 5; border-radius: 50%; margin: 0 10px; }
-  .hero-next { right: 0; }
-  .hero-dots { position: absolute; bottom: 20px; right: 30px; display: flex; gap: 8px; z-index: 5; }
-  .hero-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); border: none; cursor: pointer; }
-  .hero-dot.active { background: var(--cyan); width: 20px; border-radius: 4px; }
-  .hero-progress { position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: rgba(255,255,255,0.1); }
-  .hero-progress-bar { height: 100%; background: var(--cyan); width: 0%; }
-
-  /* ── LAYOUT ── */
-  .media-layout { max-width: 1400px; margin: 0 auto; padding: 2.5rem 3rem; display: grid; grid-template-columns: 1fr 310px; gap: 2.5rem; }
-  main { min-width: 0; }
-  .source-bar { margin: 2rem 0 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-  .src-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--muted); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.55rem; font-family: var(--mono); }
-  .src-btn.active { border-color: var(--blue); color: var(--cyan); background: var(--blue-dim); }
-
-  /* ── CARDS ── */
-  .article-card { display: grid; grid-template-columns: 140px 1fr; gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--border); text-decoration: none; color: inherit; transition: 0.2s; }
-  .article-card:hover { opacity: 0.8; background: rgba(255,255,255,0.02); }
-  .card-thumb { width: 140px; height: 95px; border-radius: 8px; background-size: cover; background-position: center; border: 1px solid var(--border); }
-  .card-body h3 { font-family: var(--serif); font-size: 1.1rem; margin-bottom: 5px; }
-  .card-body p { color: var(--muted); font-size: 0.7rem; }
-
-  /* ── WIDGETS ── */
-  aside { display: flex; flex-direction: column; gap: 1.5rem; }
-  .widget { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.3rem; }
-  .widget-title { font-size: 0.6rem; letter-spacing: 2px; color: var(--cyan); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; }
-  .trend-item { display: block; text-decoration: none; color: inherit; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-  .trend-item h4 { font-family: var(--serif); font-size: 0.9rem; }
-
-  /* ── SKELETON ── */
-  .skeleton-card { height: 100px; background: var(--bg-card); border-radius: 8px; margin-bottom: 1rem; animation: pulse 1.5s infinite; }
-  @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 0.8; } 100% { opacity: 0.5; } }
-
-  .page { display: none; }
-  .page.active { display: block; }
-  
-  @media(max-width: 1024px) {
-    .media-layout { grid-template-columns: 1fr; padding: 1rem; }
-    .hero { height: 400px; }
-    .hero-content h1 { font-size: 1.8rem; }
-  }
-</style>
-</head>
-<body>
-
-<div class="orb orb1"></div>
-<div class="orb orb2"></div>
-
-<div class="breaking-bar">
-  <div class="ticker" id="ticker-feed">
-    <span>Chargement des dernières brèves IA...</span>
-  </div>
-</div>
-
-<header>
-  <a href="#" class="logo" onclick="location.reload()">CORE-IA <span>HUB</span></a>
-  <nav>
-    <a href="#" class="nav-link active">ACTUS</a>
-    <a href="#" class="nav-link">DOSSIERS</a>
-    <a href="#" class="nav-link">FORUM</a>
-    <a href="#" class="nav-cta">S'INSCRIRE</a>
-  </nav>
-</header>
-
-<div class="media-layout">
-  <main>
-    <div class="hero fade-in" id="hero-carousel">
-      <div class="hero-bg" id="hero-bg"></div>
-      <div class="hero-content">
-        <span class="tag tag-green" id="hero-tag">CORE-IA</span>
-        <h1 id="hero-title">Prêt pour la veille stratégique ?</h1>
-        <p id="hero-desc">Sélectionnez une source pour explorer les actualités.</p>
-        <div id="hero-meta">
-          <span id="hero-date"></span>
-          <a href="#" id="hero-link" class="read-btn" target="_blank">LIRE L'ARTICLE</a>
-        </div>
-      </div>
-      <div class="hero-dots" id="hero-dots"></div>
-      <button class="hero-nav hero-prev" onclick="heroStep(-1)">&#8249;</button>
-      <button class="hero-nav hero-next" onclick="heroStep(1)">&#8250;</button>
-      <div class="hero-progress"><div class="hero-progress-bar" id="hero-progress-bar"></div></div>
-    </div>
-
-    <div class="source-bar">
-      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-        <span style="font-size:0.6rem; color:var(--muted);">FR 🇫🇷</span>
-        <button class="src-btn active" data-src="0">Numerama</button>
-        <button class="src-btn" data-src="1">L'Usine Digitale</button>
-        <button class="src-btn" data-src="2">01net</button>
-        <button class="src-btn" data-src="3">JDN</button>
-        <span style="font-size:0.6rem; color:var(--muted); margin-left:10px;">INT 🌍</span>
-        <button class="src-btn" data-src="4">Hugging Face</button>
-        <button class="src-btn" data-src="5">MIT Tech</button>
-        <button class="src-btn" data-src="6">VentureBeat</button>
-        <button class="src-btn" data-src="7">OpenAI</button>
-      </div>
-    </div>
-
-    <div id="rss-loading" style="display:none;"><div class="skeleton-card"></div><div class="skeleton-card"></div></div>
-    <div id="rss-feed"></div>
-    <div id="rss-error" style="display:none; color:var(--red);">⚠️ Erreur de chargement.</div>
-  </main>
-
-  <aside>
-    <div class="widget">
-      <div class="widget-title">SOUVERAINETÉ STATUS</div>
-      <div style="font-size:0.6rem; color:var(--green);"><span class="online-dot"></span> NODE L-3 : ONLINE</div>
-    </div>
-    <div class="widget">
-      <div class="widget-title">TENDANCES</div>
-      <a href="#" class="trend-item"><h4>IA Locale : Le guide Llama 3</h4></a>
-      <a href="#" class="trend-item"><h4>n8n + Santé : Automatisation RGPD</h4></a>
-    </div>
-  </aside>
-</div>
-
-<script>
-  const SOURCES = [
-    { name: 'Numerama', url: 'https://www.numerama.com/tag/intelligence-artificielle/feed/', cls: 'tag-green' },
-    { name: 'Usine Digitale', url: 'https://www.usine-digitale.fr/ia/rss', cls: 'tag-green' },
-    { name: '01net', url: 'https://www.01net.com/actualites/intelligence-artificielle/feed/', cls: 'tag-green' },
-    { name: 'JDN', url: 'https://www.journaldunet.com/solutions/dsi/rss/', cls: 'tag-green' },
-    { name: 'Hugging Face', url: 'https://huggingface.co/blog/feed.xml', cls: 'tag-violet' },
-    { name: 'MIT Tech', url: 'https://www.technologyreview.com/feed/', cls: 'tag-blue' },
-    { name: 'VentureBeat', url: 'https://venturebeat.com/category/ai/feed/', cls: 'tag-cyan' },
-    { name: 'OpenAI', url: 'https://openai.com/news/rss.xml', cls: 'tag-blue' }
-  ];
-
-  const PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
-  let heroPool = [];
-  let heroIdx = 0;
-  let heroTimer, progressTimer;
-
-  const strip = h => { const d = document.createElement('div'); d.innerHTML = h || ''; return d.textContent.slice(0, 120) + '...'; };
-  const fmtDate = s => new Date(s).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
-
-  async function loadRSS(idx) {
-    const src = SOURCES[idx];
-    const feedEl = document.getElementById('rss-feed');
-    const loadingEl = document.getElementById('rss-loading');
-    
-    loadingEl.style.display = 'block';
-    feedEl.innerHTML = '';
-
-    try {
-      const resp = await fetch(PROXY + encodeURIComponent(src.url));
-      const data = await resp.json();
-      loadingEl.style.display = 'none';
-
-      if (data.status === 'ok') {
-        renderFeed(data.items, src);
-        if (idx <= 3) { // Si c'est du FR, on remplit le carousel
-          heroPool = data.items.slice(0, 6).map(item => ({ ...item, _src: src }));
-          initHero();
-          updateTicker(data.items);
-        }
-      }
-    } catch (e) {
-      loadingEl.style.display = 'none';
-      document.getElementById('rss-error').style.display = 'block';
-    }
-  }
-
-  function renderFeed(items, src) {
-    const feedEl = document.getElementById('rss-feed');
-    items.forEach(item => {
-      const img = item.thumbnail || 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=200';
-      feedEl.innerHTML += `
-        <a href="${item.link}" target="_blank" class="article-card">
-          <div class="card-thumb" style="background-image:url('${img}')"></div>
-          <div class="card-body">
-            <span class="tag ${src.cls}">${src.name}</span>
-            <h3>${item.title}</h3>
-            <p>${strip(item.description)}</p>
-            <div class="card-footer"><span>${fmtDate(item.pubDate)}</span></div>
-          </div>
-        </a>`;
-    });
-  }
-
-  function updateTicker(items) {
-    const ticker = document.getElementById('ticker-feed');
-    const news = items.slice(0, 5).map(it => `<span>${it.title}</span><span class="sep">◆</span>`).join('');
-    ticker.innerHTML = news + news;
-  }
-
-  function initHero() {
-    heroIdx = 0;
-    renderHero();
-    startHeroTimer();
-  }
-
-  function renderHero() {
-    if (!heroPool.length) return;
-    const item = heroPool[heroIdx];
-    const bg = item.thumbnail || item.enclosure?.link || 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1260';
-    
-    document.getElementById('hero-bg').style.backgroundImage = `linear-gradient(to bottom,rgba(3,4,11,0.1),rgba(3,4,11,0.85)), url('${bg}')`;
-    document.getElementById('hero-title').textContent = item.title;
-    document.getElementById('hero-desc').textContent = strip(item.description);
-    document.getElementById('hero-tag').textContent = item._src.name;
-    document.getElementById('hero-link').href = item.link;
-    
-    const dots = document.getElementById('hero-dots');
-    dots.innerHTML = heroPool.map((_, i) => `<button class="hero-dot ${i === heroIdx ? 'active' : ''}" onclick="heroGoto(${i})"></button>`).join('');
-    
-    resetProgressBar();
-  }
-
-  function resetProgressBar() {
-    const bar = document.getElementById('hero-progress-bar');
-    bar.style.transition = 'none';
-    bar.style.width = '0%';
-    setTimeout(() => {
-      bar.style.transition = 'width 6s linear';
-      bar.style.width = '100%';
-    }, 10);
-  }
-
-  function startHeroTimer() {
-    clearInterval(heroTimer);
-    heroTimer = setInterval(() => heroStep(1), 6000);
-  }
-
-  function heroStep(n) {
-    heroIdx = (heroIdx + n + heroPool.length) % heroPool.length;
-    renderHero();
-  }
-
-  function heroGoto(n) {
-    heroIdx = n;
-    renderHero();
-    startHeroTimer();
-  }
-
-  document.querySelectorAll('.src-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.src-btn').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      loadRSS(this.dataset.src);
-    });
-  });
-
-  loadRSS(0); // Charge Numerama par défaut
-</script>
-</body>
-</html>
+  .nav-cta { background: var(--blue); color: #fff !important; padding: 7px 16px; border-radius: 6px; margin
