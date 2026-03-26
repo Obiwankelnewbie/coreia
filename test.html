@@ -481,7 +481,7 @@
 
 <script>
   /* ── SCRIPT SANS SUPABASE ET AVEC IMAGES CAROUSEL CORRIGÉES ── */
-<script>
+
   const SOURCES = [
     { url:'https://www.numerama.com/tag/intelligence-artificielle/feed/',                 tag:'NUMERAMA',      cls:'tag-green' },
     { url:'https://www.lemondeinformatique.fr/flux-rss/intelligence-artificielle/rss.xml', tag:'LE MONDE INFO', cls:'tag-green' },
@@ -492,6 +492,7 @@
     { url:'https://venturebeat.com/category/ai/feed/',                                     tag:'VENTUREBEAT',   cls:'tag-cyan' },
     { url:'https://openai.com/news/rss.xml',                                               tag:'OPENAI',        cls:'tag-blue' },
   ];
+  
   const PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
   const IMGS = [
     'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=400',
@@ -500,13 +501,16 @@
     'https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=400',
     'https://images.pexels.com/photos/7567444/pexels-photo-7567444.jpeg?auto=compress&cs=tinysrgb&w=400',
   ];
+  
   const fmtDate = s => { const d=new Date(s); return isNaN(d)?'':d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}); };
+  
   const getImg  = (item,i) => {
-    if (item.thumbnail?.startsWith('http')) return item.thumbnail;
-    if (item.enclosure?.link) return item.enclosure.link;
+    if (item.thumbnail && item.thumbnail.includes('http')) return item.thumbnail;
+    if (item.enclosure && item.enclosure.link) return item.enclosure.link;
     const m = (item.content||item.description||'').match(/<img[^>]+src=["']([^"']+)["']/i);
     return m ? m[1] : IMGS[i % IMGS.length];
   };
+  
   const strip = h => { const d=document.createElement('div'); d.innerHTML=h||''; return (d.textContent||'').trim().slice(0,108)+'…'; };
 
   function render(items, src) {
@@ -525,6 +529,7 @@
         </div>`;
       feed.appendChild(a);
     });
+    
     const ticker = document.querySelector('.ticker');
     if (ticker && items.length) {
       const t = items.slice(0,6).map(x=>`<span>${x.title}</span><span class="sep">◆</span>`).join('');
@@ -532,51 +537,41 @@
     }
   }
 
-  let currentActiveIdx = 0;
-
-  async function loadRSS(idx, isBackground = false) {
+  async function loadRSS(idx) {
     const src = SOURCES[idx];
-    
-    // Si c'est un clic utilisateur (pas en background), on affiche le chargement
-    if (!isBackground) {
-      document.getElementById('rss-loading').style.display='block'; 
-      document.getElementById('rss-feed').innerHTML=''; 
-      document.getElementById('rss-error').style.display='none';
-      currentActiveIdx = idx;
+    if (idx === 0) { 
+        document.getElementById('rss-loading').style.display='block'; 
+        document.getElementById('rss-feed').innerHTML=''; 
+        document.getElementById('rss-error').style.display='none'; 
     }
     
     try {
       const r = await fetch(PROXY+encodeURIComponent(src.url)+'&count=10');
       const d = await r.json();
       
-      if (!isBackground) document.getElementById('rss-loading').style.display='none';
+      if (idx === 0) document.getElementById('rss-loading').style.display='none';
       
       if (d.status==='ok'&&d.items?.length) {
-        // On affiche les articles UNIQUEMENT si ça correspond au bouton cliqué
-        if (!isBackground && currentActiveIdx === idx) {
-          render(d.items, src);
-        }
-        // On remplit le Hero de manière invisible
+        if (idx === 0) render(d.items, src);
         if (idx <= 3) {
           heroPool.push(...d.items.slice(0,5).map(it => ({...it, _src: src})));
           if (!heroStarted) { heroStarted = true; heroInit(); }
-          else if (isBackground) { heroRefresh(); }
+          else { heroRefresh(); }
         }
-      } else if (!isBackground) { 
-        document.getElementById('rss-error').style.display='block'; 
+      } else if (idx===0) { 
+          document.getElementById('rss-error').style.display='block'; 
       }
     } catch { 
-      if(!isBackground){ 
-        document.getElementById('rss-loading').style.display='none'; 
-        document.getElementById('rss-error').style.display='block'; 
-      } 
+        if(idx===0){ 
+            document.getElementById('rss-loading').style.display='none'; 
+            document.getElementById('rss-error').style.display='block'; 
+        } 
     }
   }
 
   document.querySelectorAll('.src-btn:not(#cat-filters .src-btn)').forEach(b=>b.addEventListener('click',function(){
     document.querySelectorAll('#source-btns .src-btn').forEach(x=>x.classList.remove('active'));
-    this.classList.add('active'); 
-    loadRSS(+this.dataset.src, false); // false = clic manuel
+    this.classList.add('active'); loadRSS(+this.dataset.src);
   }));
 
   /* ══════ NAV ══════ */
@@ -588,12 +583,14 @@
     const t=document.getElementById('tabs-media');
     if(t) t.style.display=n==='media'?'flex':'none';
   }
+  
   function toggleCat(id){ const e=document.getElementById(id); e.style.display=e.style.display==='none'?'':'none'; }
+  
   document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',function(){
     document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active')); this.classList.add('active');
   }));
 
-  /* ══════ HERO CAROUSEL ══════ */
+  /* ══════ HERO CAROUSEL FIXÉ ══════ */
   let heroItems = [];
   let heroPool  = [];
   let heroIdx   = 0;
@@ -606,22 +603,25 @@
     const item = heroItems[idx];
     const src  = item._src || SOURCES[0];
     const bg = document.getElementById('hero-bg');
+    
     bg.style.opacity = 0;
     setTimeout(() => {
       bg.style.backgroundImage = `linear-gradient(to bottom,rgba(3,4,11,0.05) 0%,rgba(3,4,11,0.78) 55%,var(--bg) 100%),url('${item._img}')`;
-      bg.style.transition = 'opacity 0.6s ease'; bg.style.opacity = 1;
+      bg.style.transition = 'opacity 0.6s ease'; 
+      bg.style.opacity = 1;
     }, 100);
+    
     document.getElementById('hero-title').textContent = item.title || 'Sans titre';
-    document.getElementById('hero-title').className = 'hero-anim';
     document.getElementById('hero-desc').textContent = strip(item.description || item.content);
-    document.getElementById('hero-desc').className = 'hero-anim';
     document.getElementById('hero-tag').textContent = src.tag;
     document.getElementById('hero-tag').className = `tag ${src.cls}`;
     document.getElementById('hero-author').textContent = item.author ? `Par ${item.author}` : '';
+    
     const d = fmtDate(item.pubDate);
     document.getElementById('hero-date').textContent = d;
     document.getElementById('hero-dot-sep').style.display = d ? 'inline' : 'none';
     document.getElementById('hero-link').href = item.link || '#';
+    
     document.querySelectorAll('.hero-dot').forEach((dot,i) => dot.classList.toggle('active', i===idx));
     heroStartProgress();
   }
@@ -638,22 +638,41 @@
   function heroStep(dir) {
     clearInterval(heroTimer);
     heroIdx = (heroIdx + dir + heroItems.length) % heroItems.length;
-    heroRender(heroIdx); heroAutoPlay();
+    heroRender(heroIdx); 
+    heroAutoPlay();
   }
-  function heroGoto(i) { clearInterval(heroTimer); heroIdx=i; heroRender(i); heroAutoPlay(); }
+  
+  function heroGoto(i) { 
+      clearInterval(heroTimer); 
+      heroIdx=i; 
+      heroRender(i); 
+      heroAutoPlay(); 
+  }
+  
   function heroAutoPlay() {
     clearInterval(heroTimer);
-    heroTimer = setInterval(() => { heroIdx=(heroIdx+1)%heroItems.length; heroRender(heroIdx); }, HERO_INTERVAL);
+    heroTimer = setInterval(() => { 
+        heroIdx=(heroIdx+1)%heroItems.length; 
+        heroRender(heroIdx); 
+    }, HERO_INTERVAL);
   }
+  
   function heroInit() { heroRefresh(); }
+  
   function heroRefresh() {
     const shuffled = [...heroPool].sort(()=>Math.random()-.5);
     heroItems = shuffled.slice(0,8);
     heroIdx = 0;
     heroItems.forEach((item,i) => { item._img = getImg(item,i); });
+    
     const dotsEl = document.getElementById('hero-dots');
-    dotsEl.innerHTML = heroItems.map((_,i)=>`<button class="hero-dot${i===0?' active':''}" onclick="heroGoto(${i})"></button>`).join('');
-    heroRender(0); clearInterval(heroTimer); heroAutoPlay();
+    if(dotsEl) {
+        dotsEl.innerHTML = heroItems.map((_,i)=>`<button class="hero-dot${i===0?' active':''}" onclick="heroGoto(${i})"></button>`).join('');
+    }
+    
+    heroRender(0); 
+    clearInterval(heroTimer); 
+    heroAutoPlay();
   }
 
   /* ══════ MODAL FORUM DUMMY ══════ */
@@ -664,11 +683,7 @@
   function openAuth(){ alert("L'authentification a été désactivée dans cette version."); }
 
   /* ══════ INIT ══════ */
-  loadRSS(0, false); // Affiche Numerama de suite
-  [1,2,3].forEach(i => loadRSS(i, true)); // Les autres sources tournent en cache pour remplir le Hero
-</script>
-
- 
+  [0,1,2,3].forEach(i => loadRSS(i));
 </script>
 </body>
 </html>
