@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Core-IA Hub · Le Média de l'IA Souveraine</title>
-<!-- ⚙️ SUPABASE SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
@@ -242,7 +240,6 @@
 <div class="orb orb1"></div>
 <div class="orb orb2"></div>
 
-<!-- TICKER -->
 <div class="breaking-bar">
   <div class="ticker">
     <span>L'IA Act officiellement adopté par l'UE</span><span class="sep">◆</span>
@@ -260,7 +257,6 @@
   </div>
 </div>
 
-<!-- HEADER -->
 <header>
   <a href="#" class="logo" onclick="showPage('media');return false;">
     CORE-IA HUB <span class="logo-badge">BETA</span>
@@ -269,7 +265,6 @@
     <a href="#" class="nav-link active" id="nav-media"    onclick="showPage('media'); return false;">ACTUS</a>
     <a href="#" class="nav-link"        id="nav-dossiers" onclick="showPage('media'); return false;">DOSSIERS</a>
     <a href="#" class="nav-link"        id="nav-forum"    onclick="showPage('forum'); return false;">FORUM</a>
-    <!-- Auth button — swaps based on session -->
     <div class="user-menu" id="auth-area">
       <a href="#" class="nav-cta" id="btn-login" onclick="openAuth('login');return false;">CONNEXION</a>
     </div>
@@ -285,11 +280,9 @@
   <button class="tab-btn">Tutoriels</button>
 </div>
 
-<!-- ═══════ PAGE MÉDIA ═══════ -->
 <div class="page active" id="page-media">
   <div class="media-layout">
 
-    <!-- HERO CAROUSEL -->
     <div class="hero fade-in" id="hero-carousel">
       <div class="hero-bg" id="hero-bg" style="background-image:linear-gradient(to bottom,rgba(3,4,11,0.1),rgba(3,4,11,0.85)),url('https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1260')"></div>
       <div class="hero-content" id="hero-content">
@@ -304,9 +297,9 @@
         </div>
       </div>
       <div class="hero-dots" id="hero-dots"></div>
-      <button class="hero-nav hero-prev" onclick="heroStep(-1)">&#8249;</button>
-      <button class="hero-nav hero-next" onclick="heroStep(1)">&#8250;</button>
-      <div class="hero-progress"><div class="hero-progress-bar" id="hero-progress-bar"></div></div>
+      <button class="hero-nav hero-prev" style="position: absolute; top: 50%; left: 20px; transform: translateY(-50%); background: rgba(0,0,0,0.4); border: none; color: white; padding: 12px; cursor: pointer; z-index: 10; border-radius: 50%;" onclick="heroStep(-1)">&#8249;</button>
+      <button class="hero-nav hero-next" style="position: absolute; top: 50%; right: 20px; transform: translateY(-50%); background: rgba(0,0,0,0.4); border: none; color: white; padding: 12px; cursor: pointer; z-index: 10; border-radius: 50%;" onclick="heroStep(1)">&#8250;</button>
+      <div class="hero-progress" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: rgba(255,255,255,0.1);"><div class="hero-progress-bar" id="hero-progress-bar" style="height: 100%; background: var(--cyan); width: 0%;"></div></div>
     </div>
 
     <main>
@@ -359,7 +352,6 @@
   </div>
 </div>
 
-<!-- ═══════ PAGE FORUM ═══════ -->
 <div class="page" id="page-forum">
   <div class="forum-layout">
     <nav class="forum-nav">
@@ -378,7 +370,6 @@
 
     <div class="forum-main" id="forum-main">
 
-      <!-- LISTE DES TOPICS -->
       <div id="forum-list-view">
         <div class="forum-header">
           <div>
@@ -388,15 +379,13 @@
           <button class="new-topic-btn" id="btn-new-topic" onclick="openNewTopic()">✏️ &nbsp;NOUVEAU SUJET</button>
         </div>
 
-        <!-- Stats dynamiques -->
         <div class="forum-stats">
-          <div class="stat-card"><div class="stat-num" id="stat-members">—</div><div class="stat-lbl">Membres</div></div>
-          <div class="stat-card"><div class="stat-num" id="stat-topics">—</div><div class="stat-lbl">Sujets</div></div>
-          <div class="stat-card"><div class="stat-num" id="stat-replies">—</div><div class="stat-lbl">Réponses</div></div>
-          <div class="stat-card"><div class="stat-num" style="color:var(--green)"><span class="online-dot"></span> <span id="stat-online">—</span></div><div class="stat-lbl">En ligne</div></div>
+          <div class="stat-card"><div class="stat-num" id="stat-members">1 247</div><div class="stat-lbl">Membres</div></div>
+          <div class="stat-card"><div class="stat-num" id="stat-topics">348</div><div class="stat-lbl">Sujets</div></div>
+          <div class="stat-card"><div class="stat-num" id="stat-replies">2 891</div><div class="stat-lbl">Réponses</div></div>
+          <div class="stat-card"><div class="stat-num" style="color:var(--green)"><span class="online-dot"></span> <span id="stat-online">23</span></div><div class="stat-lbl">En ligne</div></div>
         </div>
 
-        <!-- Filtre catégorie -->
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.2rem;" id="cat-filters">
           <button class="src-btn active" data-cat="all">Tout</button>
           <button class="src-btn" data-cat="ia-locale">🤖 IA Locale</button>
@@ -406,32 +395,53 @@
           <button class="src-btn" data-cat="souverainete">🔐 Souveraineté</button>
         </div>
 
-        <!-- Liste topics -->
         <div class="category-card">
           <div id="forum-topics-list">
-            <div class="forum-empty pulse"><span>⏳</span>Chargement des sujets…</div>
-          </div>
-        </div>
-      </div>
+             <div class="topic-row" onclick="alert('Connexion base de données requise pour voir le sujet en détail.')">
+              <div class="topic-left">
+                <div class="topic-avatar" style="background:linear-gradient(135deg,#3b5bff,#7c5cfc)">AL</div>
+                <div class="topic-body">
+                  <h4>Mistral 7B vs Phi-3 Mini pour du RAG médical — comparatif</h4>
+                  <div class="topic-meta">
+                    <span class="tag tag-violet" style="font-size:.5rem">🤖 IA Locale</span>
+                    <span>alexandre_n</span><span>·</span><span>il y a 1h</span>
+                  </div>
+                </div>
+              </div>
+              <div class="topic-right"><div class="topic-replies"><strong>24</strong> rép.</div></div>
+            </div>
+            
+            <div class="topic-row" onclick="alert('Connexion base de données requise pour voir le sujet en détail.')">
+              <div class="topic-left">
+                <div class="topic-avatar" style="background:linear-gradient(135deg,#f093fb,#f5576c)">MK</div>
+                <div class="topic-body">
+                  <h4>Comment connecter n8n à mon CRM local sans cloud ?</h4>
+                  <div class="topic-meta">
+                    <span class="tag tag-green" style="font-size:.5rem">NOUVEAU</span>
+                    <span class="tag tag-blue" style="font-size:.5rem">⚙️ Automation</span>
+                    <span>m_kaddour</span><span>·</span><span>il y a 2h</span>
+                  </div>
+                </div>
+              </div>
+              <div class="topic-right"><div class="topic-replies"><strong>12</strong> rép.</div></div>
+            </div>
+            
+            <div class="topic-row" onclick="alert('Connexion base de données requise pour voir le sujet en détail.')">
+              <div class="topic-left">
+                <div class="topic-avatar" style="background:linear-gradient(135deg,#00c6ff,#0072ff)">AL</div>
+                <div class="topic-body">
+                  <h4>Modèle prédictif VNI — partage de code Python + dataset</h4>
+                  <div class="topic-meta">
+                    <span class="tag tag-green" style="font-size:.5rem">NOUVEAU</span>
+                    <span class="tag tag-green" style="font-size:.5rem">💊 Santé</span>
+                    <span>alexandre_n</span><span>·</span><span>il y a 5h</span>
+                  </div>
+                </div>
+              </div>
+              <div class="topic-right"><div class="topic-replies"><strong>5</strong> rép.</div></div>
+            </div>
 
-      <!-- VUE DÉTAIL TOPIC -->
-      <div class="topic-detail" id="forum-detail-view">
-        <div class="topic-detail-header">
-          <button class="back-btn" onclick="backToList()">← RETOUR</button>
-          <div>
-            <h2 id="detail-title" style="font-family:var(--serif);font-size:1.3rem;font-weight:800;line-height:1.2"></h2>
-            <span id="detail-tag" class="tag tag-blue" style="margin-top:6px;display:inline-block"></span>
           </div>
-        </div>
-        <div id="detail-posts"></div>
-        <div class="reply-box" id="reply-box">
-          <div class="form-label" style="margin-bottom:6px">VOTRE RÉPONSE</div>
-          <textarea class="reply-textarea" id="reply-input" placeholder="Partagez votre expertise…"></textarea>
-          <button class="reply-submit" onclick="submitReply()">ENVOYER →</button>
-          <div style="clear:both"></div>
-        </div>
-        <div id="reply-login-prompt" style="display:none;text-align:center;padding:1rem;font-family:var(--mono);font-size:.65rem;color:var(--muted)">
-          <a href="#" onclick="openAuth('login');return false;" style="color:var(--cyan)">Connectez-vous</a> pour répondre.
         </div>
       </div>
 
@@ -439,38 +449,15 @@
   </div>
 </div>
 
-<!-- ═══════ AUTH OVERLAY ═══════ -->
-<div class="auth-overlay" id="auth-overlay" onclick="closeAuthOutside(event)">
+<div class="auth-overlay" id="auth-overlay" onclick="closeAuthOutside(event)" style="display: none;">
   <div class="auth-box">
     <button class="auth-close modal-close" onclick="closeAuth()">✕</button>
     <span class="auth-logo">CORE-IA HUB</span>
-    <h2 class="auth-title" id="auth-title">Bon retour !</h2>
-    <p class="auth-sub" id="auth-sub">Connectez-vous pour accéder au forum.</p>
-    <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchAuth('login')">CONNEXION</button>
-      <button class="auth-tab" onclick="switchAuth('register')">INSCRIPTION</button>
-    </div>
-    <div class="auth-err" id="auth-err"></div>
-    <div class="auth-ok"  id="auth-ok"></div>
-    <div class="form-group" id="auth-name-group" style="display:none">
-      <label class="form-label">PSEUDO</label>
-      <input class="form-input" id="auth-username" type="text" placeholder="votre_pseudo" autocomplete="username">
-    </div>
-    <div class="form-group">
-      <label class="form-label">EMAIL</label>
-      <input class="form-input" id="auth-email" type="email" placeholder="votre@email.com" autocomplete="email">
-    </div>
-    <div class="form-group">
-      <label class="form-label">MOT DE PASSE</label>
-      <input class="form-input" id="auth-password" type="password" placeholder="••••••••" autocomplete="current-password">
-    </div>
-    <div class="form-actions" style="margin-top:1rem">
-      <button class="btn-submit" style="width:100%;padding:11px" onclick="submitAuth()">CONTINUER →</button>
-    </div>
+    <h2 class="auth-title" id="auth-title">Authentification</h2>
+    <p class="auth-sub" id="auth-sub">Le système de compte est actuellement en mode lecture seule.</p>
   </div>
 </div>
 
-<!-- ═══════ NEW TOPIC MODAL ═══════ -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -488,393 +475,24 @@
       </select>
     </div>
     <div class="form-group"><label class="form-label">VOTRE MESSAGE</label><textarea class="form-textarea" id="topic-body-input" placeholder="Décrivez votre question ou partage en détail…"></textarea></div>
-    <div class="form-actions"><button class="btn-cancel" onclick="closeModal()">Annuler</button><button class="btn-submit" onclick="submitTopic()">PUBLIER →</button></div>
+    <div class="form-actions"><button class="btn-cancel" onclick="closeModal()">Annuler</button><button class="btn-submit" onclick="alert('Le mode publication nécessite une base de données active.'); closeModal();">PUBLIER →</button></div>
   </div>
 </div>
 
 <script>
-  /* ══════════════════════════════════════════
-     ⚙️  CONFIG SUPABASE — remplace ces 2 lignes
-     ══════════════════════════════════════════ */
-  const SUPA_URL = 'https://VOTRE_PROJECT_ID.supabase.co';
-  const SUPA_KEY = 'VOTRE_ANON_PUBLIC_KEY';
-  /* ══════════════════════════════════════════ */
+  /* ── SCRIPT SANS SUPABASE ET AVEC IMAGES CAROUSEL CORRIGÉES ── */
 
-  /* ── Supabase init sécurisé ── */
-  const SUPA_READY = SUPA_URL !== 'https://VOTRE_PROJECT_ID.supabase.co' && SUPA_KEY !== 'VOTRE_ANON_PUBLIC_KEY';
-  let db = null;
-  if (SUPA_READY) {
-    try { const { createClient } = supabase; db = createClient(SUPA_URL, SUPA_KEY); }
-    catch(e) { console.warn('Supabase init error:', e); }
-  } else {
-    console.info('ℹ️ Supabase non configuré — forum en mode démo');
-  }
-
-  /* ── Session courante ── */
-  let currentUser = null;
-  let currentSession = null;
-  let currentTopicId = null;
-  let activeCatFilter = 'all';
-
-  /* ── Init auth listener ── */
-  if (db) db.auth.onAuthStateChange((_event, session) => {
-    currentSession = session;
-    currentUser = session?.user ?? null;
-    renderAuthArea();
-    if (currentUser) { closeAuth(); loadForumStats(); }
-  });
-
-  /* ══════ AUTH ══════ */
-  let authMode = 'login';
-
-  function openAuth(mode = 'login') {
-    authMode = mode;
-    switchAuth(mode);
-    document.getElementById('auth-overlay').classList.add('open');
-  }
-  function closeAuth() { document.getElementById('auth-overlay').classList.remove('open'); }
-  function closeAuthOutside(e) { if (e.target.id === 'auth-overlay') closeAuth(); }
-
-  function switchAuth(mode) {
-    authMode = mode;
-    const isReg = mode === 'register';
-    document.getElementById('auth-title').textContent = isReg ? 'Créer un compte' : 'Bon retour !';
-    document.getElementById('auth-sub').textContent = isReg ? 'Rejoignez la communauté Core-IA.' : 'Connectez-vous pour accéder au forum.';
-    document.getElementById('auth-name-group').style.display = isReg ? 'block' : 'none';
-    document.querySelectorAll('.auth-tab').forEach((t,i)=> t.classList.toggle('active', (isReg && i===1)||(!isReg && i===0)));
-    document.getElementById('auth-err').style.display = 'none';
-    document.getElementById('auth-ok').style.display = 'none';
-  }
-
-  async function submitAuth() {
-    const email = document.getElementById('auth-email').value.trim();
-    const pass  = document.getElementById('auth-password').value;
-    const uname = document.getElementById('auth-username')?.value.trim();
-    const errEl = document.getElementById('auth-err');
-    const okEl  = document.getElementById('auth-ok');
-    errEl.style.display = 'none';
-    okEl.style.display  = 'none';
-
-    if (!email || !pass) { errEl.textContent = 'Email et mot de passe requis.'; errEl.style.display='block'; return; }
-
-    if (authMode === 'register') {
-      if (!db) { errEl.textContent = 'Supabase non configuré. Ajoutez vos clés.'; errEl.style.display='block'; return; }
-    const { error } = await db.auth.signUp({
-        email, password: pass,
-        options: { data: { username: uname || email.split('@')[0] } }
-      });
-      if (error) { errEl.textContent = error.message; errEl.style.display='block'; }
-      else { okEl.textContent = '✓ Vérifiez votre email pour confirmer votre compte !'; okEl.style.display='block'; }
-    } else {
-      const { error } = await db.auth.signInWithPassword({ email, password: pass });
-      if (error) { errEl.textContent = 'Email ou mot de passe incorrect.'; errEl.style.display='block'; }
-    }
-  }
-
-  async function logout() {
-    if (db) await db.auth.signOut();
-    currentUser = null;
-    renderAuthArea();
-    closeUserDropdown();
-  }
-
-  function renderAuthArea() {
-    const area = document.getElementById('auth-area');
-    if (currentUser) {
-      const uname = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
-      const initials = uname.slice(0,2).toUpperCase();
-      area.innerHTML = `
-        <div class="user-menu">
-          <button class="user-btn" onclick="toggleUserDropdown()">
-            <div class="user-avatar-sm">${initials}</div>
-            ${uname}  ▾
-          </button>
-          <div class="user-dropdown" id="user-dd">
-            <div style="padding:8px 12px;font-family:var(--mono);font-size:.58rem;color:var(--muted);border-bottom:1px solid var(--border);margin-bottom:4px">${currentUser.email}</div>
-            <button class="user-dd-item" onclick="showPage('forum')">💬 Mon forum</button>
-            <div class="user-dd-sep"></div>
-            <button class="user-dd-item danger" onclick="logout()">Déconnexion</button>
-          </div>
-        </div>`;
-    } else {
-      area.innerHTML = `<a href="#" class="nav-cta" id="btn-login" onclick="openAuth('login');return false;">CONNEXION</a>`;
-    }
-  }
-
-  function toggleUserDropdown() {
-    document.getElementById('user-dd')?.classList.toggle('open');
-  }
-  function closeUserDropdown() {
-    document.getElementById('user-dd')?.classList.remove('open');
-  }
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.user-menu')) closeUserDropdown();
-  });
-
-  /* ══════ FORUM — STATS ══════ */
-  async function loadForumStats() {
-    if (!db) {
-      document.getElementById('stat-topics').textContent  = '—';
-      document.getElementById('stat-replies').textContent = '—';
-      document.getElementById('stat-members').textContent = '—';
-      document.getElementById('stat-online').textContent  = '—';
-      return;
-    }
-    const [{ count: topics }, { count: replies }, { count: members }] = await Promise.all([
-      db.from('topics').select('*', { count:'exact', head:true }),
-      db.from('replies').select('*', { count:'exact', head:true }),
-      db.from('profiles').select('*', { count:'exact', head:true }),
-    ]);
-    document.getElementById('stat-topics').textContent  = topics  ?? '—';
-    document.getElementById('stat-replies').textContent = replies ?? '—';
-    document.getElementById('stat-members').textContent = members ?? '—';
-    document.getElementById('stat-online').textContent  = Math.floor(Math.random()*18)+4;
-  }
-
-  /* ══════ FORUM — TOPICS LIST ══════ */
-  const CAT_LABELS = {
-    'ia-locale': '🤖 IA Locale', 'automation': '⚙️ Automation',
-    'sante': '💊 Santé', 'bi-data': '📊 BI & Data', 'souverainete': '🔐 Souveraineté'
-  };
-  const CAT_CLASSES = {
-    'ia-locale':'tag-violet','automation':'tag-blue','sante':'tag-green','bi-data':'tag-cyan','souverainete':'tag-red'
-  };
-
-  function timeAgo(dateStr) {
-    const diff = (Date.now() - new Date(dateStr)) / 1000;
-    if (diff < 60) return 'à l'instant';
-    if (diff < 3600) return `il y a ${Math.floor(diff/60)}min`;
-    if (diff < 86400) return `il y a ${Math.floor(diff/3600)}h`;
-    return `il y a ${Math.floor(diff/86400)}j`;
-  }
-
-  function avatarColor(str) {
-    const colors = [
-      'linear-gradient(135deg,#3b5bff,#7c5cfc)',
-      'linear-gradient(135deg,#00c6ff,#0072ff)',
-      'linear-gradient(135deg,#43e97b,#38f9d7)',
-      'linear-gradient(135deg,#f093fb,#f5576c)',
-      'linear-gradient(135deg,#f7971e,#ffd200)',
-    ];
-    let h = 0; for (const c of str) h = (h*31 + c.charCodeAt(0)) % colors.length;
-    return colors[h];
-  }
-
-
-  /* ── DEMO topics (Supabase non configuré) ── */
-  function demoTopicsHTML() {
-    const demo = [
-      { id:'d1', title:'Mistral 7B vs Phi-3 Mini pour du RAG médical — comparatif', category:'ia-locale', uname:'alexandre_n', replies:24, ago:'il y a 1h', isNew:false },
-      { id:'d2', title:'Comment connecter n8n à mon CRM local sans cloud ?',         category:'automation', uname:'m_kaddour',   replies:12, ago:'il y a 2h', isNew:true  },
-      { id:'d3', title:'Modèle prédictif VNI — partage de code Python + dataset',   category:'sante',      uname:'alexandre_n', replies:5,  ago:'il y a 5h', isNew:true  },
-      { id:'d4', title:'Comment quantifier un modèle en GGUF sans perte de qualité ?', category:'ia-locale', uname:'r_leconte', replies:7,  ago:'il y a 3h', isNew:true  },
-      { id:'d5', title:'RAG on-premise avec LangChain et PGVector — retour terrain', category:'bi-data',    uname:'t_dupuis',   replies:9,  ago:'hier',       isNew:false },
-      { id:'d6', title:'Agent IA pour triage email RH avec Mistral — mon retour',   category:'automation', uname:'sarah_bwi',  replies:6,  ago:'hier',       isNew:false },
-    ];
-    return demo.map(t => {
-      const initials = t.uname.slice(0,2).toUpperCase();
-      const catCls   = CAT_CLASSES[t.category] || 'tag-blue';
-      const catLabel = CAT_LABELS[t.category]  || t.category;
-      return `
-        <div class="topic-row" onclick="openTopic('${t.id}','${t.title}','${t.category}')">
-          <div class="topic-left">
-            <div class="topic-avatar" style="background:${avatarColor(t.uname)}">${initials}</div>
-            <div class="topic-body">
-              <h4>${t.title}</h4>
-              <div class="topic-meta">
-                ${t.isNew ? '<span class="tag tag-green" style="font-size:.5rem">NOUVEAU</span>' : ''}
-                <span class="tag ${catCls}" style="font-size:.5rem">${catLabel}</span>
-                <span>${t.uname}</span><span>·</span><span>${t.ago}</span>
-              </div>
-            </div>
-          </div>
-          <div class="topic-right"><div class="topic-replies"><strong>${t.replies}</strong> rép.</div></div>
-        </div>`;
-    }).join('');
-  }
-
-  async function loadTopics() {
-    const list = document.getElementById('forum-topics-list');
-    if (!db) {
-      list.innerHTML = demoTopicsHTML();
-      return;
-    }
-    list.innerHTML = '<div class="forum-empty pulse"><span>⏳</span>Chargement…</div>';
-
-    let query = db.from('topics')
-      .select('*, profiles(username), reply_count:replies(count)')
-      .order('created_at', { ascending: false })
-      .limit(30);
-
-    if (activeCatFilter !== 'all') query = query.eq('category', activeCatFilter);
-
-    const { data, error } = await query;
-
-    if (error || !data?.length) {
-      list.innerHTML = '<div class="forum-empty"><span>💬</span>Aucun sujet pour l\'instant.<br>Soyez le premier à poster !</div>';
-      return;
-    }
-
-    list.innerHTML = data.map(t => {
-      const uname = t.profiles?.username || 'anonyme';
-      const initials = uname.slice(0,2).toUpperCase();
-      const replyCount = t.reply_count?.[0]?.count ?? 0;
-      const catCls = CAT_CLASSES[t.category] || 'tag-blue';
-      const catLabel = CAT_LABELS[t.category] || t.category;
-      const isNew = (Date.now() - new Date(t.created_at)) < 86400000;
-      return `
-        <div class="topic-row" onclick="openTopic('${t.id}','${t.title.replace(/'/g,"\'")}','${t.category}')">
-          <div class="topic-left">
-            <div class="topic-avatar" style="background:${avatarColor(uname)}">${initials}</div>
-            <div class="topic-body">
-              <h4>${t.title}</h4>
-              <div class="topic-meta">
-                ${isNew ? '<span class="tag tag-green" style="font-size:.5rem">NOUVEAU</span>' : ''}
-                <span class="tag ${catCls}" style="font-size:.5rem">${catLabel}</span>
-                <span>${uname}</span><span>·</span><span>${timeAgo(t.created_at)}</span>
-              </div>
-            </div>
-          </div>
-          <div class="topic-right">
-            <div class="topic-replies"><strong>${replyCount}</strong> rép.</div>
-          </div>
-        </div>`;
-    }).join('');
-  }
-
-  /* ══════ FORUM — TOPIC DETAIL ══════ */
-  async function openTopic(id, title, category) {
-    currentTopicId = id;
-    document.getElementById('forum-list-view').style.display  = 'none';
-    document.getElementById('forum-detail-view').classList.add('open');
-    document.getElementById('detail-title').textContent = title;
-    const catEl = document.getElementById('detail-tag');
-    catEl.textContent = CAT_LABELS[category] || category;
-    catEl.className = `tag ${CAT_CLASSES[category]||'tag-blue'}`;
-
-    const posts = document.getElementById('detail-posts');
-    posts.innerHTML = '<div class="forum-empty pulse"><span>⏳</span>Chargement…</div>';
-
-    // Load OP + replies
-    if (!db) { posts.innerHTML = '<div class="forum-empty"><span>💬</span>Connectez Supabase pour voir les messages.</div>'; return; }
-    const [{ data: topic }, { data: replies }] = await Promise.all([
-      db.from('topics').select('*, profiles(username)').eq('id', id).single(),
-      db.from('replies').select('*, profiles(username)').eq('topic_id', id).order('created_at')
-    ]);
-
-    const all = [];
-    if (topic) all.push({ ...topic, is_op: true });
-    if (replies) all.push(...replies);
-
-    posts.innerHTML = all.map(p => {
-      const uname = p.profiles?.username || 'anonyme';
-      const initials = uname.slice(0,2).toUpperCase();
-      return `
-        <div class="post-card ${p.is_op ? 'is-op' : ''}">
-          <div class="post-header">
-            <div class="post-avatar" style="background:${avatarColor(uname)}">${initials}</div>
-            <div class="post-meta"><strong>${uname}</strong> · ${timeAgo(p.created_at)}${p.is_op ? ' · <span style="color:var(--cyan)">OP</span>' : ''}</div>
-          </div>
-          <div class="post-body">${p.body || p.content || ''}</div>
-        </div>`;
-    }).join('');
-
-    // Show reply box or login prompt
-    if (currentUser) {
-      document.getElementById('reply-box').style.display = 'block';
-      document.getElementById('reply-login-prompt').style.display = 'none';
-    } else {
-      document.getElementById('reply-box').style.display = 'none';
-      document.getElementById('reply-login-prompt').style.display = 'block';
-    }
-  }
-
-  function backToList() {
-    document.getElementById('forum-list-view').style.display = 'block';
-    document.getElementById('forum-detail-view').classList.remove('open');
-    currentTopicId = null;
-  }
-
-  async function submitReply() {
-    if (!currentUser || !currentTopicId) return;
-    const body = document.getElementById('reply-input').value.trim();
-    if (!body) return;
-    if (!db) return;
-    const { error } = await db.from('replies').insert({
-      topic_id: currentTopicId,
-      body,
-      user_id: currentUser.id
-    });
-    if (!error) {
-      document.getElementById('reply-input').value = '';
-      openTopic(currentTopicId, document.getElementById('detail-title').textContent, '');
-    }
-  }
-
-  /* ══════ FORUM — NEW TOPIC ══════ */
-  function openNewTopic() {
-    if (!currentUser) { openAuth('login'); return; }
-    document.getElementById('modal-overlay').classList.add('open');
-  }
-  function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
-  function closeModalOutside(e) { if (e.target.id === 'modal-overlay') closeModal(); }
-
-  async function submitTopic() {
-    if (!currentUser) { openAuth('login'); return; }
-    const title    = document.getElementById('topic-title-input').value.trim();
-    const category = document.getElementById('topic-cat-input').value;
-    const body     = document.getElementById('topic-body-input').value.trim();
-    const errEl    = document.getElementById('topic-err');
-    errEl.style.display = 'none';
-    if (!title || !category || !body) {
-      errEl.textContent = 'Tous les champs sont requis.';
-      errEl.style.display = 'block'; return;
-    }
-    if (!db) { errEl.textContent = 'Supabase non configuré.'; errEl.style.display='block'; return; }
-    const { error } = await db.from('topics').insert({ title, category, body, user_id: currentUser.id });
-    if (error) { errEl.textContent = error.message; errEl.style.display='block'; }
-    else {
-      closeModal();
-      document.getElementById('topic-title-input').value = '';
-      document.getElementById('topic-cat-input').value   = '';
-      document.getElementById('topic-body-input').value  = '';
-      loadTopics();
-      loadForumStats();
-    }
-  }
-
-  /* ══════ FORUM — CAT FILTER ══════ */
-  document.getElementById('cat-filters')?.addEventListener('click', e => {
-    const btn = e.target.closest('.src-btn');
-    if (!btn) return;
-    document.querySelectorAll('#cat-filters .src-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeCatFilter = btn.dataset.cat;
-    loadTopics();
-  });
-
-  /* ══════ REALTIME — nouvelles réponses ══════ */
-  if (db) db.channel('forum-realtime')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'topics' }, () => loadTopics())
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'replies' }, payload => {
-      if (currentTopicId && payload.new.topic_id === currentTopicId)
-        openTopic(currentTopicId, document.getElementById('detail-title').textContent, '');
-    })
-    .subscribe();
-
-  /* ══════ RSS ══════ */
   const SOURCES = [
-    // 🇫🇷 FRANÇAIS
-    { url:'https://www.numerama.com/tag/intelligence-artificielle/feed/',                   tag:'NUMERAMA',      cls:'tag-green',  lang:'fr' },
-    { url:'https://www.lemondeinformatique.fr/flux-rss/intelligence-artificielle/rss.xml', tag:'LE MONDE INFO', cls:'tag-green',  lang:'fr' },
-    { url:'https://www.01net.com/rss/actualites/',                                         tag:'01NET',         cls:'tag-green',  lang:'fr' },
-    { url:'https://www.journaldunet.com/rss/',                                             tag:'JDN',           cls:'tag-green',  lang:'fr' },
-    // 🌍 INTERNATIONAL
-    { url:'https://huggingface.co/blog/feed.xml',                                          tag:'HUGGING FACE',  cls:'tag-violet', lang:'en' },
-    { url:'https://www.technologyreview.com/feed/',                                        tag:'MIT TECH',      cls:'tag-blue',   lang:'en' },
-    { url:'https://venturebeat.com/category/ai/feed/',                                     tag:'VENTUREBEAT',   cls:'tag-cyan',   lang:'en' },
-    { url:'https://openai.com/news/rss.xml',                                               tag:'OPENAI',        cls:'tag-blue',   lang:'en' },
+    { url:'https://www.numerama.com/tag/intelligence-artificielle/feed/',                 tag:'NUMERAMA',      cls:'tag-green' },
+    { url:'https://www.lemondeinformatique.fr/flux-rss/intelligence-artificielle/rss.xml', tag:'LE MONDE INFO', cls:'tag-green' },
+    { url:'https://www.01net.com/rss/actualites/',                                         tag:'01NET',         cls:'tag-green' },
+    { url:'https://www.journaldunet.com/rss/',                                             tag:'JDN',           cls:'tag-green' },
+    { url:'https://huggingface.co/blog/feed.xml',                                          tag:'HUGGING FACE',  cls:'tag-violet' },
+    { url:'https://www.technologyreview.com/feed/',                                        tag:'MIT TECH',      cls:'tag-blue' },
+    { url:'https://venturebeat.com/category/ai/feed/',                                     tag:'VENTUREBEAT',   cls:'tag-cyan' },
+    { url:'https://openai.com/news/rss.xml',                                               tag:'OPENAI',        cls:'tag-blue' },
   ];
+  
   const PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
   const IMGS = [
     'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=400',
@@ -883,13 +501,16 @@
     'https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=400',
     'https://images.pexels.com/photos/7567444/pexels-photo-7567444.jpeg?auto=compress&cs=tinysrgb&w=400',
   ];
+  
   const fmtDate = s => { const d=new Date(s); return isNaN(d)?'':d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}); };
+  
   const getImg  = (item,i) => {
-    if (item.thumbnail?.startsWith('http')) return item.thumbnail;
-    if (item.enclosure?.link) return item.enclosure.link;
+    if (item.thumbnail && item.thumbnail.includes('http')) return item.thumbnail;
+    if (item.enclosure && item.enclosure.link) return item.enclosure.link;
     const m = (item.content||item.description||'').match(/<img[^>]+src=["']([^"']+)["']/i);
     return m ? m[1] : IMGS[i % IMGS.length];
   };
+  
   const strip = h => { const d=document.createElement('div'); d.innerHTML=h||''; return (d.textContent||'').trim().slice(0,108)+'…'; };
 
   function render(items, src) {
@@ -908,6 +529,7 @@
         </div>`;
       feed.appendChild(a);
     });
+    
     const ticker = document.querySelector('.ticker');
     if (ticker && items.length) {
       const t = items.slice(0,6).map(x=>`<span>${x.title}</span><span class="sep">◆</span>`).join('');
@@ -917,11 +539,18 @@
 
   async function loadRSS(idx) {
     const src = SOURCES[idx];
-    if (idx === 0) { document.getElementById('rss-loading').style.display='block'; document.getElementById('rss-feed').innerHTML=''; document.getElementById('rss-error').style.display='none'; }
+    if (idx === 0) { 
+        document.getElementById('rss-loading').style.display='block'; 
+        document.getElementById('rss-feed').innerHTML=''; 
+        document.getElementById('rss-error').style.display='none'; 
+    }
+    
     try {
       const r = await fetch(PROXY+encodeURIComponent(src.url)+'&count=10');
       const d = await r.json();
+      
       if (idx === 0) document.getElementById('rss-loading').style.display='none';
+      
       if (d.status==='ok'&&d.items?.length) {
         if (idx === 0) render(d.items, src);
         if (idx <= 3) {
@@ -929,8 +558,15 @@
           if (!heroStarted) { heroStarted = true; heroInit(); }
           else { heroRefresh(); }
         }
-      } else if (idx===0) { document.getElementById('rss-error').style.display='block'; }
-    } catch { if(idx===0){ document.getElementById('rss-loading').style.display='none'; document.getElementById('rss-error').style.display='block'; } }
+      } else if (idx===0) { 
+          document.getElementById('rss-error').style.display='block'; 
+      }
+    } catch { 
+        if(idx===0){ 
+            document.getElementById('rss-loading').style.display='none'; 
+            document.getElementById('rss-error').style.display='block'; 
+        } 
+    }
   }
 
   document.querySelectorAll('.src-btn:not(#cat-filters .src-btn)').forEach(b=>b.addEventListener('click',function(){
@@ -938,7 +574,7 @@
     this.classList.add('active'); loadRSS(+this.dataset.src);
   }));
 
-/* ══════ NAV ══════ */
+  /* ══════ NAV ══════ */
   function showPage(n){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
@@ -947,17 +583,18 @@
     const t=document.getElementById('tabs-media');
     if(t) t.style.display=n==='media'?'flex':'none';
   }
+  
   function toggleCat(id){ const e=document.getElementById(id); e.style.display=e.style.display==='none'?'':'none'; }
+  
   document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',function(){
     document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active')); this.classList.add('active');
   }));
 
-  /* ══════ HERO CAROUSEL ══════ */
+  /* ══════ HERO CAROUSEL FIXÉ ══════ */
   let heroItems = [];
   let heroPool  = [];
   let heroIdx   = 0;
   let heroTimer = null;
-  let heroProgressTimer = null;
   let heroStarted = false;
   const HERO_INTERVAL = 6000;
 
@@ -966,22 +603,25 @@
     const item = heroItems[idx];
     const src  = item._src || SOURCES[0];
     const bg = document.getElementById('hero-bg');
+    
     bg.style.opacity = 0;
     setTimeout(() => {
       bg.style.backgroundImage = `linear-gradient(to bottom,rgba(3,4,11,0.05) 0%,rgba(3,4,11,0.78) 55%,var(--bg) 100%),url('${item._img}')`;
-      bg.style.transition = 'opacity 0.6s ease'; bg.style.opacity = 1;
+      bg.style.transition = 'opacity 0.6s ease'; 
+      bg.style.opacity = 1;
     }, 100);
+    
     document.getElementById('hero-title').textContent = item.title || 'Sans titre';
-    document.getElementById('hero-title').className = 'hero-anim';
     document.getElementById('hero-desc').textContent = strip(item.description || item.content);
-    document.getElementById('hero-desc').className = 'hero-anim';
     document.getElementById('hero-tag').textContent = src.tag;
     document.getElementById('hero-tag').className = `tag ${src.cls}`;
     document.getElementById('hero-author').textContent = item.author ? `Par ${item.author}` : '';
+    
     const d = fmtDate(item.pubDate);
     document.getElementById('hero-date').textContent = d;
     document.getElementById('hero-dot-sep').style.display = d ? 'inline' : 'none';
     document.getElementById('hero-link').href = item.link || '#';
+    
     document.querySelectorAll('.hero-dot').forEach((dot,i) => dot.classList.toggle('active', i===idx));
     heroStartProgress();
   }
@@ -998,31 +638,52 @@
   function heroStep(dir) {
     clearInterval(heroTimer);
     heroIdx = (heroIdx + dir + heroItems.length) % heroItems.length;
-    heroRender(heroIdx); heroAutoPlay();
+    heroRender(heroIdx); 
+    heroAutoPlay();
   }
-  function heroGoto(i) { clearInterval(heroTimer); heroIdx=i; heroRender(i); heroAutoPlay(); }
+  
+  function heroGoto(i) { 
+      clearInterval(heroTimer); 
+      heroIdx=i; 
+      heroRender(i); 
+      heroAutoPlay(); 
+  }
+  
   function heroAutoPlay() {
     clearInterval(heroTimer);
-    heroTimer = setInterval(() => { heroIdx=(heroIdx+1)%heroItems.length; heroRender(heroIdx); }, HERO_INTERVAL);
+    heroTimer = setInterval(() => { 
+        heroIdx=(heroIdx+1)%heroItems.length; 
+        heroRender(heroIdx); 
+    }, HERO_INTERVAL);
   }
+  
   function heroInit() { heroRefresh(); }
+  
   function heroRefresh() {
     const shuffled = [...heroPool].sort(()=>Math.random()-.5);
     heroItems = shuffled.slice(0,8);
     heroIdx = 0;
     heroItems.forEach((item,i) => { item._img = getImg(item,i); });
+    
     const dotsEl = document.getElementById('hero-dots');
-    dotsEl.innerHTML = heroItems.map((_,i)=>`<button class="hero-dot${i===0?' active':''}" onclick="heroGoto(${i})"></button>`).join('');
-    heroRender(0); clearInterval(heroTimer); heroAutoPlay();
+    if(dotsEl) {
+        dotsEl.innerHTML = heroItems.map((_,i)=>`<button class="hero-dot${i===0?' active':''}" onclick="heroGoto(${i})"></button>`).join('');
+    }
+    
+    heroRender(0); 
+    clearInterval(heroTimer); 
+    heroAutoPlay();
   }
+
+  /* ══════ MODAL FORUM DUMMY ══════ */
+  function openModal(){ document.getElementById('modal-overlay').classList.add('open'); }
+  function closeModal(){ document.getElementById('modal-overlay').classList.remove('open'); }
+  function closeModalOutside(e){ if(e.target.id==='modal-overlay') closeModal(); }
+  function openNewTopic(){ openModal(); }
+  function openAuth(){ alert("L'authentification a été désactivée dans cette version."); }
 
   /* ══════ INIT ══════ */
   [0,1,2,3].forEach(i => loadRSS(i));
-  
-    currentSession = session;
-    currentUser = session?.user ?? null;
-    renderAuthArea();
-  });
 </script>
 </body>
 </html>
