@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Core-IA · Alexandre Nourrissat</title>
+<title>Core-IA Hub · Le Média Tech Souverain</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #03040b;
@@ -15,170 +15,143 @@
     --cyan: #4fc3f7;
     --text: #e8eaff;
     --muted: #7b82c0;
-    --border: rgba(124, 92, 252, 0.2);
+    --border: rgba(124, 92, 252, 0.1);
     --mono: 'Space Mono', monospace;
     --sans: 'Inter', sans-serif;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { 
-    background: var(--bg); 
-    color: var(--text); 
-    font-family: var(--sans); 
-    line-height: 1.6;
-    background-image: radial-gradient(circle at 50% -20%, #1a1c3d 0%, transparent 50%);
-    overflow-x: hidden;
-  }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.6; overflow-x: hidden; }
 
-  /* NAVBAR GLASS */
-  nav { 
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100; 
-    display: flex; align-items: center; justify-content: space-between; 
-    padding: 1.2rem 4rem; background: rgba(3, 4, 11, 0.7); 
-    backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); 
-  }
-  .nav-logo { font-family: var(--mono); font-weight: 700; color: var(--violet); }
-  .nav-logo span { color: var(--blue); }
+  /* HEADER MÉDIA */
+  header { padding: 2rem 4rem; border-bottom: 1px solid var(--border); background: rgba(3, 4, 11, 0.8); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+  .media-logo { font-family: var(--mono); font-size: 1.5rem; font-weight: 700; color: var(--text); text-decoration: none; }
+  .media-logo span { color: var(--blue); }
+  .media-tagline { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1rem; text-transform: uppercase; }
 
-  /* HERO SECTION */
-  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 4rem; position: relative; }
-  .hero-name { font-size: clamp(3rem, 8vw, 6rem); font-weight: 800; line-height: 1; letter-spacing: -0.04em; margin-bottom: 1.5rem; }
-  .hero-name span { color: var(--blue); }
+  /* CONTAINER PRINCIPAL */
+  .main-container { max-width: 1400px; margin: 0 auto; padding: 3rem 4rem; display: grid; grid-template-columns: 3fr 1fr; gap: 3rem; }
 
-  /* BENTO GRID SYSTEM */
-  .bento-container { padding: 4rem; max-width: 1400px; margin: 0 auto; }
-  .section-label { font-family: var(--mono); color: var(--cyan); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem; }
+  /* SECTION 'A LA UNE' */
+  .headline-art { grid-column: span 2; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; margin-bottom: 2rem; transition: 0.3s; }
+  .headline-art:hover { border-color: var(--blue); box-shadow: 0 0 30px rgba(59, 91, 255, 0.1); }
+  .headline-img { width: 100%; height: 300px; background: rgba(59, 91, 255, 0.05); border-radius: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--blue); font-family: var(--mono); }
+  .headline-cat { font-family: var(--mono); font-size: 0.7rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.1rem; }
+  .headline-title { font-size: 2.5rem; font-weight: 800; line-height: 1.1; margin: 0.5rem 0 1rem; color: #fff; }
+  .headline-desc { color: var(--muted); font-size: 1.1rem; font-weight: 300; margin-bottom: 1.5rem; }
+
+  /* GRILLE D'ARTICLES */
+  .articles-feed { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; }
   
-  .bento-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 220px;
-    gap: 1.5rem;
-    margin-top: 2rem;
-  }
+  /* CARTE ARTICLE STYLE 'NUMÉRIQUES' */
+  .art-card { background: transparent; border-radius: 12px; overflow: hidden; text-decoration: none; color: var(--text); transition: 0.3s; display: flex; flex-direction: column; }
+  .art-card:hover { transform: translateY(-3px); }
+  .art-img { width: 100%; height: 200px; background: rgba(124, 92, 252, 0.05); border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--violet); font-family: var(--mono); }
+  .art-body { padding: 0 0.5rem; }
+  .art-cat { font-family: var(--mono); font-size: 0.65rem; color: var(--violet); text-transform: uppercase; }
+  .art-title { font-size: 1.2rem; font-weight: 600; line-height: 1.3; margin: 0.3rem 0 0.5rem; color: #fff; transition: 0.2s; }
+  .art-card:hover .art-title { color: var(--blue); }
+  .art-meta { font-size: 0.75rem; color: var(--muted); font-weight: 300; }
 
-  .card {
-    position: relative;
-    background: var(--bg-card);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 2rem;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.3s ease;
-  }
+  /* SIDEBAR (BREVES) */
+  .sidebar { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; height: fit-content; }
+  .side-title { font-family: var(--mono); font-size: 0.8rem; color: var(--text); text-transform: uppercase; letter-spacing: 0.1rem; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+  .side-item { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.03); text-decoration: none; display: block; }
+  .side-item:last-child { border-bottom: none; }
+  .side-time { font-family: var(--mono); font-size: 0.65rem; color: var(--cyan); }
+  .side-text { font-size: 0.9rem; color: var(--text); font-weight: 400; line-height: 1.4; transition: 0.2s; }
+  .side-item:hover .side-text { color: var(--cyan); }
 
-  /* L'effet de lumière qui suit la souris */
-  .card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(59, 91, 255, 0.2), transparent 40%);
-    opacity: 0;
-    transition: opacity 0.4s;
-    pointer-events: none;
-  }
-  .card:hover::before { opacity: 1; }
-  .card:hover { transform: translateY(-5px); border-color: rgba(59, 91, 255, 0.5); }
+  /* BOUTONS */
+  .btn { display: inline-block; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
+  .btn-primary { background: var(--blue); color: white; }
+  .btn-primary:hover { background: #2a4ae0; box-shadow: 0 0 20px rgba(59, 91, 255, 0.3); }
 
-  /* Variantes Bento */
-  .card-lg { grid-column: span 2; grid-row: span 2; }
-  .card-wide { grid-column: span 2; }
-
-  /* STYLE ÉLÉMENTS INTERNES */
-  .tech-tag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 0.65rem; color: var(--cyan); background: rgba(79, 195, 247, 0.1); padding: 4px 10px; border-radius: 100px; margin-bottom: 1rem; }
-  .card-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; }
-  .card-desc { color: var(--muted); font-size: 0.9rem; font-weight: 300; }
-  .pill { font-family: var(--mono); font-size: 0.6rem; padding: 2px 8px; border: 1px solid var(--border); border-radius: 4px; color: var(--muted); margin-right: 5px; }
-
-  /* FORUM TEASER */
-  .forum-teaser { grid-column: span 4; background: linear-gradient(90deg, rgba(59, 91, 255, 0.1), rgba(124, 92, 252, 0.1)); border: 1px dashed var(--violet); display: flex; align-items: center; justify-content: center; text-align: center; }
-  .btn-forum { background: var(--violet); color: white; padding: 12px 24px; border-radius: 100px; text-decoration: none; font-weight: 700; margin-top: 1rem; display: inline-block; transition: 0.3s; }
-  .btn-forum:hover { box-shadow: 0 0 20px var(--violet); }
-
+  /* MOBILE OPTIMIZATION */
   @media (max-width: 1024px) {
-    .bento-grid { grid-template-columns: repeat(2, 1fr); }
-    .card-lg, .card-wide, .forum-teaser { grid-column: span 2; }
+    .main-container { grid-template-columns: 1fr; padding: 2rem; }
+    .headline-art { grid-template-columns: 1fr; padding: 2rem; grid-column: span 1; }
+    .headline-img { height: 200px; }
+    .headline-title { font-size: 2rem; }
+  }
+  @media (max-width: 768px) {
+    header { padding: 1rem 2rem; }
   }
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-logo"><span>&lt;</span>AN<span>&gt;</span> Core-IA</div>
-</nav>
+<header>
+  <a href="#" class="media-logo">Core-IA <span>Hub</span></a>
+  <div class="media-tagline">L'IA SOUVERAINE AU SERVICE DE LA PERFORMANCE</div>
+</header>
 
-<section class="hero">
-  <div class="bento-container">
-    <div class="section-label">// System Status: Online</div>
-    <h1 class="hero-name">L'IA de proximité,<br><span>Souveraine & Humaine.</span></h1>
-    <p style="max-width: 600px; color: var(--muted);">Data Marketing, Automatisation n8n et Intelligence Artificielle locale pour les entreprises qui exigent la maîtrise totale de leurs données.</p>
-  </div>
-</section>
-
-<div class="bento-container">
-  <div class="section-label">// 01 - Écosystème Technique</div>
+<div class="main-container">
   
-  <div class="bento-grid">
-    <div class="card card-lg">
-      <div>
-        <div class="tech-tag">BI & ANALYTICS</div>
-        <h3 class="card-title" style="font-size: 2rem;">Dashboard VNI Santé</h3>
-        <p class="card-desc">Pilotage des flux logistiques et prévision des ruptures de stock pour les dispositifs médicaux critiques.</p>
-      </div>
-      <div style="background: rgba(255,255,255,0.03); height: 150px; border-radius: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--mono); color: var(--blue);">[ VISUALISATION DATA ]</div>
+  <article class="headline-art">
+    <div class="headline-img">[ IMAGE D'ILLUSTRATION PRINCIPALE ]</div>
+    <div>
+      <div class="headline-cat">LÉGISLATION · RGPD</div>
+      <h1 class="headline-title">L'AI Act décrypté : Quel impact réel pour les PME françaises ?</h1>
+      <p class="headline-desc">Analyse complète des nouvelles régulations européennes et des étapes concrètes pour mettre votre entreprise en conformité sans freiner l'innovation.</p>
+      <a href="#" class="btn btn-primary">Lire l'analyse complète →</a>
     </div>
+  </article>
 
-    <div class="card">
-      <div class="tech-tag">AUTOMATION</div>
-      <h3 class="card-title">n8n Factory</h3>
-      <p class="card-desc">Production automatisée de contenu vidéo via Creatomate.</p>
-      <div><span class="pill">n8n</span><span class="pill">Groq</span></div>
-    </div>
-
-    <div class="card">
-      <div class="tech-tag">PRIVACY</div>
-      <h3 class="card-title">IA On-Premise</h3>
-      <p class="card-desc">Llama 3 & Gemma déployés localement. 0% Cloud.</p>
-      <div><span class="pill">Llama</span><span class="pill">RGPD</span></div>
-    </div>
-
-    <div class="card card-wide">
-      <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-        <div>
-          <div class="tech-tag">ACQUISITION</div>
-          <h3 class="card-title">SEO & Croissance</h3>
-          <p class="card-desc">Audit technique et stratégie de domination locale.</p>
+  <section>
+    <div class="articles-feed">
+      
+      <a href="#" class="art-card">
+        <div class="art-img">[ IMAGE ]</div>
+        <div class="art-body">
+          <div class="art-cat">SANTÉ · VNI</div>
+          <h3 class="art-title">Power BI : Optimiser les stocks de dispositifs médicaux</h3>
+          <p class="art-meta">Par Alexandre Nourrissat · Il y a 2 jours</p>
         </div>
-        <div style="font-size: 3rem; font-weight: 800; color: var(--blue); opacity: 0.5;">A+</div>
-      </div>
-    </div>
+      </a>
 
-    <div class="card forum-teaser">
-      <div>
-        <h2 style="font-size: 1.5rem;">Rejoignez la Communauté Core-IA</h2>
-        <p class="card-desc">Le premier forum dédié à l'IA souveraine pour les PME.</p>
-        <a href="#" class="btn-forum">Bientôt disponible</a>
-      </div>
+      <a href="#" class="art-card">
+        <div class="art-img">[ IMAGE ]</div>
+        <div class="art-body">
+          <div class="art-cat">AUTOMATION</div>
+          <h3 class="art-title">Créer une usine à Shorts ASMR avec n8n et Creatomate</h3>
+          <p class="art-meta">Par Alexandre Nourrissat · Il y a 5 jours</p>
+        </div>
+      </a>
+
+      <a href="#" class="art-card">
+        <div class="art-img">[ IMAGE ]</div>
+        <div class="art-body">
+          <div class="art-cat">SOUVERAINETÉ</div>
+          <h3 class="art-title">Installer Llama 3 en local : Le guide pour les nuls</h3>
+          <p class="art-meta">Par Alexandre Nourrissat · Il y a 1 semaine</p>
+        </div>
+      </a>
+
     </div>
-  </div>
+  </section>
+
+  <aside class="sidebar">
+    <h2 class="side-title">Dernières Brèves</h2>
+    
+    <a href="#" class="side-item">
+      <div class="side-time">IL Y A 1H</div>
+      <p class="side-text">OpenAI annonce GPT-5 pour l'été 2026 : Ce qu'on sait.</p>
+    </a>
+
+    <a href="#" class="side-item">
+      <div class="side-time">IL Y A 3H</div>
+      <p class="side-text">Mistral AI lève 500M€ pour concurrencer Google.</p>
+    </a>
+
+    <a href="#" class="side-item">
+      <div class="side-time">HIER</div>
+      <p class="side-text">Nouveau module n8n pour Groq disponible.</p>
+    </a>
+
+  </aside>
+
 </div>
-
-<script>
-  // Script pour l'effet de spotlight sur les cartes
-  document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('mousemove', e => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      card.style.setProperty('--mouse-x', `${x}px`);
-      card.style.setProperty('--mouse-y', `${y}px`);
-    });
-  });
-</script>
 
 </body>
 </html>
