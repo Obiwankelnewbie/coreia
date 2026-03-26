@@ -530,7 +530,12 @@
       document.getElementById('rss-loading').style.display='none';
       if (d.status==='ok'&&d.items?.length) {
         render(d.items, src);
-        if (idx === 0) heroInit(d.items); // feed hero with first source (Numerama)
+        // Toutes les sources FR (idx 0-3) alimentent le hero pool
+        if (idx <= 3) {
+          heroPool.push(...d.items.slice(0,5).map(it => ({...it, _src: src})));
+          if (!heroStarted) { heroStarted = true; heroInit(); }
+          else { heroRefresh(); }
+        }
       } else { document.getElementById('rss-error').style.display='block'; }
     } catch { document.getElementById('rss-loading').style.display='none'; document.getElementById('rss-error').style.display='block'; }
   }
@@ -560,15 +565,17 @@
 
   /* ── HERO CAROUSEL ── */
   let heroItems = [];
-  let heroIdx = 0;
+  let heroPool  = [];   // articles collectés de toutes sources FR
+  let heroIdx   = 0;
   let heroTimer = null;
   let heroProgressTimer = null;
+  let heroStarted = false;
   const HERO_INTERVAL = 6000; // ms per slide
 
   function heroRender(idx) {
     if (!heroItems.length) return;
     const item = heroItems[idx];
-    const src = SOURCES[0]; // always Numerama for hero
+    const src = item._src || SOURCES[0];
 
     const bg = document.getElementById('hero-bg');
     const title = document.getElementById('hero-title');
@@ -639,8 +646,14 @@
     }, HERO_INTERVAL);
   }
 
-  function heroInit(items) {
-    heroItems = items.slice(0, 6);
+  function heroInit() {
+    heroRefresh();
+  }
+
+  function heroRefresh() {
+    // Mélange aléatoire du pool, garde max 8 slides
+    const shuffled = [...heroPool].sort(() => Math.random() - 0.5);
+    heroItems = shuffled.slice(0, 8);
     heroIdx = 0;
 
     // Preload images
@@ -653,6 +666,7 @@
     ).join('');
 
     heroRender(0);
+    clearInterval(heroTimer);
     heroAutoPlay();
   }
 
@@ -663,7 +677,8 @@
     heroAutoPlay();
   }
 
-  loadRSS(0);
+  // Charge les 4 sources FR pour alimenter le hero (en arrière-plan)
+  [0, 1, 2, 3].forEach(i => loadRSS(i));
 </script>
 </body>
 </html>
