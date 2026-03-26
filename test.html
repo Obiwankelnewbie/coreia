@@ -55,7 +55,7 @@
   .logo { font-family: var(--mono); font-size: 0.95rem; font-weight: 700; color: #fff; text-decoration: none; letter-spacing: 4px; display: flex; align-items: center; gap: 10px; }
   .logo-badge { background: var(--blue); color: #fff; font-family: var(--mono); font-size: 0.48rem; padding: 2px 6px; border-radius: 3px; letter-spacing: 2px; }
   nav { display: flex; gap: 4px; align-items: center; }
-  .nav-link { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 2px; padding: 6px 14px; border-radius: 5px; text-decoration: none; color: var(--muted); transition: all 0.2s; }
+  .nav-link { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 2px; padding: 6px 14px; border-radius: 5px; text-decoration: none; color: var(--muted); transition: all 0.2s; cursor: pointer;}
   .nav-link:hover { color: #fff; background: var(--blue-dim); }
   .nav-link.active { color: var(--cyan); }
   .nav-cta { background: var(--blue); color: #fff !important; padding: 7px 16px; border-radius: 6px; margin-left: 8px; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 1px; text-decoration: none; transition: all 0.2s; }
@@ -78,8 +78,7 @@
   .hero { grid-column: span 2; position: relative; border-radius: 16px; overflow: hidden; height: 500px; border: 1px solid var(--border); display: block; text-decoration: none; color: inherit; }
   .hero-bg { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(3,4,11,0.05) 0%, rgba(3,4,11,0.75) 55%, var(--bg) 100%), url('https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1260') center/cover; transition: transform 0.7s ease; }
   .hero:hover .hero-bg { transform: scale(1.03); }
-  .hero-content { position: absolute; bottom: 0; padding: 2.5rem 3rem; max-width: 800px; }
-  /* ★ SERIF HERO TITLE */
+  .hero-content { position: absolute; bottom: 0; padding: 2.5rem 3rem; max-width: 800px; z-index: 10; }
   .hero-content h1 { font-family: var(--serif); font-size: 3.2rem; font-weight: 800; line-height: 1.08; margin: 0.8rem 0 1rem; text-shadow: 0 2px 40px rgba(3,4,11,0.9); }
   .hero-content h1 em { font-style: italic; color: var(--cyan); }
   .hero-content p { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); max-width: 560px; line-height: 1.75; }
@@ -87,9 +86,13 @@
   .hero-meta span { font-family: var(--mono); font-size: 0.58rem; color: var(--muted); }
   .read-btn { background: var(--blue); color: #fff; padding: 8px 20px; border-radius: 6px; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 2px; margin-left: auto; }
 
-  /* SECTION LABEL */
-  .section-label { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; display: flex; align-items: center; gap: 12px; margin-bottom: 1.4rem; }
-  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .hero-progress { position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: rgba(255,255,255,0.1); }
+  .hero-progress-bar { height: 100%; background: var(--cyan); width: 0%; }
+  .hero-dots { position: absolute; bottom: 30px; right: 3rem; display: flex; gap: 8px; z-index: 10; }
+  .hero-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2); border: none; cursor: pointer; transition: 0.3s; }
+  .hero-dot.active { background: var(--cyan); width: 22px; border-radius: 4px; }
+  .hero-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); border: none; color: white; padding: 12px; cursor: pointer; z-index: 10; border-radius: 50%; transition: 0.2s; }
+  .hero-nav:hover { background: var(--blue); }
 
   /* SOURCE BUTTONS */
   .source-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.4rem; flex-wrap: wrap; gap: 8px; }
@@ -103,7 +106,6 @@
   .card-thumb { width: 130px; height: 88px; border-radius: 6px; background-size: cover; background-position: center; border: 1px solid var(--border); position: relative; overflow: hidden; flex-shrink: 0; }
   .card-thumb::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(59,91,255,0.08), transparent); }
   .card-body { display: flex; flex-direction: column; justify-content: space-between; }
-  /* ★ SERIF ARTICLE TITLES */
   .card-body h3 { font-family: var(--serif); font-size: 1.02rem; font-weight: 700; line-height: 1.25; margin: 5px 0 4px; }
   .card-body p { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); line-height: 1.65; }
   .card-footer { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
@@ -132,7 +134,6 @@
   .trend-item:last-child { border-bottom: none; padding-bottom: 0; }
   .trend-item:hover { opacity: 0.75; }
   .trend-num { font-family: var(--mono); font-size: 1.2rem; font-weight: 700; color: var(--border-bright); line-height: 1; min-width: 26px; }
-  /* ★ SERIF SIDEBAR TITLES */
   .trend-text h4 { font-family: var(--serif); font-size: 0.9rem; font-weight: 700; line-height: 1.3; }
   .trend-text span { font-family: var(--mono); font-size: 0.56rem; color: var(--muted); }
 
@@ -155,7 +156,6 @@
   .forum-divider { height: 1px; background: var(--border); margin: 6px 0; }
 
   .forum-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.5rem; gap: 1rem; }
-  /* ★ SERIF FORUM TITLE */
   .forum-header h2 { font-family: var(--serif); font-size: 1.9rem; font-weight: 800; line-height: 1.1; }
   .forum-header p { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); margin-top: 5px; }
   .new-topic-btn { background: var(--blue); color: #fff; border: none; border-radius: 6px; padding: 9px 16px; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
@@ -176,19 +176,17 @@
   .category-header { display: flex; align-items: center; gap: 14px; padding: 1rem 1.4rem; cursor: pointer; border-bottom: 1px solid var(--border); }
   .cat-icon { font-size: 1.4rem; min-width: 30px; text-align: center; }
   .cat-info { flex: 1; }
-  /* ★ SERIF CATEGORY NAMES */
   .cat-info h3 { font-family: var(--serif); font-size: 1.02rem; font-weight: 700; }
   .cat-info p { font-family: var(--mono); font-size: 0.58rem; color: var(--muted); margin-top: 3px; }
   .cat-counts { display: flex; gap: 14px; text-align: center; }
   .cat-count-item .num { font-family: var(--mono); font-size: 0.9rem; font-weight: 700; }
   .cat-count-item .lbl { font-family: var(--mono); font-size: 0.5rem; color: var(--muted); display: block; letter-spacing: 1px; }
 
-  .topic-row { display: grid; grid-template-columns: 1fr auto; gap: 1rem; padding: 11px 1.4rem; border-bottom: 1px solid var(--border); text-decoration: none; color: inherit; transition: background 0.15s; align-items: center; }
+  .topic-row { display: grid; grid-template-columns: 1fr auto; gap: 1rem; padding: 11px 1.4rem; border-bottom: 1px solid var(--border); text-decoration: none; color: inherit; transition: background 0.15s; align-items: center; cursor: pointer; }
   .topic-row:last-child { border-bottom: none; }
   .topic-row:hover { background: rgba(59,91,255,0.04); }
   .topic-left { display: flex; align-items: flex-start; gap: 10px; }
   .topic-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--violet)); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 0.58rem; font-weight: 700; color: #fff; flex-shrink: 0; }
-  /* ★ SERIF TOPIC TITLES */
   .topic-body h4 { font-family: var(--serif); font-size: 0.94rem; font-weight: 700; line-height: 1.28; margin-bottom: 5px; }
   .topic-meta { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
   .topic-meta span { font-family: var(--mono); font-size: 0.56rem; color: var(--muted); }
@@ -201,7 +199,6 @@
   .modal-overlay.open { display: flex; }
   .modal { background: #080b1a; border: 1px solid var(--border-bright); border-radius: 14px; padding: 2rem; width: 100%; max-width: 580px; position: relative; animation: slideUp 0.22s ease; }
   @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
-  /* ★ SERIF MODAL TITLE */
   .modal-title { font-family: var(--serif); font-size: 1.5rem; font-weight: 800; margin-bottom: 1.5rem; }
   .modal-close { position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.1rem; transition: color 0.2s; }
   .modal-close:hover { color: var(--text); }
@@ -266,7 +263,7 @@
     <a href="#" class="nav-link"        id="nav-dossiers" onclick="showPage('media'); return false;">DOSSIERS</a>
     <a href="#" class="nav-link"        id="nav-forum"    onclick="showPage('forum'); return false;">FORUM</a>
     <div class="user-menu" id="auth-area">
-      <a href="#" class="nav-cta" id="btn-login" onclick="openAuth('login');return false;">CONNEXION</a>
+      <a href="#" class="nav-cta" id="btn-login" onclick="openAuth();return false;">CONNEXION</a>
     </div>
   </nav>
 </header>
@@ -297,9 +294,9 @@
         </div>
       </div>
       <div class="hero-dots" id="hero-dots"></div>
-      <button class="hero-nav hero-prev" style="position: absolute; top: 50%; left: 20px; transform: translateY(-50%); background: rgba(0,0,0,0.4); border: none; color: white; padding: 12px; cursor: pointer; z-index: 10; border-radius: 50%;" onclick="heroStep(-1)">&#8249;</button>
-      <button class="hero-nav hero-next" style="position: absolute; top: 50%; right: 20px; transform: translateY(-50%); background: rgba(0,0,0,0.4); border: none; color: white; padding: 12px; cursor: pointer; z-index: 10; border-radius: 50%;" onclick="heroStep(1)">&#8250;</button>
-      <div class="hero-progress" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: rgba(255,255,255,0.1);"><div class="hero-progress-bar" id="hero-progress-bar" style="height: 100%; background: var(--cyan); width: 0%;"></div></div>
+      <button class="hero-nav hero-prev" style="left:20px" onclick="heroStep(-1)">&#8249;</button>
+      <button class="hero-nav hero-next" style="right:20px" onclick="heroStep(1)">&#8250;</button>
+      <div class="hero-progress"><div class="hero-progress-bar" id="hero-progress-bar"></div></div>
     </div>
 
     <main>
@@ -440,21 +437,18 @@
               </div>
               <div class="topic-right"><div class="topic-replies"><strong>5</strong> rép.</div></div>
             </div>
-
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </div>
 
 <div class="auth-overlay" id="auth-overlay" onclick="closeAuthOutside(event)" style="display: none;">
-  <div class="auth-box">
-    <button class="auth-close modal-close" onclick="closeAuth()">✕</button>
-    <span class="auth-logo">CORE-IA HUB</span>
-    <h2 class="auth-title" id="auth-title">Authentification</h2>
-    <p class="auth-sub" id="auth-sub">Le système de compte est actuellement en mode lecture seule.</p>
+  <div class="auth-box" style="background: #080b1a; border: 1px solid var(--border-bright); border-radius: 14px; padding: 2rem; max-width: 400px; margin: 15vh auto; position: relative;">
+    <button class="auth-close modal-close" onclick="closeAuth()" style="position: absolute; right: 20px; top: 20px; background: none; border: none; color: white; cursor: pointer;">✕</button>
+    <h2 class="auth-title" style="font-family: var(--serif); color: white;">Authentification</h2>
+    <p class="auth-sub" style="color: var(--muted); font-size: 0.8rem; margin-top: 10px;">Le système de compte est actuellement en mode lecture seule pour la démo.</p>
   </div>
 </div>
 
@@ -480,7 +474,7 @@
 </div>
 
 <script>
-  /* ── SCRIPT SANS SUPABASE ET AVEC IMAGES CAROUSEL CORRIGÉES ── */
+  /* ── SCRIPT SANS SUPABASE ET SANS BUG DE RATE LIMIT ── */
 
   const SOURCES = [
     { url:'https://www.numerama.com/tag/intelligence-artificielle/feed/',                 tag:'NUMERAMA',      cls:'tag-green' },
@@ -505,7 +499,7 @@
   const fmtDate = s => { const d=new Date(s); return isNaN(d)?'':d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}); };
   
   const getImg  = (item,i) => {
-    if (item.thumbnail && item.thumbnail.includes('http')) return item.thumbnail;
+    if (item.thumbnail && item.thumbnail.indexOf('http') !== -1) return item.thumbnail;
     if (item.enclosure && item.enclosure.link) return item.enclosure.link;
     const m = (item.content||item.description||'').match(/<img[^>]+src=["']([^"']+)["']/i);
     return m ? m[1] : IMGS[i % IMGS.length];
@@ -537,41 +531,45 @@
     }
   }
 
+  let currentActiveIdx = 0;
+
   async function loadRSS(idx) {
     const src = SOURCES[idx];
-    if (idx === 0) { 
-        document.getElementById('rss-loading').style.display='block'; 
-        document.getElementById('rss-feed').innerHTML=''; 
-        document.getElementById('rss-error').style.display='none'; 
-    }
+    currentActiveIdx = idx;
+
+    document.getElementById('rss-loading').style.display='block'; 
+    document.getElementById('rss-feed').innerHTML=''; 
+    document.getElementById('rss-error').style.display='none'; 
     
     try {
       const r = await fetch(PROXY+encodeURIComponent(src.url)+'&count=10');
       const d = await r.json();
       
-      if (idx === 0) document.getElementById('rss-loading').style.display='none';
+      if (currentActiveIdx !== idx) return; // Si on a cliqué sur un autre bouton entre temps
+      document.getElementById('rss-loading').style.display='none';
       
-      if (d.status==='ok'&&d.items?.length) {
-        if (idx === 0) render(d.items, src);
-        if (idx <= 3) {
-          heroPool.push(...d.items.slice(0,5).map(it => ({...it, _src: src})));
-          if (!heroStarted) { heroStarted = true; heroInit(); }
-          else { heroRefresh(); }
-        }
-      } else if (idx===0) { 
-          document.getElementById('rss-error').style.display='block'; 
+      if (d.status==='ok' && d.items?.length) {
+        render(d.items, src);
+        
+        // Alimente le Hero et force l'actualisation
+        heroPool = d.items.slice(0,6).map(it => ({...it, _src: src}));
+        heroInit();
+        
+      } else { 
+        document.getElementById('rss-error').style.display='block'; 
       }
     } catch { 
-        if(idx===0){ 
-            document.getElementById('rss-loading').style.display='none'; 
-            document.getElementById('rss-error').style.display='block'; 
-        } 
+      if(currentActiveIdx === idx){ 
+        document.getElementById('rss-loading').style.display='none'; 
+        document.getElementById('rss-error').style.display='block'; 
+      } 
     }
   }
 
   document.querySelectorAll('.src-btn:not(#cat-filters .src-btn)').forEach(b=>b.addEventListener('click',function(){
     document.querySelectorAll('#source-btns .src-btn').forEach(x=>x.classList.remove('active'));
-    this.classList.add('active'); loadRSS(+this.dataset.src);
+    this.classList.add('active'); 
+    loadRSS(+this.dataset.src);
   }));
 
   /* ══════ NAV ══════ */
@@ -591,22 +589,20 @@
   }));
 
   /* ══════ HERO CAROUSEL FIXÉ ══════ */
-  let heroItems = [];
   let heroPool  = [];
   let heroIdx   = 0;
   let heroTimer = null;
-  let heroStarted = false;
   const HERO_INTERVAL = 6000;
 
   function heroRender(idx) {
-    if (!heroItems.length) return;
-    const item = heroItems[idx];
+    if (!heroPool.length) return;
+    const item = heroPool[idx];
     const src  = item._src || SOURCES[0];
     const bg = document.getElementById('hero-bg');
     
     bg.style.opacity = 0;
     setTimeout(() => {
-      bg.style.backgroundImage = `linear-gradient(to bottom,rgba(3,4,11,0.05) 0%,rgba(3,4,11,0.78) 55%,var(--bg) 100%),url('${item._img}')`;
+      bg.style.backgroundImage = `linear-gradient(to bottom,rgba(3,4,11,0.05) 0%,rgba(3,4,11,0.78) 55%,var(--bg) 100%),url('${getImg(item, idx)}')`;
       bg.style.transition = 'opacity 0.6s ease'; 
       bg.style.opacity = 1;
     }, 100);
@@ -637,7 +633,7 @@
 
   function heroStep(dir) {
     clearInterval(heroTimer);
-    heroIdx = (heroIdx + dir + heroItems.length) % heroItems.length;
+    heroIdx = (heroIdx + dir + heroPool.length) % heroPool.length;
     heroRender(heroIdx); 
     heroAutoPlay();
   }
@@ -652,24 +648,17 @@
   function heroAutoPlay() {
     clearInterval(heroTimer);
     heroTimer = setInterval(() => { 
-        heroIdx=(heroIdx+1)%heroItems.length; 
+        heroIdx=(heroIdx+1)%heroPool.length; 
         heroRender(heroIdx); 
     }, HERO_INTERVAL);
   }
   
-  function heroInit() { heroRefresh(); }
-  
-  function heroRefresh() {
-    const shuffled = [...heroPool].sort(()=>Math.random()-.5);
-    heroItems = shuffled.slice(0,8);
+  function heroInit() { 
     heroIdx = 0;
-    heroItems.forEach((item,i) => { item._img = getImg(item,i); });
-    
     const dotsEl = document.getElementById('hero-dots');
     if(dotsEl) {
-        dotsEl.innerHTML = heroItems.map((_,i)=>`<button class="hero-dot${i===0?' active':''}" onclick="heroGoto(${i})"></button>`).join('');
+        dotsEl.innerHTML = heroPool.map((_,i)=>`<button class="hero-dot${i===0?' active':''}" onclick="heroGoto(${i})"></button>`).join('');
     }
-    
     heroRender(0); 
     clearInterval(heroTimer); 
     heroAutoPlay();
@@ -680,10 +669,20 @@
   function closeModal(){ document.getElementById('modal-overlay').classList.remove('open'); }
   function closeModalOutside(e){ if(e.target.id==='modal-overlay') closeModal(); }
   function openNewTopic(){ openModal(); }
-  function openAuth(){ alert("L'authentification a été désactivée dans cette version."); }
+  
+  function openAuth(){ 
+    document.getElementById('auth-overlay').style.display = 'block'; 
+  }
+  function closeAuth(){ 
+    document.getElementById('auth-overlay').style.display = 'none'; 
+  }
+  function closeAuthOutside(e){ 
+    if(e.target.id==='auth-overlay') closeAuth(); 
+  }
 
   /* ══════ INIT ══════ */
-  [0,1,2,3].forEach(i => loadRSS(i));
+  // On charge UNIQUEMENT la première source au démarrage pour éviter de bloquer l'API
+  loadRSS(0);
 </script>
 </body>
 </html>
