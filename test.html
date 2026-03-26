@@ -1019,7 +1019,7 @@
 
   /* ══════ INIT ══════ */
   [0,1,2,3].forEach(i => loadRSS(i));
-  if (db) db.auth.getSession().then(({ data: { session } }) => {
+  
     currentSession = session;
     currentUser = session?.user ?? null;
     renderAuthArea();
