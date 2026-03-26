@@ -161,6 +161,49 @@
     .divider { margin: 0 1.5rem; }
     #chat-window { width: 300px !important; }
   }
+  /* --- BOUTON MÉDIA CORE-IA --- */
+  .nav-btn-media {
+    text-decoration: none;
+    padding: 8px 16px;
+    background: rgba(59, 91, 255, 0.1);
+    border: 1px solid var(--blue);
+    border-radius: 6px;
+    color: var(--cyan) !important;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 0 15px rgba(59, 91, 255, 0.2);
+    transition: all 0.3s ease;
+    margin-left: 1.5rem; /* Espace par rapport aux autres liens */
+  }
+
+  .pulse-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--cyan);
+    animation: blink 1.5s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 0.3; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+
+  .nav-btn-media:hover {
+    background: var(--blue);
+    color: #fff !important;
+    box-shadow: 0 0 25px var(--blue);
+    transform: translateY(-2px);
+  }
+
+  /* Cache le bouton sur mobile pour ne pas casser la nav */
+  @media (max-width: 768px) {
+    .nav-btn-media { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -174,7 +217,13 @@
     <li><a href="#stack">Stack</a></li>
     <li><a href="#about">Parcours</a></li>
     <li><a href="#contact">Contact</a></li>
-  </ul>
+ 
+</ul>
+<a href="https://core-ia-teal.vercel.app/test.html" class="nav-btn-media">
+  <span class="pulse-dot"></span>
+  MÉDIA & FORUM
+</a>
+  
 </nav>
 
 <!-- HERO -->
