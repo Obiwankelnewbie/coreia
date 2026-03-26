@@ -302,11 +302,17 @@
     <main>
       <div class="source-bar">
         <div class="section-label" style="margin-bottom:0;flex:none;">VEILLE IA EN DIRECT</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;" id="source-btns">
-          <button class="src-btn active" data-src="0">🤗 Hugging Face</button>
-          <button class="src-btn" data-src="1">📰 MIT Tech Review</button>
-          <button class="src-btn" data-src="2">🧠 The Verge AI</button>
-          <button class="src-btn" data-src="3">🇫🇷 Numerama</button>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;" id="source-btns">
+          <span style="font-family:var(--mono);font-size:0.52rem;color:var(--muted);letter-spacing:2px;">🇫🇷</span>
+          <button class="src-btn active" data-src="0">Numerama</button>
+          <button class="src-btn" data-src="1">Le Monde Info</button>
+          <button class="src-btn" data-src="2">01net</button>
+          <button class="src-btn" data-src="3">Journal du Net</button>
+          <span style="font-family:var(--mono);font-size:0.52rem;color:var(--muted);letter-spacing:2px;margin-left:4px;">🌍</span>
+          <button class="src-btn" data-src="4">Hugging Face</button>
+          <button class="src-btn" data-src="5">MIT Tech</button>
+          <button class="src-btn" data-src="6">The Verge AI</button>
+          <button class="src-btn" data-src="7">OpenAI</button>
         </div>
       </div>
       <div id="rss-loading">
@@ -456,10 +462,16 @@
 <script>
   /* ── RSS ── */
   const SOURCES = [
-    { url:'https://huggingface.co/blog/feed.xml',                                 tag:'OPEN SOURCE', cls:'tag-violet' },
-    { url:'https://www.technologyreview.com/feed/',                               tag:'RECHERCHE',   cls:'tag-blue'   },
-    { url:'https://www.theverge.com/ai-artificial-intelligence/rss/index.xml',    tag:'ACTU IA',     cls:'tag-cyan'   },
-    { url:'https://www.numerama.com/tag/intelligence-artificielle/feed/',         tag:'FR',          cls:'tag-green'  }
+    // 🇫🇷 FRANÇAIS
+    { url:'https://www.numerama.com/tag/intelligence-artificielle/feed/',                       tag:'NUMERAMA',       cls:'tag-green',  lang:'fr' },
+    { url:'https://www.lemondeinformatique.fr/flux-rss/intelligence-artificielle/rss.xml',     tag:'LE MONDE INFO',  cls:'tag-green',  lang:'fr' },
+    { url:'https://www.01net.com/rss/actualites/',                                             tag:'01NET',          cls:'tag-green',  lang:'fr' },
+    { url:'https://www.journaldunet.com/rss/',                                                 tag:'JDN',            cls:'tag-green',  lang:'fr' },
+    // 🌍 INTERNATIONAL
+    { url:'https://huggingface.co/blog/feed.xml',                                              tag:'HUGGING FACE',   cls:'tag-violet', lang:'en' },
+    { url:'https://www.technologyreview.com/feed/',                                            tag:'MIT TECH',       cls:'tag-blue',   lang:'en' },
+    { url:'https://www.theverge.com/ai-artificial-intelligence/rss/index.xml',                tag:'THE VERGE AI',   cls:'tag-cyan',   lang:'en' },
+    { url:'https://openai.com/news/rss.xml',                                                   tag:'OPENAI',         cls:'tag-blue',   lang:'en' },
   ];
   const PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
   const IMGS = [
