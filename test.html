@@ -938,7 +938,7 @@
     this.classList.add('active'); loadRSS(+this.dataset.src);
   }));
 
-  /* ══════ NAV ══════ */
+/* ══════ NAV ══════ */
   function showPage(n){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
@@ -946,7 +946,6 @@
     document.getElementById('nav-'+n)?.classList.add('active');
     const t=document.getElementById('tabs-media');
     if(t) t.style.display=n==='media'?'flex':'none';
-    if(n==='forum'){ loadTopics(); loadForumStats(); }
   }
   function toggleCat(id){ const e=document.getElementById(id); e.style.display=e.style.display==='none'?'':'none'; }
   document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',function(){
