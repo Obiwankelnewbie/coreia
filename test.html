@@ -500,8 +500,15 @@
   const SUPA_KEY = 'VOTRE_ANON_PUBLIC_KEY';
   /* ══════════════════════════════════════════ */
 
-  const { createClient } = supabase;
-  const db = createClient(SUPA_URL, SUPA_KEY);
+  /* ── Supabase init sécurisé ── */
+  const SUPA_READY = SUPA_URL !== 'https://VOTRE_PROJECT_ID.supabase.co' && SUPA_KEY !== 'VOTRE_ANON_PUBLIC_KEY';
+  let db = null;
+  if (SUPA_READY) {
+    try { const { createClient } = supabase; db = createClient(SUPA_URL, SUPA_KEY); }
+    catch(e) { console.warn('Supabase init error:', e); }
+  } else {
+    console.info('ℹ️ Supabase non configuré — forum en mode démo');
+  }
 
   /* ── Session courante ── */
   let currentUser = null;
@@ -510,7 +517,7 @@
   let activeCatFilter = 'all';
 
   /* ── Init auth listener ── */
-  db.auth.onAuthStateChange((_event, session) => {
+  if (db) db.auth.onAuthStateChange((_event, session) => {
     currentSession = session;
     currentUser = session?.user ?? null;
     renderAuthArea();
@@ -551,7 +558,8 @@
     if (!email || !pass) { errEl.textContent = 'Email et mot de passe requis.'; errEl.style.display='block'; return; }
 
     if (authMode === 'register') {
-      const { error } = await db.auth.signUp({
+      if (!db) { errEl.textContent = 'Supabase non configuré. Ajoutez vos clés.'; errEl.style.display='block'; return; }
+    const { error } = await db.auth.signUp({
         email, password: pass,
         options: { data: { username: uname || email.split('@')[0] } }
       });
@@ -564,7 +572,7 @@
   }
 
   async function logout() {
-    await db.auth.signOut();
+    if (db) await db.auth.signOut();
     currentUser = null;
     renderAuthArea();
     closeUserDropdown();
@@ -605,6 +613,13 @@
 
   /* ══════ FORUM — STATS ══════ */
   async function loadForumStats() {
+    if (!db) {
+      document.getElementById('stat-topics').textContent  = '—';
+      document.getElementById('stat-replies').textContent = '—';
+      document.getElementById('stat-members').textContent = '—';
+      document.getElementById('stat-online').textContent  = '—';
+      return;
+    }
     const [{ count: topics }, { count: replies }, { count: members }] = await Promise.all([
       db.from('topics').select('*', { count:'exact', head:true }),
       db.from('replies').select('*', { count:'exact', head:true }),
@@ -645,8 +660,45 @@
     return colors[h];
   }
 
+
+  /* ── DEMO topics (Supabase non configuré) ── */
+  function demoTopicsHTML() {
+    const demo = [
+      { id:'d1', title:'Mistral 7B vs Phi-3 Mini pour du RAG médical — comparatif', category:'ia-locale', uname:'alexandre_n', replies:24, ago:'il y a 1h', isNew:false },
+      { id:'d2', title:'Comment connecter n8n à mon CRM local sans cloud ?',         category:'automation', uname:'m_kaddour',   replies:12, ago:'il y a 2h', isNew:true  },
+      { id:'d3', title:'Modèle prédictif VNI — partage de code Python + dataset',   category:'sante',      uname:'alexandre_n', replies:5,  ago:'il y a 5h', isNew:true  },
+      { id:'d4', title:'Comment quantifier un modèle en GGUF sans perte de qualité ?', category:'ia-locale', uname:'r_leconte', replies:7,  ago:'il y a 3h', isNew:true  },
+      { id:'d5', title:'RAG on-premise avec LangChain et PGVector — retour terrain', category:'bi-data',    uname:'t_dupuis',   replies:9,  ago:'hier',       isNew:false },
+      { id:'d6', title:'Agent IA pour triage email RH avec Mistral — mon retour',   category:'automation', uname:'sarah_bwi',  replies:6,  ago:'hier',       isNew:false },
+    ];
+    return demo.map(t => {
+      const initials = t.uname.slice(0,2).toUpperCase();
+      const catCls   = CAT_CLASSES[t.category] || 'tag-blue';
+      const catLabel = CAT_LABELS[t.category]  || t.category;
+      return `
+        <div class="topic-row" onclick="openTopic('${t.id}','${t.title}','${t.category}')">
+          <div class="topic-left">
+            <div class="topic-avatar" style="background:${avatarColor(t.uname)}">${initials}</div>
+            <div class="topic-body">
+              <h4>${t.title}</h4>
+              <div class="topic-meta">
+                ${t.isNew ? '<span class="tag tag-green" style="font-size:.5rem">NOUVEAU</span>' : ''}
+                <span class="tag ${catCls}" style="font-size:.5rem">${catLabel}</span>
+                <span>${t.uname}</span><span>·</span><span>${t.ago}</span>
+              </div>
+            </div>
+          </div>
+          <div class="topic-right"><div class="topic-replies"><strong>${t.replies}</strong> rép.</div></div>
+        </div>`;
+    }).join('');
+  }
+
   async function loadTopics() {
     const list = document.getElementById('forum-topics-list');
+    if (!db) {
+      list.innerHTML = demoTopicsHTML();
+      return;
+    }
     list.innerHTML = '<div class="forum-empty pulse"><span>⏳</span>Chargement…</div>';
 
     let query = db.from('topics')
@@ -659,7 +711,7 @@
     const { data, error } = await query;
 
     if (error || !data?.length) {
-      list.innerHTML = '<div class="forum-empty"><span>💬</span>Aucun sujet pour l'instant.<br>Soyez le premier à poster !</div>';
+      list.innerHTML = '<div class="forum-empty"><span>💬</span>Aucun sujet pour l\'instant.<br>Soyez le premier à poster !</div>';
       return;
     }
 
@@ -704,6 +756,7 @@
     posts.innerHTML = '<div class="forum-empty pulse"><span>⏳</span>Chargement…</div>';
 
     // Load OP + replies
+    if (!db) { posts.innerHTML = '<div class="forum-empty"><span>💬</span>Connectez Supabase pour voir les messages.</div>'; return; }
     const [{ data: topic }, { data: replies }] = await Promise.all([
       db.from('topics').select('*, profiles(username)').eq('id', id).single(),
       db.from('replies').select('*, profiles(username)').eq('topic_id', id).order('created_at')
@@ -746,6 +799,7 @@
     if (!currentUser || !currentTopicId) return;
     const body = document.getElementById('reply-input').value.trim();
     if (!body) return;
+    if (!db) return;
     const { error } = await db.from('replies').insert({
       topic_id: currentTopicId,
       body,
@@ -776,6 +830,7 @@
       errEl.textContent = 'Tous les champs sont requis.';
       errEl.style.display = 'block'; return;
     }
+    if (!db) { errEl.textContent = 'Supabase non configuré.'; errEl.style.display='block'; return; }
     const { error } = await db.from('topics').insert({ title, category, body, user_id: currentUser.id });
     if (error) { errEl.textContent = error.message; errEl.style.display='block'; }
     else {
@@ -799,7 +854,7 @@
   });
 
   /* ══════ REALTIME — nouvelles réponses ══════ */
-  db.channel('forum-realtime')
+  if (db) db.channel('forum-realtime')
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'topics' }, () => loadTopics())
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'replies' }, payload => {
       if (currentTopicId && payload.new.topic_id === currentTopicId)
@@ -964,7 +1019,7 @@
 
   /* ══════ INIT ══════ */
   [0,1,2,3].forEach(i => loadRSS(i));
-  db.auth.getSession().then(({ data: { session } }) => {
+  if (db) db.auth.getSession().then(({ data: { session } }) => {
     currentSession = session;
     currentUser = session?.user ?? null;
     renderAuthArea();
