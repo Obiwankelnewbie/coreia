@@ -5,857 +5,700 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Core-IA Hub · Le Média de l'IA Souveraine</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
-<!-- Supabase SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════
-   DESIGN TOKENS
-═══════════════════════════════════════ */
+/* ── TOKENS ── */
 :root {
-  --ink:        #05060f;
-  --ink2:       #0b0d1e;
-  --ink3:       #111428;
-  --surface:    rgba(255,255,255,0.03);
-  --surface2:   rgba(255,255,255,0.06);
-  --electric:   #2563ff;
-  --electric2:  #5b8aff;
-  --acid:       #00e5a0;
-  --acid-dim:   rgba(0,229,160,0.08);
-  --amber:      #f59e0b;
-  --rose:       #f43f5e;
-  --text:       #e2e4f0;
-  --text2:      #7880a4;
-  --text3:      #3d4468;
-  --rule:       rgba(255,255,255,0.07);
-  --rule2:      rgba(255,255,255,0.12);
-  --serif:      'Playfair Display', Georgia, serif;
-  --mono:       'JetBrains Mono', monospace;
-  --r:          10px;
-  --r2:         16px;
-  --glow:       0 0 40px rgba(37,99,255,0.18);
-  --header-bg:  rgba(5,6,15,0.92);
-  --body-bg:    #05060f;
+  --bg:#05060f; --bg2:#0b0d1e; --bg3:#111428;
+  --surf:rgba(255,255,255,.03); --surf2:rgba(255,255,255,.06);
+  --blue:#2563ff; --blue2:#5b8aff;
+  --acid:#00e5a0; --acid-d:rgba(0,229,160,.08);
+  --amber:#f59e0b; --rose:#f43f5e;
+  --tx:#e2e4f0; --tx2:#7880a4; --tx3:#3d4468;
+  --br:rgba(255,255,255,.07); --br2:rgba(255,255,255,.12);
+  --serif:'Playfair Display',Georgia,serif;
+  --mono:'JetBrains Mono',monospace;
+  --r:10px; --r2:16px;
 }
-/* ── LIGHT MODE ── */
 body.light {
-  --ink:        #f8f9ff;
-  --ink2:       #eef0f8;
-  --ink3:       #e4e7f4;
-  --surface:    rgba(0,0,0,0.03);
-  --surface2:   rgba(0,0,0,0.06);
-  --text:       #0f1130;
-  --text2:      #505880;
-  --text3:      #9098c0;
-  --rule:       rgba(0,0,0,0.07);
-  --rule2:      rgba(0,0,0,0.12);
-  --header-bg:  rgba(248,249,255,0.95);
-  --body-bg:    #f8f9ff;
-  --acid-dim:   rgba(0,180,130,0.1);
+  --bg:#f5f6ff; --bg2:#eceef8; --bg3:#e4e6f2;
+  --surf:rgba(0,0,0,.03); --surf2:rgba(0,0,0,.05);
+  --tx:#0d0f28; --tx2:#525a82; --tx3:#9098c0;
+  --br:rgba(0,0,0,.07); --br2:rgba(0,0,0,.12);
 }
-body.light .glow-orb { opacity: .4; }
-body.light .site-header { background: var(--header-bg); }
-body.light .cat-bar { background: rgba(238,240,248,0.9); }
-body.light .hero-scrim { background: linear-gradient(105deg,rgba(248,249,255,.96) 0%,rgba(248,249,255,.75) 45%,rgba(248,249,255,.05) 100%); }
-body.light .hero h1 { color: #0f1130; }
-body.light .ticker-bar { opacity: 1; }
-body.light .widget { background: #fff; box-shadow: 0 1px 12px rgba(0,0,0,.06); }
-body.light .nl-widget { background: linear-gradient(135deg,rgba(37,99,255,.07),rgba(0,229,160,.04)); }
-body.light .topics-card { background: #fff; box-shadow: 0 1px 12px rgba(0,0,0,.06); }
-body.light .post-card { background: #fff; }
-body.light .overlay-box, body.light .modal-box { background: #f8f9ff; }
-body.light .f-stat { background: #fff; box-shadow: 0 1px 8px rgba(0,0,0,.05); }
-body.light body::after { opacity: .01; }
+body.light .site-header{background:rgba(245,246,255,.95)}
+body.light .cat-bar{background:rgba(236,238,248,.9)}
+body.light .hero-scrim{background:linear-gradient(105deg,rgba(245,246,255,.96) 0%,rgba(245,246,255,.7) 50%,transparent 100%)}
+body.light .hero-title{color:#0d0f28}
+body.light .widget,.light .topics-card,.light .post-card,.light .f-stat{background:#fff;box-shadow:0 1px 10px rgba(0,0,0,.06)}
+body.light .nl-widget{background:linear-gradient(135deg,rgba(37,99,255,.07),rgba(0,229,160,.04))}
+body.light .mob-nav-overlay{background:rgba(245,246,255,.98)}
+body.light .mob-nav-item{color:var(--tx2)}
+body.light .mob-nav-item:hover,.light .mob-nav-item.on{color:var(--acid)}
+body.light .overlay-box,.light .modal-box{background:#f5f6ff}
 
-/* Theme toggle button */
-.theme-toggle { background: var(--surface); border: 1px solid var(--rule2); border-radius: 20px; padding: 5px 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all .2s; flex-shrink: 0; }
-.theme-toggle:hover { background: var(--surface2); }
-.theme-toggle span { font-size: .7rem; line-height: 1; }
-.theme-toggle .th-label { font-family: var(--mono); font-size: .5rem; letter-spacing: .08em; color: var(--text2); }
-
-/* ═══════════════════════════════════════
-   RESET & BASE
-═══════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
-body{background:var(--ink);color:var(--text);font-family:var(--mono);font-size:13px;line-height:1.6;overflow-x:hidden;min-height:100vh}
+body{background:var(--bg);color:var(--tx);font-family:var(--mono);font-size:13px;line-height:1.6;overflow-x:hidden}
 
-/* Grain texture */
-body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9998}
+/* grain */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.35;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E")}
+.orb{position:fixed;border-radius:50%;filter:blur(150px);pointer-events:none;z-index:0}
+.orb1{width:700px;height:700px;background:radial-gradient(circle,rgba(37,99,255,.08),transparent 70%);top:-300px;left:-300px}
+.orb2{width:500px;height:500px;background:radial-gradient(circle,rgba(0,229,160,.05),transparent 70%);bottom:-150px;right:-150px}
 
-/* Ambient glow orbs */
-.glow-orb{position:fixed;border-radius:50%;filter:blur(160px);pointer-events:none;z-index:0}
-.go1{width:800px;height:800px;background:radial-gradient(circle,rgba(37,99,255,0.07),transparent 70%);top:-300px;left:-300px}
-.go2{width:600px;height:600px;background:radial-gradient(circle,rgba(0,229,160,0.05),transparent 70%);bottom:-200px;right:-200px}
+/* ── TICKER ── */
+.ticker-bar{background:linear-gradient(90deg,var(--blue),#1d4ed8);height:32px;display:flex;align-items:center;overflow:hidden;position:relative;z-index:50}
+.ticker-badge{flex-shrink:0;padding:0 14px;height:100%;display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.3);border-right:1px solid rgba(255,255,255,.15)}
+.ticker-badge span{font-family:var(--mono);font-size:.52rem;font-weight:700;letter-spacing:.2em;color:#fff}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--acid);animation:blink 1.4s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.ticker-scroll{display:flex;white-space:nowrap;animation:scroll 40s linear infinite;padding-left:1.5rem}
+.ticker-scroll span{font-family:var(--mono);font-size:.6rem;color:rgba(255,255,255,.88);padding-right:3rem}
+.ticker-scroll .sep{color:rgba(255,255,255,.25)!important;padding-right:1.5rem!important}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-/* ═══════════════════════════════════════
-   TYPOGRAPHY UTILITIES
-═══════════════════════════════════════ */
-.serif{font-family:var(--serif)}
-.mono{font-family:var(--mono)}
-.label{font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text2)}
-.label-acid{color:var(--acid)}
+/* ── HEADER ── */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(5,6,15,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--br2)}
+.hdr{max-width:1440px;margin:0 auto;padding:0 2rem;height:58px;display:flex;align-items:center;gap:1rem}
+.logo{font-family:var(--mono);font-size:.78rem;font-weight:700;letter-spacing:.22em;color:#fff;text-decoration:none;display:flex;align-items:center;gap:9px;flex-shrink:0}
+.logo-sq{width:26px;height:26px;background:var(--blue);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:.52rem;font-weight:700;color:#fff}
+.logo-b{font-size:.42rem;letter-spacing:.1em;background:rgba(37,99,255,.2);border:1px solid rgba(37,99,255,.4);color:var(--blue2);padding:2px 6px;border-radius:3px}
+.hdr-nav{display:flex;gap:2px;margin-left:1.5rem}
+.nav-btn{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;padding:6px 13px;border-radius:6px;color:var(--tx2);cursor:pointer;transition:all .2s;background:none;border:none}
+.nav-btn:hover{color:var(--tx);background:var(--surf2)}
+.nav-btn.on{color:var(--acid);background:var(--acid-d)}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px}
 
-/* ═══════════════════════════════════════
-   LIVE TICKER
-═══════════════════════════════════════ */
-.ticker-bar{background:linear-gradient(90deg,var(--electric) 0%,#1d4ed8 100%);height:34px;display:flex;align-items:center;overflow:hidden;position:relative;z-index:50;border-bottom:1px solid rgba(255,255,255,0.1)}
-.ticker-label{flex-shrink:0;padding:0 16px;height:100%;display:flex;align-items:center;gap:6px;background:rgba(0,0,0,0.3);border-right:1px solid rgba(255,255,255,0.15);z-index:2}
-.ticker-label span{font-family:var(--mono);font-size:.55rem;font-weight:700;letter-spacing:.2em;color:#fff}
-.ticker-dot{width:6px;height:6px;background:var(--acid);border-radius:50%;animation:pulse 1.5s ease infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
-.ticker-track{display:flex;white-space:nowrap;animation:slide 45s linear infinite;padding-left:2rem}
-.ticker-track span{font-family:var(--mono);font-size:.62rem;color:rgba(255,255,255,.88);padding-right:3rem;letter-spacing:.02em}
-.ticker-track .sep{color:rgba(255,255,255,.25)!important;padding-right:1.5rem!important}
-@keyframes slide{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+/* theme toggle */
+.theme-btn{background:var(--surf);border:1px solid var(--br2);border-radius:20px;padding:5px 11px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.2s;flex-shrink:0}
+.theme-btn:hover{background:var(--surf2)}
+.theme-btn .th-lbl{font-family:var(--mono);font-size:.48rem;letter-spacing:.08em;color:var(--tx2)}
 
-/* ═══════════════════════════════════════
-   HEADER
-═══════════════════════════════════════ */
-.site-header{position:sticky;top:0;z-index:100;background:rgba(5,6,15,.92);backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid var(--rule2)}
-.header-inner{max-width:1440px;margin:0 auto;padding:0 2.5rem;height:60px;display:flex;align-items:center;gap:2rem}
-.logo{font-family:var(--mono);font-size:.8rem;font-weight:700;letter-spacing:.25em;color:#fff;text-decoration:none;display:flex;align-items:center;gap:10px;flex-shrink:0}
-.logo-mark{width:28px;height:28px;background:var(--electric);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:700;color:#fff;letter-spacing:.05em}
-.logo-beta{font-size:.45rem;letter-spacing:.1em;background:rgba(37,99,255,.2);border:1px solid rgba(37,99,255,.4);color:var(--electric2);padding:2px 7px;border-radius:3px}
-.header-nav{display:flex;gap:2px;margin-left:2rem}
-.nav-item{font-family:var(--mono);font-size:.6rem;letter-spacing:.15em;padding:7px 14px;border-radius:6px;text-decoration:none;color:var(--text2);cursor:pointer;transition:all .2s;background:none;border:none}
-.nav-item:hover{color:var(--text);background:var(--surface2)}
-.nav-item.active{color:var(--acid);background:var(--acid-dim)}
-.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-.btn-primary{background:var(--electric);color:#fff;border:none;border-radius:7px;padding:7px 18px;font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
-.btn-primary:hover{background:#1d4ed8;transform:translateY(-1px);box-shadow:var(--glow)}
-.btn-ghost{background:none;border:1px solid var(--rule2);color:var(--text2);border-radius:7px;padding:7px 14px;font-family:var(--mono);font-size:.58rem;cursor:pointer;transition:all .2s}
-.btn-ghost:hover{border-color:var(--rule2);color:var(--text);background:var(--surface)}
+/* btn-cta */
+.btn-cta{background:var(--blue);color:#fff;border:none;border-radius:7px;padding:7px 16px;font-family:var(--mono);font-size:.56rem;letter-spacing:.08em;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.btn-cta:hover{background:#1d4ed8;transform:translateY(-1px)}
+.btn-outline{background:none;border:1px solid var(--br2);color:var(--tx2);border-radius:7px;padding:7px 14px;font-family:var(--mono);font-size:.56rem;cursor:pointer;transition:.2s}
+.btn-outline:hover{color:var(--tx);background:var(--surf)}
 
-/* Category tabs */
-.cat-bar{border-bottom:1px solid var(--rule);background:rgba(11,13,30,.8);backdrop-filter:blur(10px);position:relative;z-index:1}
-.cat-bar-inner{max-width:1440px;margin:0 auto;padding:0 2.5rem;display:flex;gap:0}
-.cat-tab{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;padding:12px 16px;background:none;border:none;color:var(--text2);cursor:pointer;transition:all .2s;border-bottom:2px solid transparent;position:relative;top:1px}
-.cat-tab:hover{color:var(--text)}
-.cat-tab.active{color:var(--acid);border-bottom-color:var(--acid)}
+/* hamburger */
+.hamburger{display:none;background:none;border:1px solid var(--br2);border-radius:6px;padding:6px 9px;cursor:pointer;flex-direction:column;gap:4px;margin-left:auto;flex-shrink:0}
+.hamburger span{display:block;width:16px;height:2px;background:var(--tx);border-radius:2px}
 
-/* Pages */
-.page{display:none}.page.active{display:block}
+/* ── MOBILE NAV ── */
+.mob-nav{position:fixed;inset:0;background:rgba(5,6,15,.97);backdrop-filter:blur(20px);z-index:500;display:flex;flex-direction:column;padding:1.5rem;transform:translateX(110%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.mob-nav.open{transform:translateX(0)}
+.mob-nav-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem}
+.mob-nav-logo{font-family:var(--mono);font-size:.7rem;font-weight:700;letter-spacing:.2em;color:#fff;display:flex;align-items:center;gap:8px}
+.mob-close{background:none;border:1px solid var(--br2);color:var(--tx);border-radius:7px;padding:7px 12px;font-family:var(--mono);font-size:.6rem;cursor:pointer}
+.mob-link{display:block;font-family:var(--mono);font-size:.95rem;font-weight:700;letter-spacing:.08em;color:var(--tx2);padding:.9rem 0;border-bottom:1px solid var(--br);background:none;border-left:none;border-right:none;border-top:none;text-align:left;width:100%;cursor:pointer;transition:color .2s}
+.mob-link:last-of-type{border-bottom:none}
+.mob-link:hover,.mob-link.on{color:var(--acid)}
+.mob-bottom{margin-top:auto;padding-top:1.5rem;border-top:1px solid var(--br)}
 
-/* ═══════════════════════════════════════
-   MEDIA PAGE — LAYOUT
-═══════════════════════════════════════ */
-.media-wrap{max-width:1440px;margin:0 auto;padding:2.5rem 2.5rem;display:grid;grid-template-columns:1fr 300px;grid-template-rows:auto auto;gap:2.5rem;position:relative;z-index:1}
+/* ── CAT BAR ── */
+.cat-bar{border-bottom:1px solid var(--br);background:rgba(11,13,30,.85);backdrop-filter:blur(10px);position:relative;z-index:1;overflow:hidden}
+.cat-inner{max-width:1440px;margin:0 auto;padding:0 2rem;display:flex;overflow-x:auto;scrollbar-width:none}
+.cat-inner::-webkit-scrollbar{display:none}
+.cat-btn{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;padding:11px 15px;background:none;border:none;color:var(--tx2);cursor:pointer;transition:.2s;border-bottom:2px solid transparent;position:relative;top:1px;white-space:nowrap;flex-shrink:0}
+.cat-btn:hover{color:var(--tx)}
+.cat-btn.on{color:var(--acid);border-bottom-color:var(--acid)}
 
-/* ═══════════════════════════════════════
-   HERO CAROUSEL
-═══════════════════════════════════════ */
-.hero{grid-column:1/-1;position:relative;height:520px;border-radius:var(--r2);overflow:hidden;border:1px solid var(--rule);cursor:pointer}
-.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:opacity .7s ease,transform .7s ease}
-.hero-scrim{position:absolute;inset:0;background:linear-gradient(105deg,rgba(5,6,15,.95) 0%,rgba(5,6,15,.7) 45%,rgba(5,6,15,.1) 100%)}
-.hero-content{position:absolute;inset:0;padding:3rem 3.5rem;display:flex;flex-direction:column;justify-content:flex-end;max-width:700px;z-index:2}
-.hero-source{display:flex;align-items:center;gap:8px;margin-bottom:1rem}
-.hero-source-tag{font-family:var(--mono);font-size:.52rem;letter-spacing:.15em;padding:3px 10px;border-radius:3px;font-weight:700}
-.hero-eyebrow{font-family:var(--mono);font-size:.55rem;letter-spacing:.15em;color:var(--text2)}
-.hero h1{font-family:var(--serif);font-size:2.8rem;font-weight:900;line-height:1.06;margin:.75rem 0 1rem;color:#fff}
-.hero h1 em{font-style:italic;color:var(--electric2)}
-.hero-summary{font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.8;max-width:520px}
-.hero-footer{display:flex;align-items:center;gap:1.2rem;margin-top:1.5rem;flex-wrap:wrap}
-.hero-meta-item{font-family:var(--mono);font-size:.55rem;color:var(--text2)}
-.hero-cta{background:var(--electric);color:#fff;padding:9px 22px;border-radius:7px;font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;margin-left:auto;text-decoration:none;transition:all .2s;display:inline-flex;align-items:center;gap:6px;flex-shrink:0}
-.hero-cta:hover{background:#1d4ed8;box-shadow:var(--glow)}
-/* Prev/Next */
-.hero-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:5;background:rgba(5,6,15,.6);border:1px solid var(--rule2);color:var(--text);width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:1.2rem;backdrop-filter:blur(8px)}
-.hero-arrow:hover{background:var(--electric);border-color:var(--electric)}
-.hero-arrow.prev{left:1.5rem}
-.hero-arrow.next{right:1.5rem}
-/* Dots */
-.hero-dots{position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:5}
-.hero-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);border:none;cursor:pointer;transition:all .3s;padding:0}
-.hero-dot.on{width:24px;border-radius:4px;background:var(--acid)}
-/* Progress */
-.hero-bar{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,.06);z-index:5}
-.hero-bar-fill{height:100%;background:linear-gradient(90deg,var(--electric),var(--acid));width:0}
-/* Slide transition */
-@keyframes heroIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.hero-anim{animation:heroIn .5s ease both}
+/* pages */
+.pg{display:none}.pg.on{display:block}
 
-/* ═══════════════════════════════════════
-   FEED SECTION
-═══════════════════════════════════════ */
-.feed-section{}
-.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;gap:1rem}
-.section-rule{flex:1;height:1px;background:var(--rule)}
-.source-pills{display:flex;gap:5px;flex-wrap:wrap}
-.pill{background:none;border:1px solid var(--rule);color:var(--text2);border-radius:20px;padding:4px 12px;font-family:var(--mono);font-size:.52rem;letter-spacing:.08em;cursor:pointer;transition:all .2s;white-space:nowrap}
-.pill:hover{border-color:var(--electric2);color:var(--text)}
-.pill.on{background:rgba(37,99,255,.15);border-color:var(--electric);color:var(--electric2)}
-.pill-sep{font-family:var(--mono);font-size:.5rem;color:var(--text3);letter-spacing:.1em;padding:4px 2px;display:flex;align-items:center}
+/* ── MEDIA LAYOUT ── */
+.media-wrap{max-width:1440px;margin:0 auto;padding:2rem 2rem;display:grid;grid-template-columns:1fr 290px;gap:2rem;position:relative;z-index:1}
 
-/* Article cards */
-.article-list{display:flex;flex-direction:column}
-.art-card{display:grid;grid-template-columns:110px 1fr;gap:1rem;padding:1.1rem 0;border-bottom:1px solid var(--rule);text-decoration:none;color:inherit;transition:opacity .2s}
-.art-card:hover{opacity:.8}
-.art-thumb{width:110px;height:76px;border-radius:var(--r);background-size:cover;background-position:center;border:1px solid var(--rule);overflow:hidden;flex-shrink:0;position:relative}
-.art-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(37,99,255,.08),transparent)}
-.art-body{display:flex;flex-direction:column;justify-content:space-between;min-width:0}
-.art-tag{display:inline-block;padding:2px 8px;border-radius:3px;font-family:var(--mono);font-size:.48rem;font-weight:700;letter-spacing:.12em;margin-bottom:4px}
-.art-body h3{font-family:var(--serif);font-size:.97rem;font-weight:700;line-height:1.28;color:var(--text)}
-.art-body p{font-family:var(--mono);font-size:.58rem;color:var(--text2);line-height:1.65;margin-top:3px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.art-meta{display:flex;align-items:center;gap:6px;margin-top:5px;flex-wrap:wrap}
-.art-meta span{font-family:var(--mono);font-size:.52rem;color:var(--text3)}
+/* ── HERO ── */
+.hero{grid-column:1/-1;position:relative;height:500px;border-radius:var(--r2);overflow:hidden;border:1px solid var(--br)}
+.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:opacity .6s ease}
+.hero-scrim{position:absolute;inset:0;background:linear-gradient(105deg,rgba(5,6,15,.95) 0%,rgba(5,6,15,.65) 45%,rgba(5,6,15,.1) 100%)}
+.hero-body{position:absolute;inset:0;padding:2.5rem 3rem;display:flex;flex-direction:column;justify-content:flex-end;max-width:680px;z-index:2}
+.hero-src{display:flex;align-items:center;gap:8px;margin-bottom:.8rem}
+.hero-title{font-family:var(--serif);font-size:2.6rem;font-weight:900;line-height:1.08;margin:.7rem 0 .9rem;color:#fff}
+.hero-desc{font-family:var(--mono);font-size:.62rem;color:rgba(255,255,255,.6);line-height:1.8;max-width:520px}
+.hero-foot{display:flex;align-items:center;gap:1rem;margin-top:1.3rem;flex-wrap:wrap}
+.hero-meta{font-family:var(--mono);font-size:.52rem;color:rgba(255,255,255,.5)}
+.hero-read{background:var(--blue);color:#fff;padding:8px 20px;border-radius:6px;font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;margin-left:auto;text-decoration:none;transition:.2s;flex-shrink:0}
+.hero-read:hover{background:#1d4ed8}
+.h-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:5;background:rgba(5,6,15,.55);border:1px solid var(--br2);color:#fff;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;font-size:1.1rem;backdrop-filter:blur(6px)}
+.h-arrow:hover{background:var(--blue);border-color:var(--blue)}
+.h-prev{left:1.2rem}.h-next{right:1.2rem}
+.h-dots{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:5}
+.h-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);border:none;cursor:pointer;transition:.3s;padding:0}
+.h-dot.on{width:20px;border-radius:3px;background:var(--acid)}
+.h-bar{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,.06);z-index:5}
+.h-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--acid));width:0}
+@keyframes hIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.h-anim{animation:hIn .45s ease both}
 
-/* Tags */
-.t-blue  {background:rgba(37,99,255,.15);color:#93c5fd;border:1px solid rgba(37,99,255,.25)}
+/* ── TAGS ── */
+.tag{display:inline-block;padding:2px 8px;border-radius:3px;font-family:var(--mono);font-size:.5rem;font-weight:700;letter-spacing:.1em}
+.t-blue{background:rgba(37,99,255,.15);color:#93c5fd;border:1px solid rgba(37,99,255,.25)}
 .t-violet{background:rgba(124,58,237,.15);color:#c4b5fd;border:1px solid rgba(124,58,237,.25)}
-.t-green {background:rgba(0,229,160,.08);color:var(--acid);border:1px solid rgba(0,229,160,.2)}
-.t-amber {background:rgba(245,158,11,.1);color:#fcd34d;border:1px solid rgba(245,158,11,.2)}
-.t-rose  {background:rgba(244,63,94,.1);color:#fda4af;border:1px solid rgba(244,63,94,.2)}
-.t-cyan  {background:rgba(6,182,212,.1);color:#67e8f9;border:1px solid rgba(6,182,212,.2)}
+.t-green{background:rgba(0,229,160,.08);color:var(--acid);border:1px solid rgba(0,229,160,.2)}
+.t-amber{background:rgba(245,158,11,.1);color:#fcd34d;border:1px solid rgba(245,158,11,.2)}
+.t-rose{background:rgba(244,63,94,.1);color:#fda4af;border:1px solid rgba(244,63,94,.2)}
+.t-cyan{background:rgba(6,182,212,.1);color:#67e8f9;border:1px solid rgba(6,182,212,.2)}
 
-/* Skeletons */
+/* ── FEED ── */
+.sect-head{display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
+.sect-label{font-family:var(--mono);font-size:.52rem;letter-spacing:.2em;color:var(--acid);white-space:nowrap}
+.sect-line{flex:1;height:1px;background:var(--br)}
+.pills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:.9rem}
+.pill{background:var(--surf);border:1px solid var(--br);color:var(--tx2);border-radius:20px;padding:4px 11px;font-family:var(--mono);font-size:.5rem;letter-spacing:.06em;cursor:pointer;transition:.2s;white-space:nowrap}
+.pill:hover{border-color:var(--blue2);color:var(--tx)}
+.pill.on{background:rgba(37,99,255,.12);border-color:var(--blue);color:var(--blue2)}
+.pill-sep{font-family:var(--mono);font-size:.48rem;color:var(--tx3);display:flex;align-items:center}
+/* skeletons */
 @keyframes sk{0%,100%{opacity:.15}50%{opacity:.4}}
-.sk-card{display:grid;grid-template-columns:110px 1fr;gap:1rem;padding:1.1rem 0;border-bottom:1px solid var(--rule);animation:sk 1.8s ease infinite}
+.sk-card{display:grid;grid-template-columns:100px 1fr;gap:.9rem;padding:1rem 0;border-bottom:1px solid var(--br);animation:sk 1.8s ease infinite}
 .sk-card:nth-child(2){animation-delay:.2s}.sk-card:nth-child(3){animation-delay:.4s}
-.sk-img{width:110px;height:76px;border-radius:var(--r);background:var(--surface2)}
-.sk-lines{display:flex;flex-direction:column;gap:8px;padding-top:6px}
-.sk-ln{height:10px;border-radius:3px;background:var(--surface2)}
+.sk-img{width:100px;height:68px;border-radius:var(--r);background:var(--surf2)}
+.sk-lines{display:flex;flex-direction:column;gap:7px;padding-top:4px}
+.sk-l{height:10px;border-radius:3px;background:var(--surf2)}
+/* article card */
+.art-card{display:grid;grid-template-columns:110px 1fr;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--br);text-decoration:none;color:inherit;transition:opacity .2s}
+.art-card:hover{opacity:.8}
+.art-img{width:110px;height:74px;border-radius:var(--r);background-size:cover;background-position:center;border:1px solid var(--br);flex-shrink:0;position:relative;overflow:hidden}
+.art-img::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(37,99,255,.07),transparent)}
+.art-body{display:flex;flex-direction:column;justify-content:space-between}
+.art-body h3{font-family:var(--serif);font-size:.95rem;font-weight:700;line-height:1.25;margin:4px 0}
+.art-body p{font-family:var(--mono);font-size:.58rem;color:var(--tx2);line-height:1.65;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.art-meta{display:flex;align-items:center;gap:6px;margin-top:5px;flex-wrap:wrap}
+.art-meta span{font-family:var(--mono);font-size:.5rem;color:var(--tx3)}
 
-/* ═══════════════════════════════════════
-   SIDEBAR
-═══════════════════════════════════════ */
-.sidebar{display:flex;flex-direction:column;gap:1.2rem}
-.widget{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r2);padding:1.3rem;backdrop-filter:blur(8px)}
-.widget-head{font-family:var(--mono);font-size:.52rem;letter-spacing:.2em;color:var(--acid);margin-bottom:1rem;padding-bottom:.7rem;border-bottom:1px solid var(--rule);text-transform:uppercase}
-.trend-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--rule);text-decoration:none;color:inherit;transition:opacity .18s}
+/* ── SIDEBAR ── */
+.sidebar{display:flex;flex-direction:column;gap:1.1rem}
+.widget{background:var(--surf);border:1px solid var(--br);border-radius:var(--r2);padding:1.2rem;backdrop-filter:blur(8px)}
+.wh{font-family:var(--mono);font-size:.5rem;letter-spacing:.2em;color:var(--acid);margin-bottom:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--br);text-transform:uppercase}
+.trend-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--br);text-decoration:none;color:inherit;transition:opacity .18s}
 .trend-item:last-child{border-bottom:none;padding-bottom:0}
 .trend-item:hover{opacity:.75}
-.trend-n{font-family:var(--mono);font-size:1.1rem;font-weight:700;color:var(--rule2);line-height:1;min-width:24px}
-.trend-body h4{font-family:var(--serif);font-size:.88rem;font-weight:700;line-height:1.3;color:var(--text)}
-.trend-body span{font-family:var(--mono);font-size:.52rem;color:var(--text2)}
-/* Newsletter */
+.trend-n{font-family:var(--mono);font-size:1.1rem;font-weight:700;color:var(--br2);line-height:1;min-width:22px;flex-shrink:0}
+.trend-body h4{font-family:var(--serif);font-size:.85rem;font-weight:700;line-height:1.28}
+.trend-body span{font-family:var(--mono);font-size:.5rem;color:var(--tx2)}
 .nl-widget{background:linear-gradient(135deg,rgba(37,99,255,.1),rgba(0,229,160,.05));border-color:rgba(37,99,255,.2)}
-.nl-widget p{font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.75;margin-bottom:1rem}
-.nl-input{width:100%;background:rgba(5,6,15,.8);border:1px solid var(--rule);border-radius:6px;padding:8px 12px;color:var(--text);font-family:var(--mono);font-size:.62rem;outline:none;margin-bottom:7px;transition:border .2s}
-.nl-input:focus{border-color:var(--electric)}
-.nl-btn{width:100%;background:var(--electric);color:#fff;border:none;border-radius:6px;padding:9px;font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;cursor:pointer;transition:.2s}
+.nl-widget p{font-family:var(--mono);font-size:.6rem;color:var(--tx2);line-height:1.75;margin-bottom:.9rem}
+.nl-input{width:100%;background:rgba(5,6,15,.85);border:1px solid var(--br);border-radius:5px;padding:8px 11px;color:var(--tx);font-family:var(--mono);font-size:.6rem;margin-bottom:7px;outline:none;transition:border .2s}
+.nl-input:focus{border-color:var(--blue)}
+.nl-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:5px;padding:9px;font-family:var(--mono);font-size:.56rem;letter-spacing:.08em;cursor:pointer;transition:.2s}
 .nl-btn:hover{background:#1d4ed8}
 
-/* ═══════════════════════════════════════
-   FORUM PAGE
-═══════════════════════════════════════ */
-.forum-wrap{max-width:1200px;margin:0 auto;padding:2.5rem 2.5rem;display:grid;grid-template-columns:220px 1fr;gap:2rem;position:relative;z-index:1}
-/* Forum sidebar */
-.f-nav{display:flex;flex-direction:column;gap:3px;position:sticky;top:80px;height:fit-content}
-.f-nav-sect{font-family:var(--mono);font-size:.48rem;letter-spacing:.2em;color:var(--text3);padding:0 10px 8px;text-transform:uppercase}
-.f-nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--text2);font-family:var(--mono);font-size:.6rem;transition:all .18s;border:1px solid transparent;cursor:pointer;background:none;width:100%;text-align:left}
-.f-nav-item:hover{color:var(--text);background:var(--surface2)}
-.f-nav-item.on{color:var(--acid);background:var(--acid-dim);border-color:rgba(0,229,160,.15)}
-.f-nav-count{margin-left:auto;font-family:var(--mono);font-size:.48rem;background:var(--surface2);padding:2px 7px;border-radius:8px;color:var(--text2)}
-.f-sep{height:1px;background:var(--rule);margin:6px 0}
-/* Forum main */
-.f-main{}
-.f-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;gap:1rem}
-.f-header h1{font-family:var(--serif);font-size:2rem;font-weight:900;line-height:1.1}
-.f-header p{font-family:var(--mono);font-size:.58rem;color:var(--text2);margin-top:5px}
-/* Stats */
-.f-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:1.4rem}
-.f-stat{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:.9rem;text-align:center}
-.f-stat-n{font-family:var(--mono);font-size:1.25rem;font-weight:700;color:var(--acid)}
-.f-stat-l{font-family:var(--mono);font-size:.48rem;letter-spacing:.15em;color:var(--text2);margin-top:3px;text-transform:uppercase}
-/* Online */
-.online-bar{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.u-chip{display:flex;align-items:center;gap:5px;background:var(--ink2);border:1px solid var(--rule);border-radius:20px;padding:3px 10px 3px 5px;font-family:var(--mono);font-size:.58rem;color:var(--text2)}
-.u-av{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.48rem;font-weight:700;color:#fff;flex-shrink:0}
+/* ── CONTENT PAGES ── */
+.content-wrap{max-width:920px;margin:0 auto;padding:2rem 2rem;position:relative;z-index:1}
+.content-wrap h1{font-family:var(--serif);font-size:2.2rem;font-weight:900;line-height:1.1;margin:1rem 0}
+.content-wrap h1 em{font-style:italic;color:var(--blue2)}
+.content-eyebrow{font-family:var(--mono);font-size:.52rem;letter-spacing:.2em;color:var(--acid);margin-bottom:.6rem}
+.content-sub{font-family:var(--mono);font-size:.65rem;color:var(--tx2);line-height:1.85;margin-bottom:2rem;max-width:620px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.card-block{background:var(--surf2);border-radius:var(--r);padding:.9rem}
+.card-block .cb-label{font-family:var(--mono);font-size:.5rem;letter-spacing:.12em;margin-bottom:.4rem}
+.card-block p{font-family:var(--mono);font-size:.6rem;color:var(--tx2);line-height:1.7}
+.info-block{border-left:2px solid var(--blue);padding-left:1rem;margin-bottom:.9rem}
+.info-block .ib-label{font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;color:var(--blue2);margin-bottom:.3rem}
+.info-block p{font-family:var(--mono);font-size:.62rem;color:var(--tx2);line-height:1.7}
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:.5rem}
+.kpi{background:var(--surf2);border-radius:var(--r);padding:.9rem;text-align:center}
+.kpi-n{font-family:var(--mono);font-size:1.6rem;font-weight:700}
+.kpi-l{font-family:var(--mono);font-size:.5rem;color:var(--tx2);margin-top:.3rem}
+.dossier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.2rem}
+.dossier-card{background:var(--surf);border:1px solid var(--br);border-radius:var(--r2);padding:1.3rem;cursor:pointer;transition:border-color .2s}
+.dossier-card:hover{border-color:rgba(37,99,255,.4)}
+.dossier-card h2{font-family:var(--serif);font-size:1.15rem;font-weight:700;line-height:1.25;margin:.6rem 0 .7rem}
+.dossier-card p{font-family:var(--mono);font-size:.58rem;color:var(--tx2);line-height:1.75;margin-bottom:.9rem}
+.dossier-foot{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.52rem;color:var(--tx2)}
+.dossier-foot span:last-child{color:var(--acid)}
+code{background:var(--surf2);padding:1px 6px;border-radius:3px;color:var(--acid);font-family:var(--mono)}
+strong.hi{color:var(--tx)}
+.step{margin-bottom:.8rem;font-family:var(--mono);font-size:.63rem;color:var(--tx2);line-height:1.8}
+.step strong{color:var(--blue2)}
+.check-list{font-family:var(--mono);font-size:.6rem;color:var(--tx2);line-height:1.9;background:var(--surf2);border-radius:var(--r);padding:.9rem}
+.check-list span{color:var(--acid)}
+
+/* ── FORUM ── */
+.forum-wrap{max-width:1200px;margin:0 auto;padding:2rem 2rem;display:grid;grid-template-columns:210px 1fr;gap:1.8rem;position:relative;z-index:1}
+.f-nav{display:flex;flex-direction:column;gap:3px;position:sticky;top:76px;height:fit-content}
+.f-nav-sect{font-family:var(--mono);font-size:.48rem;letter-spacing:.2em;color:var(--tx3);padding:0 10px 7px;text-transform:uppercase}
+.f-nav-btn{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:7px;color:var(--tx2);font-family:var(--mono);font-size:.6rem;transition:.18s;border:1px solid transparent;cursor:pointer;background:none;width:100%;text-align:left;text-decoration:none}
+.f-nav-btn:hover{color:var(--tx);background:var(--surf2)}
+.f-nav-btn.on{color:var(--acid);background:var(--acid-d);border-color:rgba(0,229,160,.15)}
+.f-nav-count{margin-left:auto;font-family:var(--mono);font-size:.48rem;background:var(--surf2);padding:2px 6px;border-radius:7px;color:var(--tx2)}
+.f-sep{height:1px;background:var(--br);margin:5px 0}
+.f-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.3rem;gap:.8rem}
+.f-head h1{font-family:var(--serif);font-size:1.8rem;font-weight:900;line-height:1.1}
+.f-head p{font-family:var(--mono);font-size:.58rem;color:var(--tx2);margin-top:4px}
+.f-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.2rem}
+.f-stat{background:var(--surf);border:1px solid var(--br);border-radius:var(--r);padding:.8rem;text-align:center}
+.f-stat-n{font-family:var(--mono);font-size:1.2rem;font-weight:700;color:var(--acid)}
+.f-stat-l{font-family:var(--mono);font-size:.48rem;color:var(--tx2);letter-spacing:.12em;margin-top:3px;text-transform:uppercase}
 .on-dot{width:6px;height:6px;border-radius:50%;background:var(--acid);box-shadow:0 0 5px var(--acid);display:inline-block}
-/* Cat filters */
-.f-filters{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1.2rem}
-/* Topics */
-.topics-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r2);overflow:hidden}
-.topic-row{display:grid;grid-template-columns:1fr auto;gap:1rem;padding:12px 1.3rem;border-bottom:1px solid var(--rule);transition:background .15s;align-items:center;cursor:pointer}
+.online-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.u-chip{display:flex;align-items:center;gap:4px;background:var(--bg2);border:1px solid var(--br);border-radius:20px;padding:3px 9px 3px 4px;font-family:var(--mono);font-size:.56rem;color:var(--tx2)}
+.u-av{width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.46rem;font-weight:700;color:#fff;flex-shrink:0}
+.topics-card{background:var(--surf);border:1px solid var(--br);border-radius:var(--r2);overflow:hidden}
+.topic-row{display:grid;grid-template-columns:1fr auto;gap:.8rem;padding:11px 1.2rem;border-bottom:1px solid var(--br);transition:background .15s;align-items:center;cursor:pointer}
 .topic-row:last-child{border-bottom:none}
-.topic-row:hover{background:var(--surface2)}
-.t-left{display:flex;align-items:flex-start;gap:10px}
-.t-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.55rem;font-weight:700;color:#fff;flex-shrink:0}
-.t-body h4{font-family:var(--serif);font-size:.92rem;font-weight:700;line-height:1.28;margin-bottom:4px;color:var(--text);transition:color .15s}
+.topic-row:hover{background:var(--surf2)}
+.t-left{display:flex;align-items:flex-start;gap:9px}
+.t-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.52rem;font-weight:700;color:#fff;flex-shrink:0}
+.t-body h4{font-family:var(--serif);font-size:.9rem;font-weight:700;line-height:1.25;margin-bottom:4px;color:var(--tx);transition:color .15s}
 .topic-row:hover .t-body h4{color:var(--acid)}
 .t-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.t-meta span{font-family:var(--mono);font-size:.52rem;color:var(--text2)}
-.t-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
-.t-replies{font-family:var(--mono);font-size:.58rem;color:var(--text2)}
-.t-replies strong{color:var(--text)}
-/* empty */
-.f-empty{text-align:center;padding:3rem;color:var(--text2);font-family:var(--mono);font-size:.65rem}
-.f-empty-icon{font-size:2.5rem;display:block;margin-bottom:.8rem;opacity:.5}
-/* Detail view */
+.t-meta span{font-family:var(--mono);font-size:.5rem;color:var(--tx2)}
+.t-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.t-reps{font-family:var(--mono);font-size:.56rem;color:var(--tx2)}
+.t-reps strong{color:var(--tx)}
+.f-empty{text-align:center;padding:2.5rem;color:var(--tx2);font-family:var(--mono);font-size:.62rem}
+.f-empty-ico{font-size:2rem;display:block;margin-bottom:.7rem;opacity:.5}
+/* detail */
 .f-detail{display:none}.f-detail.on{display:block}
-.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--rule);color:var(--text2);border-radius:6px;padding:6px 14px;font-family:var(--mono);font-size:.58rem;cursor:pointer;transition:.18s;margin-bottom:1.2rem}
-.back-btn:hover{border-color:var(--electric2);color:var(--text)}
-.post-card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r2);padding:1.2rem 1.4rem;margin-bottom:.8rem}
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--br);color:var(--tx2);border-radius:6px;padding:6px 13px;font-family:var(--mono);font-size:.56rem;cursor:pointer;transition:.18s;margin-bottom:1.1rem}
+.back-btn:hover{border-color:var(--blue2);color:var(--tx)}
+.post-card{background:var(--surf);border:1px solid var(--br);border-radius:var(--r2);padding:1.1rem 1.3rem;margin-bottom:.7rem}
 .post-card.is-op{border-color:rgba(37,99,255,.3);background:rgba(37,99,255,.03)}
-.post-head{display:flex;align-items:center;gap:10px;margin-bottom:.8rem}
-.post-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.55rem;font-weight:700;color:#fff}
-.post-info{font-family:var(--mono);font-size:.58rem;color:var(--text2)}
-.post-info strong{color:var(--text)}
-.post-body{font-family:var(--mono);font-size:.65rem;line-height:1.8;color:var(--text);white-space:pre-wrap}
-.reply-box{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r2);padding:1.2rem;margin-top:1rem}
-.reply-area{width:100%;background:rgba(5,6,15,.9);border:1px solid var(--rule);border-radius:7px;padding:10px 12px;color:var(--text);font-family:var(--mono);font-size:.62rem;min-height:90px;resize:vertical;outline:none;transition:border .2s}
-.reply-area:focus{border-color:var(--electric)}
-.reply-footer{display:flex;justify-content:flex-end;margin-top:8px}
+.post-head{display:flex;align-items:center;gap:9px;margin-bottom:.7rem}
+.post-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.5rem;font-weight:700;color:#fff}
+.post-info{font-family:var(--mono);font-size:.56rem;color:var(--tx2)}
+.post-info strong{color:var(--tx)}
+.post-body{font-family:var(--mono);font-size:.63rem;line-height:1.8;color:var(--tx);white-space:pre-wrap}
+.reply-box{background:var(--surf);border:1px solid var(--br);border-radius:var(--r2);padding:1.1rem;margin-top:.9rem}
+.reply-ta{width:100%;background:rgba(5,6,15,.9);border:1px solid var(--br);border-radius:6px;padding:9px 11px;color:var(--tx);font-family:var(--mono);font-size:.6rem;min-height:80px;resize:vertical;outline:none;transition:border .2s}
+.reply-ta:focus{border-color:var(--blue)}
+.reply-foot{display:flex;justify-content:flex-end;margin-top:7px}
 
-/* ═══════════════════════════════════════
-   AUTH OVERLAY
-═══════════════════════════════════════ */
+/* ── AUTH ── */
 .overlay{position:fixed;inset:0;background:rgba(5,6,15,.88);backdrop-filter:blur(12px);z-index:200;display:none;align-items:center;justify-content:center}
 .overlay.on{display:flex}
-.overlay-box{background:var(--ink2);border:1px solid var(--rule2);border-radius:var(--r2);padding:2.2rem;width:100%;max-width:420px;position:relative;animation:boxIn .25s ease}
-@keyframes boxIn{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
-.overlay-close{position:absolute;top:1.1rem;right:1.1rem;background:none;border:none;color:var(--text2);cursor:pointer;font-size:1rem;transition:.18s}
-.overlay-close:hover{color:var(--text)}
-.overlay-logo{font-family:var(--mono);font-size:.55rem;letter-spacing:.2em;color:var(--acid);margin-bottom:1.4rem;display:block}
-.overlay-title{font-family:var(--serif);font-size:1.6rem;font-weight:900;margin-bottom:.3rem}
-.overlay-sub{font-family:var(--mono);font-size:.58rem;color:var(--text2);margin-bottom:1.6rem}
-.auth-tabs{display:flex;background:var(--surface);border:1px solid var(--rule);border-radius:7px;overflow:hidden;margin-bottom:1.5rem}
-.auth-tab{flex:1;background:none;border:none;padding:9px;font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;color:var(--text2);cursor:pointer;transition:.18s}
-.auth-tab.on{background:var(--electric);color:#fff}
-.msg-err{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.2);border-radius:6px;padding:8px 12px;font-family:var(--mono);font-size:.58rem;color:#fda4af;margin-bottom:.9rem;display:none}
-.msg-ok{background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.15);border-radius:6px;padding:8px 12px;font-family:var(--mono);font-size:.58rem;color:var(--acid);margin-bottom:.9rem;display:none}
-.field{margin-bottom:.9rem}
-.field label{font-family:var(--mono);font-size:.5rem;letter-spacing:.15em;color:var(--text2);display:block;margin-bottom:5px;text-transform:uppercase}
-.field input,.field select,.field textarea{width:100%;background:rgba(5,6,15,.9);border:1px solid var(--rule);border-radius:7px;padding:9px 12px;color:var(--text);font-family:var(--mono);font-size:.65rem;outline:none;transition:border .2s}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--electric)}
-.field textarea{resize:vertical;min-height:100px}
-.field select option{background:var(--ink2)}
-
-/* Modal new topic */
+.ov-box{background:var(--bg2);border:1px solid var(--br2);border-radius:var(--r2);padding:2rem;width:100%;max-width:400px;position:relative;animation:boxIn .22s ease}
+@keyframes boxIn{from{transform:translateY(15px);opacity:0}to{transform:translateY(0);opacity:1}}
+.ov-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--tx2);cursor:pointer;font-size:1rem;transition:.18s}
+.ov-close:hover{color:var(--tx)}
+.ov-logo{font-family:var(--mono);font-size:.52rem;letter-spacing:.2em;color:var(--acid);margin-bottom:1.2rem;display:block}
+.ov-title{font-family:var(--serif);font-size:1.5rem;font-weight:900;margin-bottom:.3rem}
+.ov-sub{font-family:var(--mono);font-size:.56rem;color:var(--tx2);margin-bottom:1.4rem}
+.auth-tabs{display:flex;background:var(--surf);border:1px solid var(--br);border-radius:6px;overflow:hidden;margin-bottom:1.3rem}
+.auth-tab{flex:1;background:none;border:none;padding:8px;font-family:var(--mono);font-size:.56rem;letter-spacing:.06em;color:var(--tx2);cursor:pointer;transition:.18s}
+.auth-tab.on{background:var(--blue);color:#fff}
+.msg-err{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.2);border-radius:5px;padding:7px 11px;font-family:var(--mono);font-size:.56rem;color:#fda4af;margin-bottom:.8rem;display:none}
+.msg-ok{background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.15);border-radius:5px;padding:7px 11px;font-family:var(--mono);font-size:.56rem;color:var(--acid);margin-bottom:.8rem;display:none}
+.field{margin-bottom:.8rem}
+.field label{font-family:var(--mono);font-size:.48rem;letter-spacing:.15em;color:var(--tx2);display:block;margin-bottom:5px;text-transform:uppercase}
+.field input,.field select,.field textarea{width:100%;background:rgba(5,6,15,.9);border:1px solid var(--br);border-radius:6px;padding:8px 11px;color:var(--tx);font-family:var(--mono);font-size:.62rem;outline:none;transition:border .2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue)}
+.field textarea{resize:vertical;min-height:90px}
+.field select option{background:var(--bg2)}
 .modal{position:fixed;inset:0;background:rgba(5,6,15,.88);backdrop-filter:blur(12px);z-index:200;display:none;align-items:center;justify-content:center}
 .modal.on{display:flex}
-.modal-box{background:var(--ink2);border:1px solid var(--rule2);border-radius:var(--r2);padding:2rem;width:100%;max-width:560px;position:relative;animation:boxIn .22s ease}
-.modal-title{font-family:var(--serif);font-size:1.4rem;font-weight:900;margin-bottom:1.4rem}
-.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text2);cursor:pointer;font-size:1rem}
-.modal-close:hover{color:var(--text)}
-.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:1.2rem}
+.modal-box{background:var(--bg2);border:1px solid var(--br2);border-radius:var(--r2);padding:1.8rem;width:100%;max-width:540px;position:relative;animation:boxIn .22s ease}
+.modal-title{font-family:var(--serif);font-size:1.3rem;font-weight:900;margin-bottom:1.3rem}
+.modal-close{position:absolute;top:.9rem;right:.9rem;background:none;border:none;color:var(--tx2);cursor:pointer;font-size:1rem}
+.modal-close:hover{color:var(--tx)}
+.form-row{display:flex;gap:8px;justify-content:flex-end;margin-top:1.1rem}
 
-/* User menu */
+/* user dropdown */
 .u-menu{position:relative}
-.u-btn{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--rule2);border-radius:7px;padding:6px 13px;font-family:var(--mono);font-size:.58rem;color:var(--text);cursor:pointer;transition:.18s}
-.u-btn:hover{background:var(--surface2);border-color:var(--acid)}
-.u-sm-av{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.5rem;font-weight:700;color:#fff}
-.u-drop{position:absolute;right:0;top:calc(100% + 8px);background:var(--ink2);border:1px solid var(--rule2);border-radius:10px;padding:.5rem;min-width:170px;z-index:150;display:none;animation:boxIn .18s ease}
+.u-btn{display:flex;align-items:center;gap:7px;background:var(--surf);border:1px solid var(--br2);border-radius:6px;padding:6px 12px;font-family:var(--mono);font-size:.56rem;color:var(--tx);cursor:pointer;transition:.18s}
+.u-btn:hover{background:var(--surf2);border-color:var(--acid)}
+.u-sm-av{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.46rem;font-weight:700;color:#fff}
+.u-drop{position:absolute;right:0;top:calc(100% + 7px);background:var(--bg2);border:1px solid var(--br2);border-radius:9px;padding:.4rem;min-width:160px;z-index:150;display:none;animation:boxIn .16s ease}
 .u-drop.on{display:block}
-.u-drop-item{display:block;width:100%;text-align:left;padding:8px 12px;font-family:var(--mono);font-size:.58rem;color:var(--text2);border-radius:6px;cursor:pointer;transition:.15s;background:none;border:none;text-decoration:none}
-.u-drop-item:hover{background:var(--surface2);color:var(--text)}
-.u-drop-item.danger:hover{background:rgba(244,63,94,.1);color:#fda4af}
-.u-drop-sep{height:1px;background:var(--rule);margin:4px 0}
-.u-drop-email{padding:8px 12px;font-family:var(--mono);font-size:.5rem;color:var(--text3);border-bottom:1px solid var(--rule);margin-bottom:4px}
+.u-di{display:block;width:100%;text-align:left;padding:7px 11px;font-family:var(--mono);font-size:.56rem;color:var(--tx2);border-radius:5px;cursor:pointer;transition:.14s;background:none;border:none;text-decoration:none}
+.u-di:hover{background:var(--surf2);color:var(--tx)}
+.u-di.danger:hover{background:rgba(244,63,94,.1);color:#fda4af}
+.u-email{padding:7px 11px;font-family:var(--mono);font-size:.48rem;color:var(--tx3);border-bottom:1px solid var(--br);margin-bottom:3px}
 
-/* Anim */
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .fu{animation:fadeUp .4s ease both}
 .fu:nth-child(1){animation-delay:.04s}.fu:nth-child(2){animation-delay:.08s}
 .fu:nth-child(3){animation-delay:.12s}.fu:nth-child(4){animation-delay:.16s}
 
-/* ═══ RESPONSIVE TABLET ═══ */
+/* ── RESPONSIVE TABLET ── */
 @media(max-width:1024px){
-  .header-inner{padding:0 1.2rem}
-  .media-wrap,.forum-wrap{padding:1.5rem;grid-template-columns:1fr}
+  .hdr{padding:0 1.5rem}
+  .media-wrap{padding:1.5rem;grid-template-columns:1fr}
   .hero{grid-column:span 1;height:380px}
-  .hero h1{font-size:1.9rem}
+  .hero-title{font-size:2rem}
+  .forum-wrap{padding:1.5rem;grid-template-columns:1fr}
   .f-nav{display:none}
   .f-stats{grid-template-columns:repeat(2,1fr)}
-  .cat-bar-inner{padding:0 1.2rem;overflow-x:auto;scrollbar-width:none}
-  .cat-bar-inner::-webkit-scrollbar{display:none}
+  .content-wrap{padding:1.5rem}
+  .grid-2{grid-template-columns:1fr}
+  .kpi-row{grid-template-columns:repeat(3,1fr)}
 }
 
-/* ═══ MOBILE HAMBURGER NAV ═══ */
-.mob-nav-overlay{position:fixed;inset:0;background:rgba(5,6,15,.97);backdrop-filter:blur(20px);z-index:500;display:flex;flex-direction:column;padding:1.5rem;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
-.mob-nav-overlay.open{transform:translateX(0)}
-.mob-nav-close{align-self:flex-end;background:none;border:1px solid var(--rule2);color:var(--text);border-radius:8px;padding:8px 14px;font-family:var(--mono);font-size:.65rem;cursor:pointer;margin-bottom:2rem}
-.mob-nav-logo{font-family:var(--mono);font-size:.75rem;font-weight:700;letter-spacing:.3em;color:#fff;margin-bottom:2rem;display:flex;align-items:center;gap:10px}
-.mob-nav-item{font-family:var(--mono);font-size:1.1rem;font-weight:700;letter-spacing:.1em;color:var(--text2);padding:1rem 0;border-bottom:1px solid var(--rule);cursor:pointer;transition:color .2s;background:none;border-left:none;border-right:none;border-top:none;text-align:left;width:100%}
-.mob-nav-item:last-of-type{border-bottom:none}
-.mob-nav-item.active,.mob-nav-item:hover{color:var(--acid)}
-.mob-auth{margin-top:2rem}
-.hamburger{display:none;background:none;border:1px solid var(--rule2);border-radius:7px;padding:7px 10px;cursor:pointer;flex-direction:column;gap:4px;flex-shrink:0}
-.hamburger span{display:block;width:18px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
-
-/* ═══ RESPONSIVE MOBILE ═══ */
+/* ── RESPONSIVE MOBILE ── */
 @media(max-width:640px){
-  /* Header — hamburger layout */
-  .site-header{height:auto}
-  .header-inner{padding:0 1rem;height:52px;gap:8px}
-  .logo{font-size:.65rem;letter-spacing:.15em;gap:7px}
-  .logo-mark{width:26px;height:26px;font-size:.5rem}
-  .logo-beta{display:none}
-  .header-nav{display:none} /* hidden — replaced by hamburger */
-  .header-right .btn-primary{display:none} /* hidden — in mob menu */
-  .header-right .theme-toggle{display:flex}
+  /* header */
+  .hdr{padding:0 1rem;height:50px;gap:6px}
+  .logo{font-size:.6rem;letter-spacing:.12em;gap:6px}
+  .logo-sq{width:24px;height:24px;font-size:.48rem}
+  .logo-b{display:none}
+  .hdr-nav{display:none}
+  .hdr-right .btn-cta{display:none}
   .hamburger{display:flex;margin-left:auto}
-
-  /* Ticker */
-  .ticker-bar{height:28px}
-  .ticker-label{padding:0 10px;gap:4px}
-  .ticker-label span{font-size:.48rem;letter-spacing:.12em}
-  .ticker-track span{font-size:.55rem}
-
-  /* Cat tabs — horizontal scroll */
-  .cat-bar-inner{padding:0 1rem;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
-  .cat-bar-inner::-webkit-scrollbar{display:none}
-  .cat-tab{padding:10px 12px;font-size:.52rem;white-space:nowrap;flex-shrink:0}
-
-  /* Media page */
-  .media-wrap{padding:.9rem;gap:1.2rem}
-  .hero{height:280px;border-radius:10px}
-  .hero-content{padding:1rem 1.2rem}
-  .hero h1{font-size:1.25rem;margin:.4rem 0 .6rem}
-  .hero-summary{font-size:.56rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .hero-footer{gap:.5rem;margin-top:.8rem;flex-wrap:wrap}
-  .hero-meta-item{font-size:.5rem}
-  .hero-cta{padding:6px 12px;font-size:.5rem;letter-spacing:.06em}
-  .hero-arrow{width:32px;height:32px;font-size:.9rem}
-  .hero-dots{bottom:.6rem}
-  .hero-dot{width:5px;height:5px}
-  .hero-dot.on{width:14px}
-
-  /* Source pills — scroll */
-  .source-pills{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
-  .source-pills::-webkit-scrollbar{display:none}
-  .pill-sep{flex-shrink:0}
-  .pill{padding:3px 9px;font-size:.48rem;flex-shrink:0}
-
-  /* Feed cards */
-  .art-card{grid-template-columns:76px 1fr;gap:.7rem;padding:.85rem 0}
-  .art-thumb{width:76px;height:54px}
-  .art-body h3{font-size:.85rem}
+  /* ticker */
+  .ticker-bar{height:27px}
+  .ticker-badge{padding:0 10px;gap:4px}
+  .ticker-badge span{font-size:.46rem}
+  .ticker-scroll span{font-size:.54rem}
+  /* cat bar */
+  .cat-inner{padding:0 .8rem}
+  .cat-btn{padding:9px 11px;font-size:.5rem}
+  /* media */
+  .media-wrap{padding:.8rem;gap:1.1rem}
+  .hero{height:260px;border-radius:10px}
+  .hero-body{padding:.9rem 1.1rem}
+  .hero-title{font-size:1.15rem;margin:.4rem 0 .5rem}
+  .hero-desc{display:none}
+  .hero-foot{margin-top:.7rem;gap:.5rem}
+  .hero-meta{font-size:.48rem}
+  .hero-read{padding:6px 12px;font-size:.48rem}
+  .h-arrow{width:30px;height:30px;font-size:.85rem}
+  .h-dot{width:5px;height:5px}
+  .h-dot.on{width:12px}
+  /* pills scroll */
+  .pills{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:3px}
+  .pills::-webkit-scrollbar{display:none}
+  .pill{flex-shrink:0;padding:3px 9px;font-size:.46rem}
+  /* feed */
+  .art-card{grid-template-columns:72px 1fr;gap:.7rem;padding:.8rem 0}
+  .art-img{width:72px;height:52px}
+  .art-body h3{font-size:.82rem}
   .art-body p{display:none}
-
-  /* Sidebar */
-  .sidebar{gap:.8rem}
+  /* sidebar */
   .widget{padding:.9rem}
-  .trend-n{font-size:.85rem;min-width:18px}
+  .trend-n{font-size:.9rem}
   .trend-body h4{font-size:.78rem}
-
-  /* Forum */
-  .forum-wrap{padding:.9rem;gap:.9rem}
-  .f-header{flex-direction:column;gap:.6rem;align-items:flex-start}
-  .f-header h1{font-size:1.4rem}
+  /* forum */
+  .forum-wrap{padding:.8rem;gap:.8rem}
+  .f-head{flex-direction:column;gap:.5rem}
+  .f-head h1{font-size:1.4rem}
   .f-stats{grid-template-columns:repeat(2,1fr);gap:.5rem}
   .f-stat{padding:.65rem}
   .f-stat-n{font-size:1rem}
   .topic-row{padding:9px .9rem}
-  .t-body h4{font-size:.82rem}
-
-  /* Overlays full screen */
+  .t-body h4{font-size:.8rem}
+  /* content pages */
+  .content-wrap{padding:.8rem}
+  .content-wrap h1{font-size:1.5rem}
+  .grid-2{grid-template-columns:1fr}
+  .kpi-row{grid-template-columns:1fr 1fr}
+  .dossier-grid{grid-template-columns:1fr}
+  /* overlays bottom-sheet */
   .overlay{align-items:flex-end}
-  .overlay-box{margin:0;border-radius:var(--r2) var(--r2) 0 0;max-height:90vh;overflow-y:auto;max-width:100%}
-  .overlay-title{font-size:1.25rem}
+  .ov-box{border-radius:var(--r2) var(--r2) 0 0;max-width:100%;max-height:90vh;overflow-y:auto}
   .modal{align-items:flex-end}
-  .modal-box{margin:0;border-radius:var(--r2) var(--r2) 0 0;max-height:90vh;overflow-y:auto;max-width:100%}
-
-  /* Forum filters */
-  .f-filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+  .modal-box{border-radius:var(--r2) var(--r2) 0 0;max-width:100%;max-height:90vh;overflow-y:auto}
+  /* forum filter pills scroll */
+  .f-filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:3px}
   .f-filters::-webkit-scrollbar{display:none}
-  .f-filters .pill{white-space:nowrap;flex-shrink:0}
-
-  /* Pages content */
-  .content-section{padding:1.2rem .9rem}
-  .content-section h1{font-size:1.6rem}
-  .content-section h2{font-size:1.2rem}
+  .f-filters .pill{flex-shrink:0;white-space:nowrap}
 }
 </style>
 </head>
 <body>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
 
-<div class="glow-orb go1"></div>
-<div class="glow-orb go2"></div>
-
-<!-- ═══ TICKER ═══ -->
+<!-- TICKER -->
 <div class="ticker-bar">
-  <div class="ticker-label">
-    <div class="ticker-dot"></div>
-    <span>LIVE</span>
-  </div>
-  <div class="ticker-track" id="ticker-track">
+  <div class="ticker-badge"><div class="live-dot"></div><span>LIVE</span></div>
+  <div class="ticker-scroll" id="ticker">
     <span>L'IA Act officiellement adopté par l'UE</span><span class="sep">◆</span>
     <span>Mistral Large 2 disponible en local</span><span class="sep">◆</span>
     <span>NVIDIA franchit les 3 000 Mds de capitalisation</span><span class="sep">◆</span>
     <span>DeepSeek R2 annoncé pour Q2 2026</span><span class="sep">◆</span>
     <span>Llama 4 Scout disponible en open-source</span><span class="sep">◆</span>
-    <span>Forum Core-IA — rejoignez la communauté</span><span class="sep">◆</span>
+    <span>Forum Core-IA — rejoignez la communauté IA souveraine</span><span class="sep">◆</span>
     <span>L'IA Act officiellement adopté par l'UE</span><span class="sep">◆</span>
     <span>Mistral Large 2 disponible en local</span><span class="sep">◆</span>
     <span>NVIDIA franchit les 3 000 Mds de capitalisation</span><span class="sep">◆</span>
     <span>DeepSeek R2 annoncé pour Q2 2026</span><span class="sep">◆</span>
     <span>Llama 4 Scout disponible en open-source</span><span class="sep">◆</span>
-    <span>Forum Core-IA — rejoignez la communauté</span><span class="sep">◆</span>
+    <span>Forum Core-IA — rejoignez la communauté IA souveraine</span><span class="sep">◆</span>
   </div>
 </div>
 
-<!-- ═══ HEADER ═══ -->
+<!-- HEADER -->
 <header class="site-header">
-  <div class="header-inner">
-    <a href="#" class="logo" onclick="showPage('media');return false">
-      <div class="logo-mark">CI</div>
-      CORE-IA HUB
-      <span class="logo-beta">BETA</span>
+  <div class="hdr">
+    <a href="#" class="logo" onclick="goPage('media');return false">
+      <div class="logo-sq">CI</div>CORE-IA HUB<span class="logo-b">BETA</span>
     </a>
-    <nav class="header-nav">
-      <button class="nav-item active" id="nav-media"    onclick="showPage('media')">ACTUS</button>
-      <button class="nav-item"        id="nav-dossiers" onclick="showPage('dossiers')">DOSSIERS</button>
-      <button class="nav-item"        id="nav-forum"    onclick="showPage('forum')">FORUM</button>
+    <nav class="hdr-nav">
+      <button class="nav-btn on" id="nb-media"      onclick="goPage('media')">ACTUS</button>
+      <button class="nav-btn"    id="nb-dossiers"   onclick="goPage('dossiers')">DOSSIERS</button>
+      <button class="nav-btn"    id="nb-forum"      onclick="goPage('forum')">FORUM</button>
     </nav>
-    <div class="header-right" id="auth-area" style="display:flex;align-items:center;gap:8px">
-      <button class="theme-toggle" onclick="toggleTheme()" title="Mode clair / sombre">
-        <span id="theme-icon">🌙</span>
-        <span class="th-label" id="theme-label">SOMBRE</span>
+    <div class="hdr-right" id="auth-area">
+      <button class="theme-btn" onclick="toggleTheme()" title="Thème">
+        <span id="th-icon">🌙</span><span class="th-lbl" id="th-lbl">SOMBRE</span>
       </button>
-      <a href="#" class="btn-primary" onclick="openAuth('login');return false">CONNEXION</a>
+      <a href="#" class="btn-cta" onclick="openAuth('login');return false">CONNEXION</a>
     </div>
-    <button class="hamburger" onclick="openMobNav()" aria-label="Menu">
+    <button class="hamburger" onclick="openMob()" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </div>
 </header>
 
-<!-- Cat tabs (media only) -->
-<div class="cat-bar" id="cat-bar">
-  <div class="cat-bar-inner">
-    <button class="cat-tab active" onclick="filterMedia('all',this)">Tout</button>
-    <button class="cat-tab" onclick="showPage('ia-locale')">IA Locale</button>
-    <button class="cat-tab" onclick="showPage('sante')">Santé</button>
-    <button class="cat-tab" onclick="filterMedia('bi-data',this)">BI & Data</button>
-    <button class="cat-tab" onclick="showPage('automation')">Automation</button>
-    <button class="cat-tab" onclick="showPage('dossiers')">Dossiers</button>
+<!-- MOBILE NAV -->
+<div class="mob-nav" id="mob-nav">
+  <div class="mob-nav-top">
+    <div class="mob-nav-logo"><div class="logo-sq">CI</div>CORE-IA HUB</div>
+    <button class="mob-close" onclick="closeMob()">✕ FERMER</button>
+  </div>
+  <button class="mob-link on" id="ml-media"    onclick="goPage('media');closeMob()">ACTUS</button>
+  <button class="mob-link"    id="ml-dossiers" onclick="goPage('dossiers');closeMob()">DOSSIERS</button>
+  <button class="mob-link"    id="ml-ia"       onclick="goPage('ia');closeMob()">IA LOCALE</button>
+  <button class="mob-link"    id="ml-sante"    onclick="goPage('sante');closeMob()">SANTÉ</button>
+  <button class="mob-link"    id="ml-auto"     onclick="goPage('auto');closeMob()">AUTOMATION</button>
+  <button class="mob-link"    id="ml-forum"    onclick="goPage('forum');closeMob()">FORUM</button>
+  <div class="mob-bottom" id="mob-auth">
+    <button class="btn-cta" style="width:100%;justify-content:center;padding:12px" onclick="openAuth('login');closeMob()">CONNEXION / INSCRIPTION</button>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════
-     PAGE : MÉDIA
-═══════════════════════════════════════ -->
-<div class="page active" id="page-media">
-  <div class="media-wrap">
+<!-- CAT BAR -->
+<div class="cat-bar" id="cat-bar">
+  <div class="cat-inner">
+    <button class="cat-btn on" onclick="goPage('media');setCat(this)">Tout</button>
+    <button class="cat-btn" onclick="goPage('ia');setCat(this)">IA Locale</button>
+    <button class="cat-btn" onclick="goPage('sante');setCat(this)">Santé</button>
+    <button class="cat-btn" onclick="goPage('auto');setCat(this)">Automation</button>
+    <button class="cat-btn" onclick="goPage('dossiers');setCat(this)">Dossiers</button>
+  </div>
+</div>
 
+<!-- ═══ PAGE: MEDIA ═══ -->
+<div class="pg on" id="pg-media">
+  <div class="media-wrap">
     <!-- HERO -->
     <div class="hero fu" id="hero">
-      <div class="hero-bg" id="hero-bg"></div>
+      <div class="hero-bg" id="hbg" style="background-image:url('https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1260');opacity:1"></div>
       <div class="hero-scrim"></div>
-      <div class="hero-content">
-        <div class="hero-source">
-          <span class="art-tag t-green" id="hero-tag">CHARGEMENT</span>
-          <span class="hero-eyebrow" id="hero-eyebrow">VEILLE IA</span>
+      <div class="hero-body">
+        <div class="hero-src">
+          <span class="tag t-green" id="h-tag">NUMERAMA</span>
+          <span style="font-family:var(--mono);font-size:.5rem;color:rgba(255,255,255,.4)">VEILLE IA</span>
         </div>
-        <h1 id="hero-title" class="">Récupération des dernières actualités…</h1>
-        <p class="hero-summary" id="hero-desc">Les flux RSS se chargent.</p>
-        <div class="hero-footer">
-          <span class="hero-meta-item" id="hero-author"></span>
-          <span class="hero-meta-item" id="hero-date"></span>
-          <a href="#" id="hero-link" target="_blank" rel="noopener" class="hero-cta">LIRE L'ARTICLE →</a>
+        <div class="hero-title" id="h-title">Chargement des dernières actualités…</div>
+        <div class="hero-desc" id="h-desc">Les flux RSS se chargent en ce moment.</div>
+        <div class="hero-foot">
+          <span class="hero-meta" id="h-author"></span>
+          <span class="hero-meta" id="h-date"></span>
+          <a href="#" id="h-link" target="_blank" rel="noopener" class="hero-read">LIRE →</a>
         </div>
       </div>
-      <button class="hero-arrow prev" onclick="heroStep(-1)">‹</button>
-      <button class="hero-arrow next" onclick="heroStep(1)">›</button>
-      <div class="hero-dots" id="hero-dots"></div>
-      <div class="hero-bar"><div class="hero-bar-fill" id="hero-fill"></div></div>
+      <button class="h-arrow h-prev" onclick="hStep(-1)">‹</button>
+      <button class="h-arrow h-next" onclick="hStep(1)">›</button>
+      <div class="h-dots" id="h-dots"></div>
+      <div class="h-bar"><div class="h-fill" id="h-fill"></div></div>
     </div>
 
     <!-- FEED -->
-    <div class="feed-section">
-      <div class="section-head">
-        <span class="label label-acid">VEILLE EN DIRECT</span>
-        <div class="section-rule"></div>
+    <div>
+      <div class="sect-head">
+        <span class="sect-label">VEILLE EN DIRECT</span>
+        <div class="sect-line"></div>
       </div>
-      <div class="source-pills" id="src-pills" style="margin-bottom:1rem">
+      <div class="pills" id="src-pills">
         <span class="pill-sep">🇫🇷</span>
-        <button class="pill on" data-src="0">Numerama</button>
-        <button class="pill" data-src="1">Le Monde Info</button>
-        <button class="pill" data-src="2">01net</button>
-        <button class="pill" data-src="3">Journal du Net</button>
+        <button class="pill on" data-i="0">Numerama</button>
+        <button class="pill" data-i="1">Le Monde Info</button>
+        <button class="pill" data-i="2">01net</button>
+        <button class="pill" data-i="3">J. du Net</button>
         <span class="pill-sep" style="margin-left:4px">🌍</span>
-        <button class="pill" data-src="4">Hugging Face</button>
-        <button class="pill" data-src="5">MIT Tech</button>
-        <button class="pill" data-src="6">VentureBeat AI</button>
-        <button class="pill" data-src="7">OpenAI</button>
+        <button class="pill" data-i="4">Hugging Face</button>
+        <button class="pill" data-i="5">MIT Tech</button>
+        <button class="pill" data-i="6">VentureBeat</button>
+        <button class="pill" data-i="7">OpenAI</button>
       </div>
-      <!-- Skeletons -->
-      <div id="feed-loading" class="article-list">
-        <div class="sk-card"><div class="sk-img"></div><div class="sk-lines"><div class="sk-ln" style="width:25%"></div><div class="sk-ln" style="width:90%"></div><div class="sk-ln" style="width:70%"></div><div class="sk-ln" style="width:40%"></div></div></div>
-        <div class="sk-card"><div class="sk-img"></div><div class="sk-lines"><div class="sk-ln" style="width:20%"></div><div class="sk-ln" style="width:82%"></div><div class="sk-ln" style="width:60%"></div><div class="sk-ln" style="width:35%"></div></div></div>
-        <div class="sk-card"><div class="sk-img"></div><div class="sk-lines"><div class="sk-ln" style="width:30%"></div><div class="sk-ln" style="width:78%"></div><div class="sk-ln" style="width:55%"></div><div class="sk-ln" style="width:42%"></div></div></div>
+      <div id="feed-sk">
+        <div class="sk-card"><div class="sk-img"></div><div class="sk-lines"><div class="sk-l" style="width:25%"></div><div class="sk-l" style="width:88%"></div><div class="sk-l" style="width:65%"></div><div class="sk-l" style="width:40%"></div></div></div>
+        <div class="sk-card"><div class="sk-img"></div><div class="sk-lines"><div class="sk-l" style="width:20%"></div><div class="sk-l" style="width:80%"></div><div class="sk-l" style="width:60%"></div><div class="sk-l" style="width:35%"></div></div></div>
+        <div class="sk-card"><div class="sk-img"></div><div class="sk-lines"><div class="sk-l" style="width:30%"></div><div class="sk-l" style="width:76%"></div><div class="sk-l" style="width:55%"></div><div class="sk-l" style="width:42%"></div></div></div>
       </div>
-      <div class="article-list" id="feed-list"></div>
-      <div id="feed-err" style="display:none;text-align:center;padding:2rem;font-size:.65rem;color:var(--text2)">⚠️ Flux indisponible — essayez une autre source.</div>
+      <div id="feed-list"></div>
+      <div id="feed-err" style="display:none;text-align:center;padding:2rem;font-family:var(--mono);font-size:.62rem;color:var(--tx2)">⚠️ Flux indisponible — essayez une autre source.</div>
     </div>
 
     <!-- SIDEBAR -->
     <div class="sidebar">
-      <div class="widget fu" id="trending-widget">
-        <div class="widget-head" id="trending-head">TENDANCES · <span id="trending-src-label" style="color:var(--text2);font-size:.48rem">NUMERAMA</span></div>
-        <div id="trending-list">
-          <!-- skeleton -->
-          <div class="trend-item" style="animation:sk 1.6s ease infinite"><span class="trend-n" style="color:var(--rule2)">01</span><div class="trend-body"><div style="height:10px;background:var(--surface2);border-radius:3px;width:90%;margin-bottom:5px"></div><div style="height:8px;background:var(--surface2);border-radius:3px;width:60%"></div></div></div>
-          <div class="trend-item" style="animation:sk 1.6s ease .15s infinite"><span class="trend-n" style="color:var(--rule2)">02</span><div class="trend-body"><div style="height:10px;background:var(--surface2);border-radius:3px;width:80%;margin-bottom:5px"></div><div style="height:8px;background:var(--surface2);border-radius:3px;width:55%"></div></div></div>
-          <div class="trend-item" style="animation:sk 1.6s ease .3s infinite"><span class="trend-n" style="color:var(--rule2)">03</span><div class="trend-body"><div style="height:10px;background:var(--surface2);border-radius:3px;width:85%;margin-bottom:5px"></div><div style="height:8px;background:var(--surface2);border-radius:3px;width:50%"></div></div></div>
-          <div class="trend-item" style="animation:sk 1.6s ease .45s infinite"><span class="trend-n" style="color:var(--rule2)">04</span><div class="trend-body"><div style="height:10px;background:var(--surface2);border-radius:3px;width:75%;margin-bottom:5px"></div><div style="height:8px;background:var(--surface2);border-radius:3px;width:45%"></div></div></div>
+      <div class="widget fu" id="trend-widget">
+        <div class="wh">TENDANCES · <span id="trend-src" style="color:var(--tx2);font-size:.45rem">NUMERAMA</span></div>
+        <div id="trend-list">
+          <div class="trend-item" style="animation:sk 1.6s ease infinite"><span class="trend-n" style="color:var(--br2)">01</span><div class="trend-body"><div style="height:10px;background:var(--surf2);border-radius:3px;width:85%;margin-bottom:5px"></div><div style="height:8px;background:var(--surf2);border-radius:3px;width:55%"></div></div></div>
+          <div class="trend-item" style="animation:sk 1.6s ease .15s infinite"><span class="trend-n" style="color:var(--br2)">02</span><div class="trend-body"><div style="height:10px;background:var(--surf2);border-radius:3px;width:78%;margin-bottom:5px"></div><div style="height:8px;background:var(--surf2);border-radius:3px;width:48%"></div></div></div>
+          <div class="trend-item" style="animation:sk 1.6s ease .3s infinite"><span class="trend-n" style="color:var(--br2)">03</span><div class="trend-body"><div style="height:10px;background:var(--surf2);border-radius:3px;width:90%;margin-bottom:5px"></div><div style="height:8px;background:var(--surf2);border-radius:3px;width:52%"></div></div></div>
+          <div class="trend-item" style="animation:sk 1.6s ease .45s infinite"><span class="trend-n" style="color:var(--br2)">04</span><div class="trend-body"><div style="height:10px;background:var(--surf2);border-radius:3px;width:72%;margin-bottom:5px"></div><div style="height:8px;background:var(--surf2);border-radius:3px;width:44%"></div></div></div>
         </div>
       </div>
       <div class="widget nl-widget fu">
-        <div class="widget-head">NEWSLETTER HEBDO</div>
+        <div class="wh">NEWSLETTER HEBDO</div>
         <p>Chaque lundi, l'essentiel de l'IA souveraine dans votre boîte mail.</p>
         <input class="nl-input" type="email" placeholder="votre@email.com">
         <button class="nl-btn">REJOINDRE — 1 200 ABONNÉS →</button>
       </div>
       <div class="widget fu">
-        <div class="widget-head">💬 CHAUD SUR LE FORUM</div>
-        <a href="#" onclick="showPage('forum');return false" class="trend-item"><div class="trend-body"><span class="art-tag t-violet" style="margin-bottom:5px;display:inline-block">AUTOMATION</span><h4>Connecter n8n à son CRM local sans cloud</h4><span>12 rép. · 2h</span></div></a>
-        <a href="#" onclick="showPage('forum');return false" class="trend-item"><div class="trend-body"><span class="art-tag t-blue" style="margin-bottom:5px;display:inline-block">HARDWARE</span><h4>Groq sur PC portable — résultats surprenants</h4><span>8 rép. · 5h</span></div></a>
-        <a href="#" onclick="showPage('forum');return false" class="trend-item"><div class="trend-body"><span class="art-tag t-green" style="margin-bottom:5px;display:inline-block">SANTÉ</span><h4>VNI — partage de code Python + dataset</h4><span>5 rép. · hier</span></div></a>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════
-     PAGE : DOSSIERS
-═══════════════════════════════════════ -->
-<div class="page" id="page-dossiers">
-  <div style="max-width:1440px;margin:0 auto;padding:2.5rem 2.5rem;position:relative;z-index:1">
-    <div style="margin-bottom:2rem">
-      <div class="label label-acid" style="margin-bottom:.8rem">DOSSIERS EXCLUSIFS</div>
-      <h1 style="font-family:var(--serif);font-size:2.4rem;font-weight:900;line-height:1.1">Analyses & Dossiers <em style="color:var(--electric2);font-style:italic">approfondis</em></h1>
-      <p style="font-family:var(--mono);font-size:.65rem;color:var(--text2);margin-top:.8rem;max-width:600px;line-height:1.8">Des analyses techniques de fond sur l'IA souveraine, l'automatisation et la transformation numérique des entreprises françaises.</p>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem">
-      <div class="widget" style="border-color:rgba(37,99,255,.25);cursor:pointer" onclick="">
-        <span class="art-tag t-violet" style="margin-bottom:.8rem;display:inline-block">DOSSIER · 12 MIN</span>
-        <h2 style="font-family:var(--serif);font-size:1.3rem;font-weight:700;line-height:1.25;margin-bottom:.8rem">IA Locale vs Cloud : le guide décisif pour les PME en 2026</h2>
-        <p style="font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.75;margin-bottom:1rem">Analyse complète des enjeux de souveraineté, coûts TCO, RGPD et performances. Tout ce qu'il faut savoir avant de déployer un LLM en entreprise.</p>
-        <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.55rem;color:var(--text2)"><span>Par Alexandre N. · 24 Mars 2026</span><span style="color:var(--acid)">LIRE →</span></div>
-      </div>
-      <div class="widget" style="border-color:rgba(0,229,160,.2);cursor:pointer">
-        <span class="art-tag t-green" style="margin-bottom:.8rem;display:inline-block">DOSSIER · 9 MIN</span>
-        <h2 style="font-family:var(--serif);font-size:1.3rem;font-weight:700;line-height:1.25;margin-bottom:.8rem">n8n & Mistral : construire un agent IA souverain en 2026</h2>
-        <p style="font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.75;margin-bottom:1rem">De la théorie à la production : pipeline d'automatisation complet, hébergement on-premise, gestion des secrets et monitoring.</p>
-        <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.55rem;color:var(--text2)"><span>Par Alexandre N. · 18 Mars 2026</span><span style="color:var(--acid)">LIRE →</span></div>
-      </div>
-      <div class="widget" style="border-color:rgba(245,158,11,.2);cursor:pointer">
-        <span class="art-tag t-amber" style="margin-bottom:.8rem;display:inline-block">DOSSIER · 15 MIN</span>
-        <h2 style="font-family:var(--serif);font-size:1.3rem;font-weight:700;line-height:1.25;margin-bottom:.8rem">IA Act : guide de conformité pour les entreprises françaises</h2>
-        <p style="font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.75;margin-bottom:1rem">Obligations, délais, niveaux de risque, sanctions. Un panorama complet pour anticiper la mise en conformité avant juin 2026.</p>
-        <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.55rem;color:var(--text2)"><span>Rédaction Core-IA · 12 Mars 2026</span><span style="color:var(--acid)">LIRE →</span></div>
-      </div>
-      <div class="widget" style="border-color:rgba(244,63,94,.2);cursor:pointer">
-        <span class="art-tag t-rose" style="margin-bottom:.8rem;display:inline-block">DOSSIER · 11 MIN</span>
-        <h2 style="font-family:var(--serif);font-size:1.3rem;font-weight:700;line-height:1.25;margin-bottom:.8rem">RAG médical : déployer un assistant IA conforme RGPD</h2>
-        <p style="font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.75;margin-bottom:1rem">Architecture RAG on-premise, vectorisation des données patients, isolation réseau et journalisation — le playbook complet pour le secteur santé.</p>
-        <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.55rem;color:var(--text2)"><span>Par Alexandre N. · 8 Mars 2026</span><span style="color:var(--acid)">LIRE →</span></div>
-      </div>
-      <div class="widget" style="cursor:pointer">
-        <span class="art-tag t-blue" style="margin-bottom:.8rem;display:inline-block">DOSSIER · 8 MIN</span>
-        <h2 style="font-family:var(--serif);font-size:1.3rem;font-weight:700;line-height:1.25;margin-bottom:.8rem">Power BI & IA : 5 KPIs pour transformer votre logistique</h2>
-        <p style="font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.75;margin-bottom:1rem">Connecter WMS, OMS et ERP en temps réel. Les dashboards qui font la différence en supply chain avec l'augmentation par LLM.</p>
-        <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.55rem;color:var(--text2)"><span>Par Alexandre N. · 2 Mars 2026</span><span style="color:var(--acid)">LIRE →</span></div>
-      </div>
-      <div class="widget" style="border-color:rgba(124,58,237,.2);cursor:pointer">
-        <span class="art-tag t-violet" style="margin-bottom:.8rem;display:inline-block">DOSSIER · 10 MIN</span>
-        <h2 style="font-family:var(--serif);font-size:1.3rem;font-weight:700;line-height:1.25;margin-bottom:.8rem">Ollama en production : sécurité, scalabilité et monitoring</h2>
-        <p style="font-family:var(--mono);font-size:.6rem;color:var(--text2);line-height:1.75;margin-bottom:1rem">Au-delà du mode développement : reverse proxy, authentification, rate limiting, observabilité avec Prometheus et Grafana.</p>
-        <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:.55rem;color:var(--text2)"><span>Par r_leconte · 28 Fév 2026</span><span style="color:var(--acid)">LIRE →</span></div>
+        <div class="wh">💬 CHAUD SUR LE FORUM</div>
+        <a href="#" onclick="goPage('forum');return false" class="trend-item"><div class="trend-body"><span class="tag t-violet" style="margin-bottom:5px;display:inline-block">AUTOMATION</span><h4>Connecter n8n à son CRM local sans cloud</h4><span>12 rép. · 2h</span></div></a>
+        <a href="#" onclick="goPage('forum');return false" class="trend-item"><div class="trend-body"><span class="tag t-blue" style="margin-bottom:5px;display:inline-block">HARDWARE</span><h4>Groq sur PC portable — résultats surprenants</h4><span>8 rép. · 5h</span></div></a>
+        <a href="#" onclick="goPage('forum');return false" class="trend-item"><div class="trend-body"><span class="tag t-green" style="margin-bottom:5px;display:inline-block">SANTÉ</span><h4>VNI — code Python + dataset partagé</h4><span>5 rép. · hier</span></div></a>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════
-     PAGE : IA LOCALE
-═══════════════════════════════════════ -->
-<div class="page" id="page-ia-locale">
-  <div style="max-width:900px;margin:0 auto;padding:2.5rem 2.5rem;position:relative;z-index:1">
-    <div style="margin-bottom:2.5rem">
-      <div class="label label-acid" style="margin-bottom:.8rem">DOSSIER FONDAMENTAL</div>
-      <h1 style="font-family:var(--serif);font-size:2.4rem;font-weight:900;line-height:1.1;margin-bottom:1rem">L'IA Locale : <em style="font-style:italic;color:var(--electric2)">reprendre le contrôle</em> de vos données</h1>
-      <p style="font-family:var(--mono);font-size:.68rem;color:var(--text2);line-height:1.85">Déployer un modèle de langage directement sur vos serveurs ou votre infrastructure n'est plus réservé aux GAFAM. En 2026, des outils comme <strong style="color:var(--text)">Ollama</strong>, <strong style="color:var(--text)">LM Studio</strong> ou <strong style="color:var(--text)">vLLM</strong> permettent à n'importe quelle PME de faire tourner des LLMs open-source en local, sans envoyer une seule donnée vers un serveur distant.</p>
+<!-- ═══ PAGE: DOSSIERS ═══ -->
+<div class="pg" id="pg-dossiers">
+  <div class="content-wrap">
+    <div class="content-eyebrow">DOSSIERS EXCLUSIFS</div>
+    <h1>Analyses & <em>Dossiers</em> approfondis</h1>
+    <p class="content-sub">Des analyses techniques de fond sur l'IA souveraine, l'automatisation et la transformation numérique des entreprises françaises.</p>
+    <div class="dossier-grid">
+      <div class="dossier-card" style="border-color:rgba(124,58,237,.25)"><span class="tag t-violet">DOSSIER · 12 MIN</span><h2>IA Locale vs Cloud : le guide décisif pour les PME en 2026</h2><p>Analyse complète des enjeux de souveraineté, coûts TCO, RGPD et performances. Tout ce qu'il faut savoir avant de déployer un LLM en entreprise.</p><div class="dossier-foot"><span>Alexandre N. · 24 Mars 2026</span><span>LIRE →</span></div></div>
+      <div class="dossier-card" style="border-color:rgba(0,229,160,.2)"><span class="tag t-green">DOSSIER · 9 MIN</span><h2>n8n & Mistral : construire un agent IA souverain en 2026</h2><p>De la théorie à la production : pipeline d'automatisation complet, hébergement on-premise, gestion des secrets et monitoring.</p><div class="dossier-foot"><span>Alexandre N. · 18 Mars 2026</span><span>LIRE →</span></div></div>
+      <div class="dossier-card" style="border-color:rgba(245,158,11,.2)"><span class="tag t-amber">DOSSIER · 15 MIN</span><h2>IA Act : guide de conformité pour les entreprises françaises</h2><p>Obligations, délais, niveaux de risque, sanctions. Un panorama complet pour anticiper la mise en conformité avant juin 2026.</p><div class="dossier-foot"><span>Rédaction Core-IA · 12 Mars 2026</span><span>LIRE →</span></div></div>
+      <div class="dossier-card" style="border-color:rgba(244,63,94,.2)"><span class="tag t-rose">DOSSIER · 11 MIN</span><h2>RAG médical : déployer un assistant IA conforme RGPD</h2><p>Architecture RAG on-premise, vectorisation des données patients, isolation réseau et journalisation pour le secteur santé.</p><div class="dossier-foot"><span>Alexandre N. · 8 Mars 2026</span><span>LIRE →</span></div></div>
+      <div class="dossier-card"><span class="tag t-blue">DOSSIER · 8 MIN</span><h2>Power BI & IA : 5 KPIs pour transformer votre logistique</h2><p>Connecter WMS, OMS et ERP en temps réel. Les dashboards qui font la différence en supply chain avec l'augmentation par LLM.</p><div class="dossier-foot"><span>Alexandre N. · 2 Mars 2026</span><span>LIRE →</span></div></div>
+      <div class="dossier-card" style="border-color:rgba(124,58,237,.2)"><span class="tag t-violet">DOSSIER · 10 MIN</span><h2>Ollama en production : sécurité, scalabilité et monitoring</h2><p>Reverse proxy, authentification, rate limiting et observabilité avec Prometheus et Grafana — au-delà du mode développement.</p><div class="dossier-foot"><span>r_leconte · 28 Fév 2026</span><span>LIRE →</span></div></div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:2rem">
+  </div>
+</div>
+
+<!-- ═══ PAGE: IA LOCALE ═══ -->
+<div class="pg" id="pg-ia">
+  <div class="content-wrap">
+    <div class="content-eyebrow">DOSSIER FONDAMENTAL</div>
+    <h1>L'IA Locale : <em>reprendre le contrôle</em> de vos données</h1>
+    <p class="content-sub">Déployer un LLM directement sur vos serveurs n'est plus réservé aux GAFAM. En 2026, Ollama, LM Studio ou vLLM permettent à n'importe quelle PME de faire tourner des modèles open-source sans envoyer une seule donnée vers un serveur distant.</p>
+    <div style="display:flex;flex-direction:column;gap:1.5rem">
       <div class="widget" style="border-color:rgba(0,229,160,.2)">
-        <div class="widget-head">🔐 POURQUOI LA SOUVERAINETÉ DES DONNÉES ?</div>
-        <p style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85;margin-bottom:1rem">Chaque requête envoyée à ChatGPT, Claude ou Gemini transite par les serveurs de ses éditeurs américains. Pour une entreprise traitant des données médicales, juridiques ou industrielles, c'est une fuite de données potentielle et un risque RGPD réel.</p>
-        <p style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85">Avec une IA locale, vos données ne quittent jamais votre réseau. Vous gardez la maîtrise complète : qui accède au modèle, quelles données sont traitées, comment les logs sont stockés.</p>
+        <div class="wh">🔐 POURQUOI LA SOUVERAINETÉ DES DONNÉES ?</div>
+        <p style="font-family:var(--mono);font-size:.63rem;color:var(--tx2);line-height:1.85;margin-bottom:.8rem">Chaque requête envoyée à ChatGPT, Claude ou Gemini transite par les serveurs de ses éditeurs américains. Pour une entreprise traitant des données médicales, juridiques ou industrielles, c'est une fuite de données potentielle et un risque RGPD réel.</p>
+        <p style="font-family:var(--mono);font-size:.63rem;color:var(--tx2);line-height:1.85">Avec une IA locale, vos données ne quittent jamais votre réseau. Vous gardez la maîtrise complète : qui accède au modèle, quelles données sont traitées, comment les logs sont stockés.</p>
       </div>
       <div class="widget">
-        <div class="widget-head">⚡ LES ATOUTS CONCRETS</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.5rem">
-          <div style="background:var(--surface2);border-radius:var(--r);padding:.9rem">
-            <div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.12em;color:var(--acid);margin-bottom:.5rem">COÛT</div>
-            <p style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7">Zéro coût par token après l'investissement initial. Un modèle Llama 3.1 8B tourne sur un GPU grand public (RTX 3060, 12 Go VRAM).</p>
-          </div>
-          <div style="background:var(--surface2);border-radius:var(--r);padding:.9rem">
-            <div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.12em;color:var(--electric2);margin-bottom:.5rem">LATENCE</div>
-            <p style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7">Pas de latence réseau. Les modèles quantifiés (GGUF Q4) génèrent 30 à 80 tokens/s sur CPU seul — largement suffisant pour du traitement documentaire.</p>
-          </div>
-          <div style="background:var(--surface2);border-radius:var(--r);padding:.9rem">
-            <div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.12em;color:var(--amber);margin-bottom:.5rem">CONFORMITÉ</div>
-            <p style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7">RGPD, HDS (santé), NIS2 : les exigences réglementaires poussent naturellement vers le traitement local des données sensibles.</p>
-          </div>
-          <div style="background:var(--surface2);border-radius:var(--r);padding:.9rem">
-            <div style="font-family:var(--mono);font-size:.55rem;letter-spacing:.12em;color:var(--rose);margin-bottom:.5rem">PERSONNALISATION</div>
-            <p style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7">Fine-tuning sur vos propres données métier, RAG avec vos documents internes, prompt system fixe — un niveau de contrôle impossible avec les APIs cloud.</p>
-          </div>
+        <div class="wh">⚡ LES 4 ATOUTS CONCRETS</div>
+        <div class="grid-2">
+          <div class="card-block"><div class="cb-label" style="color:var(--acid)">COÛT</div><p>Zéro coût par token après l'investissement initial. Un modèle Llama 3.1 8B tourne sur un GPU grand public (RTX 3060, 12 Go VRAM).</p></div>
+          <div class="card-block"><div class="cb-label" style="color:var(--blue2)">LATENCE</div><p>Pas de latence réseau. Les modèles quantifiés (GGUF Q4) génèrent 30 à 80 tokens/s sur CPU seul — suffisant pour du traitement documentaire.</p></div>
+          <div class="card-block"><div class="cb-label" style="color:var(--amber)">CONFORMITÉ</div><p>RGPD, HDS (santé), NIS2 : les exigences réglementaires poussent naturellement vers le traitement local des données sensibles.</p></div>
+          <div class="card-block"><div class="cb-label" style="color:var(--rose)">PERSONNALISATION</div><p>Fine-tuning sur vos données métier, RAG avec vos documents internes — un niveau de contrôle impossible avec les APIs cloud.</p></div>
         </div>
       </div>
       <div class="widget" style="border-color:rgba(37,99,255,.2)">
-        <div class="widget-head">🛠️ PAR OÙ COMMENCER ?</div>
-        <div style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85">
-          <p style="margin-bottom:.8rem"><strong style="color:var(--electric2)">1. Ollama</strong> — Le moyen le plus simple. Une commande <code style="background:var(--surface2);padding:1px 6px;border-radius:3px;color:var(--acid)">ollama run mistral</code> suffit à lancer un modèle. Compatible macOS, Linux, Windows. Interface OpenAI-compatible.</p>
-          <p style="margin-bottom:.8rem"><strong style="color:var(--electric2)">2. LM Studio</strong> — Interface graphique pour les non-développeurs. Idéal pour tester des modèles GGUF depuis Hugging Face sans ligne de commande.</p>
-          <p style="margin-bottom:.8rem"><strong style="color:var(--electric2)">3. vLLM</strong> — Pour la production à fort volume. Optimisé GPU, supporte le batching continu et la quantification AWQ. Déploiement via Docker.</p>
-          <p><strong style="color:var(--electric2)">4. Modèles recommandés</strong> — <span style="color:var(--text)">Mistral 7B</span> (équilibre perf/taille), <span style="color:var(--text)">Llama 3.1 8B</span> (meilleur open-source 2025), <span style="color:var(--text)">Phi-3 Mini</span> (CPU uniquement), <span style="color:var(--text)">CodeLlama 13B</span> (code).</p>
-        </div>
+        <div class="wh">🛠️ PAR OÙ COMMENCER ?</div>
+        <div class="step"><strong>1. Ollama</strong> — Le plus simple. Une commande <code>ollama run mistral</code> suffit à lancer un modèle. Compatible macOS, Linux, Windows. Interface OpenAI-compatible.</div>
+        <div class="step"><strong>2. LM Studio</strong> — Interface graphique pour les non-développeurs. Idéal pour tester des modèles GGUF depuis Hugging Face sans ligne de commande.</div>
+        <div class="step"><strong>3. vLLM</strong> — Pour la production à fort volume. Optimisé GPU, batching continu, quantification AWQ. Déploiement via Docker.</div>
+        <div class="step"><strong>4. Modèles recommandés</strong> — <strong class="hi">Mistral 7B</strong> (équilibre perf/taille), <strong class="hi">Llama 3.1 8B</strong> (meilleur open-source 2025), <strong class="hi">Phi-3 Mini</strong> (CPU seul), <strong class="hi">CodeLlama 13B</strong> (code).</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════
-     PAGE : SANTÉ
-═══════════════════════════════════════ -->
-<div class="page" id="page-sante">
-  <div style="max-width:900px;margin:0 auto;padding:2.5rem 2.5rem;position:relative;z-index:1">
-    <div style="margin-bottom:2.5rem">
-      <div class="label" style="color:var(--acid);margin-bottom:.8rem">THÉMATIQUE SANTÉ & IA</div>
-      <h1 style="font-family:var(--serif);font-size:2.4rem;font-weight:900;line-height:1.1;margin-bottom:1rem">IA & Santé : <em style="font-style:italic;color:var(--acid)">soigner mieux</em>, sans compromis sur la vie privée</h1>
-      <p style="font-family:var(--mono);font-size:.68rem;color:var(--text2);line-height:1.85">Le secteur de la santé est l'un des plus porteurs pour l'IA — et l'un des plus contraints réglementairement. Données HDS, secret médical, exigences de traçabilité : voici comment allier innovation et conformité.</p>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:2rem">
+<!-- ═══ PAGE: SANTÉ ═══ -->
+<div class="pg" id="pg-sante">
+  <div class="content-wrap">
+    <div class="content-eyebrow" style="color:var(--acid)">THÉMATIQUE SANTÉ & IA</div>
+    <h1>IA & Santé : <em style="color:var(--acid)">soigner mieux</em>, sans compromis</h1>
+    <p class="content-sub">Le secteur de la santé est l'un des plus porteurs pour l'IA — et l'un des plus contraints réglementairement. Données HDS, secret médical, exigences de traçabilité : comment allier innovation et conformité.</p>
+    <div style="display:flex;flex-direction:column;gap:1.5rem">
       <div class="widget" style="border-color:rgba(0,229,160,.2)">
-        <div class="widget-head">💊 AUTOMATISATION DES DONNÉES : UN ENJEU CRITIQUE</div>
-        <p style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85;margin-bottom:1rem">Un professionnel de santé passe en moyenne <strong style="color:var(--text)">35% de son temps</strong> sur des tâches administratives — saisie de comptes rendus, codage PMSI, préparation de synthèses. C'est autant de temps volé au soin direct.</p>
-        <p style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85">L'automatisation par IA des flux documentaires (transcription vocale, structuration automatique des CR, aide au codage) peut réduire cette charge de <strong style="color:var(--acid)">40 à 60%</strong> — sans jamais exfiltrer les données vers le cloud grâce aux modèles locaux.</p>
+        <div class="wh">💊 AUTOMATISATION DES DONNÉES : UN ENJEU CRITIQUE</div>
+        <p style="font-family:var(--mono);font-size:.63rem;color:var(--tx2);line-height:1.85;margin-bottom:.8rem">Un professionnel de santé passe en moyenne <strong class="hi">35% de son temps</strong> sur des tâches administratives — saisie de comptes rendus, codage PMSI, préparation de synthèses. C'est autant de temps volé au soin direct.</p>
+        <p style="font-family:var(--mono);font-size:.63rem;color:var(--tx2);line-height:1.85">L'automatisation par IA des flux documentaires peut réduire cette charge de <strong style="color:var(--acid)">40 à 60%</strong> — sans jamais exfiltrer les données vers le cloud grâce aux modèles locaux.</p>
       </div>
       <div class="widget">
-        <div class="widget-head">📊 CAS D'USAGE VALIDÉS EN 2026</div>
-        <div style="display:flex;flex-direction:column;gap:.8rem;margin-top:.5rem">
-          <div style="border-left:2px solid var(--electric);padding-left:1rem">
-            <div style="font-family:var(--mono);font-size:.58rem;color:var(--electric2);margin-bottom:.3rem">VNI / RÉANIMATION</div>
-            <p style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7">Modèles LSTM entraînés sur les données de monitoring prédisent les besoins en oxygène 2h avant le déclenchement de l'alarme. Réduction de 23% des épisodes critiques non anticipés.</p>
-          </div>
-          <div style="border-left:2px solid var(--acid);padding-left:1rem">
-            <div style="font-family:var(--mono);font-size:.58rem;color:var(--acid);margin-bottom:.3rem">IMAGERIE MÉDICALE</div>
-            <p style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7">Détection assistée sur scanners et IRM (tumeurs, fractures occultes). Les modèles de vision comme MedSAM ou BioViL tournent sur GPU local, sans envoyer les images DICOM en dehors de l'établissement.</p>
-          </div>
-          <div style="border-left:2px solid var(--amber);padding-left:1rem">
-            <div style="font-family:var(--mono);font-size:.58rem;color:var(--amber);margin-bottom:.3rem">DOSSIER PATIENT AUGMENTÉ</div>
-            <p style="font-family:var(--mono);font-size:.62rem;color:var(--text2);line-height:1.7">RAG sur le DPI : l'assistant répond aux questions du praticien en langage naturel ("Quels médicaments pour ce patient avec insuffisance rénale ?") en consultant uniquement les données du dossier local.</p>
-          </div>
-        </div>
+        <div class="wh">📊 CAS D'USAGE VALIDÉS EN 2026</div>
+        <div class="info-block" style="border-color:var(--blue)"><div class="ib-label" style="color:var(--blue2)">VNI / RÉANIMATION</div><p>Modèles LSTM entraînés sur les données de monitoring prédisent les besoins en oxygène 2h avant le déclenchement de l'alarme. Réduction de 23% des épisodes critiques non anticipés.</p></div>
+        <div class="info-block" style="border-color:var(--acid)"><div class="ib-label" style="color:var(--acid)">IMAGERIE MÉDICALE</div><p>Détection assistée sur scanners et IRM (tumeurs, fractures occultes). Les modèles de vision comme MedSAM tournent sur GPU local, sans envoyer les images DICOM à l'extérieur.</p></div>
+        <div class="info-block" style="border-color:var(--amber)"><div class="ib-label" style="color:var(--amber)">DOSSIER PATIENT AUGMENTÉ</div><p>RAG sur le DPI : l'assistant répond aux questions du praticien en langage naturel ("Quels médicaments pour ce patient avec insuffisance rénale ?") en consultant uniquement le dossier local.</p></div>
       </div>
       <div class="widget" style="border-color:rgba(244,63,94,.2)">
-        <div class="widget-head">🔒 RGPD & HDS : LES RÈGLES DU JEU</div>
-        <p style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85;margin-bottom:.8rem">Les données de santé sont des données sensibles au sens de l'<strong style="color:var(--text)">article 9 du RGPD</strong>. Leur traitement par IA nécessite une DPIA (analyse d'impact), un hébergeur certifié HDS, et le consentement explicite ou une base légale démontrée.</p>
-        <p style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85">La solution la plus simple pour rester conforme : <strong style="color:var(--acid)">traitement 100% local</strong>. Aucun flux de données vers l'extérieur, aucun sous-traitant américain à déclarer, aucune DPIA complexe sur des transferts hors UE.</p>
+        <div class="wh">🔒 RGPD & HDS : LES RÈGLES DU JEU</div>
+        <p style="font-family:var(--mono);font-size:.63rem;color:var(--tx2);line-height:1.85;margin-bottom:.7rem">Les données de santé sont des données sensibles au sens de l'article 9 du RGPD. Leur traitement par IA nécessite une DPIA, un hébergeur certifié HDS, et une base légale démontrée.</p>
+        <p style="font-family:var(--mono);font-size:.63rem;color:var(--tx2);line-height:1.85">La solution la plus simple pour rester conforme : <strong style="color:var(--acid)">traitement 100% local</strong>. Aucun flux de données vers l'extérieur, aucun sous-traitant américain à déclarer.</p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════
-     PAGE : AUTOMATION
-═══════════════════════════════════════ -->
-<div class="page" id="page-automation">
-  <div style="max-width:900px;margin:0 auto;padding:2.5rem 2.5rem;position:relative;z-index:1">
-    <div style="margin-bottom:2.5rem">
-      <div class="label" style="color:var(--amber);margin-bottom:.8rem">AUTOMATISATION & WORKFLOWS</div>
-      <h1 style="font-family:var(--serif);font-size:2.4rem;font-weight:900;line-height:1.1;margin-bottom:1rem">Automatiser avec l'IA : <em style="font-style:italic;color:var(--amber)">travailler moins,</em> produire plus</h1>
-      <p style="font-family:var(--mono);font-size:.68rem;color:var(--text2);line-height:1.85">n8n, Make, Zapier augmentés par des LLMs locaux : la combinaison qui permet aux entreprises de 10 à 500 personnes d'automatiser des tâches qui nécessitaient jusqu'ici des équipes entières.</p>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:2rem">
+<!-- ═══ PAGE: AUTOMATION ═══ -->
+<div class="pg" id="pg-auto">
+  <div class="content-wrap">
+    <div class="content-eyebrow" style="color:var(--amber)">AUTOMATISATION & WORKFLOWS</div>
+    <h1>Automatiser avec l'IA : <em style="color:var(--amber)">produire plus,</em> travailler mieux</h1>
+    <p class="content-sub">n8n, Make, Zapier augmentés par des LLMs locaux : la combinaison qui permet aux entreprises de 10 à 500 personnes d'automatiser des tâches qui nécessitaient jusqu'ici des équipes entières.</p>
+    <div style="display:flex;flex-direction:column;gap:1.5rem">
       <div class="widget" style="border-color:rgba(245,158,11,.2)">
-        <div class="widget-head">⚙️ N8N + MISTRAL : LA STACK SOUVERAINE</div>
-        <p style="font-family:var(--mono);font-size:.65rem;color:var(--text2);line-height:1.85;margin-bottom:1rem">n8n est un outil d'automatisation open-source auto-hébergeable. Combiné à Mistral via Ollama, il forme un <strong style="color:var(--text)">agent IA souverain</strong> capable de traiter emails, documents, données CRM et notifications — sans aucun abonnement SaaS et sans exfiltration de données.</p>
-        <div style="font-family:var(--mono);font-size:.62rem;background:var(--surface2);border-radius:var(--r);padding:1rem;color:var(--acid);line-height:1.9">
-          <div>📥 Trigger : email entrant → extraction des infos clés (LLM)</div>
-          <div>📋 Action : création de ticket CRM + résumé automatique</div>
-          <div>📤 Notification : Slack / Teams avec priorité suggérée par l'IA</div>
-          <div>📁 Archivage : classification documentaire automatique</div>
+        <div class="wh">⚙️ N8N + MISTRAL : LA STACK SOUVERAINE</div>
+        <p style="font-family:var(--mono);font-size:.63rem;color:var(--tx2);line-height:1.85;margin-bottom:.9rem">n8n est un outil d'automatisation open-source auto-hébergeable. Combiné à Mistral via Ollama, il forme un <strong class="hi">agent IA souverain</strong> capable de traiter emails, documents, données CRM — sans abonnement SaaS et sans exfiltration de données.</p>
+        <div class="check-list">
+          <div><span>📥</span> Trigger : email entrant → extraction des infos clés (LLM)</div>
+          <div><span>📋</span> Action : création de ticket CRM + résumé automatique</div>
+          <div><span>📤</span> Notification : Slack / Teams avec priorité suggérée par l'IA</div>
+          <div><span>📁</span> Archivage : classification documentaire automatique</div>
         </div>
       </div>
       <div class="widget">
-        <div class="widget-head">🏆 10 TÂCHES À AUTOMATISER EN PRIORITÉ</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:.5rem">
-          <div style="font-family:var(--mono);font-size:.6rem;background:var(--surface2);border-radius:var(--r);padding:.8rem;line-height:1.75">
-            <span style="color:var(--acid)">01</span> Triage et réponse aux emails entrants<br>
-            <span style="color:var(--acid)">02</span> Extraction de données depuis des PDFs<br>
-            <span style="color:var(--acid)">03</span> Génération de rapports hebdomadaires<br>
-            <span style="color:var(--acid)">04</span> Qualification des leads entrants<br>
-            <span style="color:var(--acid)">05</span> Onboarding documentaire RH
-          </div>
-          <div style="font-family:var(--mono);font-size:.6rem;background:var(--surface2);border-radius:var(--r);padding:.8rem;line-height:1.75">
-            <span style="color:var(--electric2)">06</span> Veille concurrentielle automatisée<br>
-            <span style="color:var(--electric2)">07</span> Traduction et adaptation de contenus<br>
-            <span style="color:var(--electric2)">08</span> Alertes anomalies sur données métier<br>
-            <span style="color:var(--electric2)">09</span> Synthèse de réunions (transcription)<br>
-            <span style="color:var(--electric2)">10</span> Mise à jour CRM depuis les échanges
-          </div>
+        <div class="wh">🏆 10 TÂCHES À AUTOMATISER EN PRIORITÉ</div>
+        <div class="grid-2">
+          <div class="check-list" style="line-height:2"><div><span style="color:var(--acid)">01</span> Triage emails entrants</div><div><span style="color:var(--acid)">02</span> Extraction données PDFs</div><div><span style="color:var(--acid)">03</span> Rapports hebdomadaires</div><div><span style="color:var(--acid)">04</span> Qualification des leads</div><div><span style="color:var(--acid)">05</span> Onboarding documentaire RH</div></div>
+          <div class="check-list" style="line-height:2"><div><span style="color:var(--blue2)">06</span> Veille concurrentielle auto</div><div><span style="color:var(--blue2)">07</span> Traduction de contenus</div><div><span style="color:var(--blue2)">08</span> Alertes anomalies données</div><div><span style="color:var(--blue2)">09</span> Synthèse de réunions</div><div><span style="color:var(--blue2)">10</span> Mise à jour CRM auto</div></div>
         </div>
       </div>
       <div class="widget" style="border-color:rgba(37,99,255,.2)">
-        <div class="widget-head">📈 ROI : LES CHIFFRES QUI CONVAINQUENT</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:.5rem;text-align:center">
-          <div style="background:var(--surface2);border-radius:var(--r);padding:1rem"><div style="font-family:var(--mono);font-size:1.8rem;font-weight:700;color:var(--acid)">-40%</div><div style="font-family:var(--mono);font-size:.52rem;color:var(--text2);margin-top:.3rem">temps tâches répétitives</div></div>
-          <div style="background:var(--surface2);border-radius:var(--r);padding:1rem"><div style="font-family:var(--mono);font-size:1.8rem;font-weight:700;color:var(--electric2)">3.2x</div><div style="font-family:var(--mono);font-size:.52rem;color:var(--text2);margin-top:.3rem">volume traité sans recruter</div></div>
-          <div style="background:var(--surface2);border-radius:var(--r);padding:1rem"><div style="font-family:var(--mono);font-size:1.8rem;font-weight:700;color:var(--amber)">< 6 mois</div><div style="font-family:var(--mono);font-size:.52rem;color:var(--text2);margin-top:.3rem">retour sur investissement</div></div>
+        <div class="wh">📈 ROI : LES CHIFFRES QUI CONVAINQUENT</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-n" style="color:var(--acid)">-40%</div><div class="kpi-l">temps tâches répétitives</div></div>
+          <div class="kpi"><div class="kpi-n" style="color:var(--blue2)">3.2×</div><div class="kpi-l">volume traité sans recruter</div></div>
+          <div class="kpi"><div class="kpi-n" style="color:var(--amber)">&lt;6m</div><div class="kpi-l">retour sur investissement</div></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════
-     PAGE : FORUM
-<!-- ═══════════════════════════════════════
-     PAGE : FORUM
-═══════════════════════════════════════ -->
-<div class="page" id="page-forum">
+<!-- ═══ PAGE: FORUM ═══ -->
+<div class="pg" id="pg-forum">
   <div class="forum-wrap">
-
-    <!-- Forum nav -->
     <nav class="f-nav">
       <div class="f-nav-sect">Catégories</div>
-      <button class="f-nav-item on" onclick="filterForum('all',this)"><span>🏠</span>Accueil<span class="f-nav-count" id="fc-all">—</span></button>
-      <button class="f-nav-item" onclick="filterForum('ia-locale',this)"><span>🤖</span>IA Locale<span class="f-nav-count" id="fc-ia">—</span></button>
-      <button class="f-nav-item" onclick="filterForum('automation',this)"><span>⚙️</span>Automation<span class="f-nav-count" id="fc-auto">—</span></button>
-      <button class="f-nav-item" onclick="filterForum('sante',this)"><span>💊</span>Santé & IA<span class="f-nav-count" id="fc-sante">—</span></button>
-      <button class="f-nav-item" onclick="filterForum('bi-data',this)"><span>📊</span>BI & Data<span class="f-nav-count" id="fc-bi">—</span></button>
-      <button class="f-nav-item" onclick="filterForum('souverainete',this)"><span>🔐</span>Souveraineté<span class="f-nav-count" id="fc-souv">—</span></button>
+      <button class="f-nav-btn on" onclick="fFilter('all',this)"><span>🏠</span>Accueil<span class="f-nav-count" id="fc-all">—</span></button>
+      <button class="f-nav-btn" onclick="fFilter('ia-locale',this)"><span>🤖</span>IA Locale<span class="f-nav-count" id="fc-ia">—</span></button>
+      <button class="f-nav-btn" onclick="fFilter('automation',this)"><span>⚙️</span>Automation<span class="f-nav-count" id="fc-auto">—</span></button>
+      <button class="f-nav-btn" onclick="fFilter('sante',this)"><span>💊</span>Santé & IA<span class="f-nav-count" id="fc-sante">—</span></button>
+      <button class="f-nav-btn" onclick="fFilter('bi-data',this)"><span>📊</span>BI & Data<span class="f-nav-count" id="fc-bi">—</span></button>
+      <button class="f-nav-btn" onclick="fFilter('souverainete',this)"><span>🔐</span>Souveraineté<span class="f-nav-count" id="fc-souv">—</span></button>
       <div class="f-sep"></div>
       <div class="f-nav-sect">Mon compte</div>
-      <button class="f-nav-item" onclick="currentUser?null:openAuth('login')"><span>🧑</span>Profil</button>
-      <button class="f-nav-item" onclick="currentUser?null:openAuth('login')"><span>🔔</span>Notifications</button>
+      <button class="f-nav-btn" onclick="currentUser?null:openAuth('login')"><span>🧑</span>Profil</button>
+      <button class="f-nav-btn" onclick="currentUser?null:openAuth('login')"><span>🔔</span>Notifications</button>
     </nav>
-
-    <!-- Forum content -->
-    <div class="f-main">
-
-      <!-- LIST VIEW -->
+    <div>
+      <!-- LIST -->
       <div id="f-list">
-        <div class="f-header">
-          <div>
-            <h1>Forum Core-IA</h1>
-            <p>Échanges techniques entre praticiens de l'IA souveraine</p>
-          </div>
-          <button class="btn-primary" onclick="openNewTopic()">✏️ &nbsp;NOUVEAU SUJET</button>
+        <div class="f-head">
+          <div><h1>Forum Core-IA</h1><p>Échanges techniques entre praticiens de l'IA souveraine</p></div>
+          <button class="btn-cta" onclick="openNewTopic()">✏️ NOUVEAU SUJET</button>
         </div>
-
         <div class="f-stats">
-          <div class="f-stat"><div class="f-stat-n" id="st-members">—</div><div class="f-stat-l">Membres</div></div>
-          <div class="f-stat"><div class="f-stat-n" id="st-topics">—</div><div class="f-stat-l">Sujets</div></div>
-          <div class="f-stat"><div class="f-stat-n" id="st-replies">—</div><div class="f-stat-l">Réponses</div></div>
-          <div class="f-stat"><div class="f-stat-n" style="color:var(--acid)" id="st-online">— <span class="on-dot"></span></div><div class="f-stat-l">En ligne</div></div>
+          <div class="f-stat"><div class="f-stat-n" id="st-m">—</div><div class="f-stat-l">Membres</div></div>
+          <div class="f-stat"><div class="f-stat-n" id="st-t">—</div><div class="f-stat-l">Sujets</div></div>
+          <div class="f-stat"><div class="f-stat-n" id="st-r">—</div><div class="f-stat-l">Réponses</div></div>
+          <div class="f-stat"><div class="f-stat-n" style="color:var(--acid)" id="st-o">— <span class="on-dot"></span></div><div class="f-stat-l">En ligne</div></div>
         </div>
-
-        <div class="widget" style="margin-bottom:1.2rem">
-          <div class="widget-head" style="margin-bottom:.7rem">EN LIGNE</div>
-          <div class="online-bar" id="online-bar">
-            <span style="font-family:var(--mono);font-size:.55rem;color:var(--text2)">Chargement…</span>
-          </div>
+        <div class="widget" style="margin-bottom:1rem">
+          <div class="wh" style="margin-bottom:.6rem">EN LIGNE</div>
+          <div class="online-chips" id="online-chips"><span style="font-family:var(--mono);font-size:.52rem;color:var(--tx2)">—</span></div>
         </div>
-
-        <div class="f-filters" id="f-filters">
+        <div class="pills f-filters" id="f-filters">
           <button class="pill on" data-cat="all">Tout</button>
           <button class="pill" data-cat="ia-locale">🤖 IA Locale</button>
           <button class="pill" data-cat="automation">⚙️ Automation</button>
@@ -863,455 +706,171 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
           <button class="pill" data-cat="bi-data">📊 BI & Data</button>
           <button class="pill" data-cat="souverainete">🔐 Souveraineté</button>
         </div>
-
         <div class="topics-card" id="topics-list">
-          <div class="f-empty"><span class="f-empty-icon">⏳</span>Chargement des sujets…</div>
+          <div class="f-empty"><span class="f-empty-ico">⏳</span>Chargement…</div>
         </div>
       </div>
-
-      <!-- DETAIL VIEW -->
+      <!-- DETAIL -->
       <div class="f-detail" id="f-detail">
-        <button class="back-btn" onclick="backToList()">← Retour aux sujets</button>
+        <button class="back-btn" onclick="backToList()">← Retour</button>
         <div id="detail-posts"></div>
         <div class="reply-box" id="reply-box" style="display:none">
-          <div class="label" style="margin-bottom:8px">VOTRE RÉPONSE</div>
-          <textarea class="reply-area" id="reply-input" placeholder="Partagez votre expertise…"></textarea>
-          <div class="reply-footer">
-            <button class="btn-primary" onclick="submitReply()">ENVOYER →</button>
-          </div>
+          <div style="font-family:var(--mono);font-size:.5rem;letter-spacing:.15em;color:var(--tx2);margin-bottom:7px;text-transform:uppercase">Votre réponse</div>
+          <textarea class="reply-ta" id="reply-input" placeholder="Partagez votre expertise…"></textarea>
+          <div class="reply-foot"><button class="btn-cta" onclick="submitReply()">ENVOYER →</button></div>
         </div>
-        <div id="reply-prompt" style="display:none;text-align:center;padding:1rem;font-family:var(--mono);font-size:.6rem;color:var(--text2)">
+        <div id="reply-prompt" style="display:none;text-align:center;padding:1rem;font-family:var(--mono);font-size:.6rem;color:var(--tx2)">
           <a href="#" onclick="openAuth('login');return false" style="color:var(--acid)">Connectez-vous</a> pour répondre.
         </div>
       </div>
-
     </div>
   </div>
 </div>
 
-<!-- ═══ AUTH OVERLAY ═══ -->
-<div class="overlay" id="auth-overlay" onclick="closeAuthOut(event)">
-  <div class="overlay-box">
-    <button class="overlay-close" onclick="closeAuth()">✕</button>
-    <span class="overlay-logo">CORE-IA HUB</span>
-    <h2 class="overlay-title" id="auth-title">Bon retour !</h2>
-    <p class="overlay-sub" id="auth-sub">Connectez-vous pour rejoindre le forum.</p>
-    <div class="auth-tabs">
-      <button class="auth-tab on" onclick="switchAuth('login')">CONNEXION</button>
-      <button class="auth-tab" onclick="switchAuth('register')">INSCRIPTION</button>
-    </div>
-    <div class="msg-err" id="auth-err"></div>
-    <div class="msg-ok"  id="auth-ok"></div>
-    <div class="field" id="field-uname" style="display:none">
-      <label>PSEUDO</label>
-      <input id="a-uname" type="text" placeholder="votre_pseudo" autocomplete="username">
-    </div>
-    <div class="field">
-      <label>EMAIL</label>
-      <input id="a-email" type="email" placeholder="votre@email.com" autocomplete="email">
-    </div>
-    <div class="field">
-      <label>MOT DE PASSE</label>
-      <input id="a-pass" type="password" placeholder="••••••••" autocomplete="current-password">
-    </div>
-    <button class="btn-primary" style="width:100%;padding:11px;justify-content:center" onclick="submitAuth()">CONTINUER →</button>
+<!-- AUTH -->
+<div class="overlay" id="auth-ov" onclick="if(event.target===this)closeAuth()">
+  <div class="ov-box">
+    <button class="ov-close" onclick="closeAuth()">✕</button>
+    <span class="ov-logo">CORE-IA HUB</span>
+    <div class="ov-title" id="ov-title">Bon retour !</div>
+    <p class="ov-sub" id="ov-sub">Connectez-vous pour rejoindre le forum.</p>
+    <div class="auth-tabs"><button class="auth-tab on" onclick="switchAuth('login')">CONNEXION</button><button class="auth-tab" onclick="switchAuth('register')">INSCRIPTION</button></div>
+    <div class="msg-err" id="a-err"></div>
+    <div class="msg-ok"  id="a-ok"></div>
+    <div class="field" id="f-uname" style="display:none"><label>PSEUDO</label><input id="a-uname" type="text" placeholder="votre_pseudo"></div>
+    <div class="field"><label>EMAIL</label><input id="a-email" type="email" placeholder="votre@email.com"></div>
+    <div class="field"><label>MOT DE PASSE</label><input id="a-pass" type="password" placeholder="••••••••"></div>
+    <button class="btn-cta" style="width:100%;justify-content:center;padding:11px" onclick="submitAuth()">CONTINUER →</button>
   </div>
 </div>
 
-<!-- ═══ NEW TOPIC MODAL ═══ -->
-<div class="modal" id="topic-modal" onclick="closeTopicOut(event)">
+<!-- NEW TOPIC MODAL -->
+<div class="modal" id="topic-modal" onclick="if(event.target===this)closeTopic()">
   <div class="modal-box">
     <button class="modal-close" onclick="closeTopic()">✕</button>
     <div class="modal-title">Créer un sujet</div>
-    <div class="msg-err" id="topic-err"></div>
+    <div class="msg-err" id="t-err"></div>
     <div class="field"><label>TITRE</label><input id="t-title" type="text" placeholder="Ex : Comment déployer Ollama en production ?"></div>
-    <div class="field">
-      <label>CATÉGORIE</label>
-      <select id="t-cat">
-        <option value="">Choisir…</option>
-        <option value="ia-locale">🤖 IA Locale & Open Source</option>
-        <option value="automation">⚙️ Automation & Workflows</option>
-        <option value="sante">💊 Santé & IA Médicale</option>
-        <option value="bi-data">📊 BI & Data</option>
-        <option value="souverainete">🔐 Souveraineté & Réglementation</option>
-      </select>
-    </div>
+    <div class="field"><label>CATÉGORIE</label><select id="t-cat"><option value="">Choisir…</option><option value="ia-locale">🤖 IA Locale</option><option value="automation">⚙️ Automation</option><option value="sante">💊 Santé</option><option value="bi-data">📊 BI & Data</option><option value="souverainete">🔐 Souveraineté</option></select></div>
     <div class="field"><label>MESSAGE</label><textarea id="t-body" placeholder="Décrivez votre question en détail…"></textarea></div>
-    <div class="modal-actions">
-      <button class="btn-ghost" onclick="closeTopic()">Annuler</button>
-      <button class="btn-primary" onclick="submitTopic()">PUBLIER →</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ MOBILE NAV ═══ -->
-<div class="mob-nav-overlay" id="mob-nav">
-  <button class="mob-nav-close" onclick="closeMobNav()">✕ FERMER</button>
-  <div class="mob-nav-logo"><div class="logo-mark">CI</div>CORE-IA HUB</div>
-  <button class="mob-nav-item active" id="mob-nav-media" onclick="showPage('media');closeMobNav()">ACTUS</button>
-  <button class="mob-nav-item" id="mob-nav-dossiers" onclick="showPage('dossiers');closeMobNav()">DOSSIERS</button>
-  <button class="mob-nav-item" id="mob-nav-forum" onclick="showPage('forum');closeMobNav()">FORUM</button>
-  <button class="mob-nav-item" onclick="showPage('ia-locale');closeMobNav()">IA LOCALE</button>
-  <button class="mob-nav-item" onclick="showPage('sante');closeMobNav()">SANTÉ</button>
-  <button class="mob-nav-item" onclick="showPage('automation');closeMobNav()">AUTOMATION</button>
-  <div class="mob-auth" id="mob-auth-area">
-    <button class="btn-primary" style="width:100%;justify-content:center;padding:12px" onclick="openAuth('login');closeMobNav()">CONNEXION / INSCRIPTION</button>
+    <div class="form-row"><button class="btn-outline" onclick="closeTopic()">Annuler</button><button class="btn-cta" onclick="submitTopic()">PUBLIER →</button></div>
   </div>
 </div>
 
 <script>
 /* ═══════════════════════════════════════
-   ⚙️  SUPABASE CONFIG
-   Remplacez ces 2 valeurs après avoir
+   SUPABASE CONFIG
+   ⚙️ Remplacez ces 2 valeurs après avoir
    créé votre projet sur supabase.com
 ═══════════════════════════════════════ */
 const SUPA_URL = 'https://VOTRE_ID.supabase.co';
 const SUPA_KEY = 'VOTRE_ANON_KEY';
 
-/* ─── Init Supabase de façon sécurisée ─── */
-const IS_CONFIGURED = !SUPA_URL.includes('VOTRE_ID');
+/* ── Init sécurisé ── */
+const SUPA_OK = !SUPA_URL.includes('VOTRE_ID');
 let sb = null;
-if (IS_CONFIGURED) {
-  try { sb = supabase.createClient(SUPA_URL, SUPA_KEY); }
-  catch(e) { console.warn('Supabase init:', e); }
+if (SUPA_OK) {
+  try {
+    // Supabase SDK loaded via CDN
+    const { createClient } = window.supabase || {};
+    if (createClient) sb = createClient(SUPA_URL, SUPA_KEY);
+  } catch(e) { console.warn('Supabase:', e); }
 }
 
-/* ─── State global ─── */
 let currentUser = null;
 let activeCat   = 'all';
 let activeTopicId = null;
 let activeTopicTitle = '';
 
-/* ─── Auth listener ─── */
 if (sb) sb.auth.onAuthStateChange((_e, session) => {
   currentUser = session?.user ?? null;
   renderAuthArea();
   if (currentUser) closeAuth();
 });
 
-/* ═══════════════════════════════════════
-   AUTH
-═══════════════════════════════════════ */
+/* ═══ AUTH ═══ */
 let authMode = 'login';
-
-function openAuth(mode='login'){
-  authMode = mode; switchAuth(mode);
-  document.getElementById('auth-overlay').classList.add('on');
+function openAuth(m){ authMode=m; switchAuth(m); document.getElementById('auth-ov').classList.add('on'); }
+function closeAuth(){ document.getElementById('auth-ov').classList.remove('on'); }
+function switchAuth(m){
+  authMode=m;
+  const r=m==='register';
+  document.getElementById('ov-title').textContent = r?'Créer un compte':'Bon retour !';
+  document.getElementById('ov-sub').textContent   = r?'Rejoignez la communauté Core-IA.':'Connectez-vous pour accéder au forum.';
+  document.getElementById('f-uname').style.display= r?'block':'none';
+  document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('on',r?i===1:i===0));
+  ['a-err','a-ok'].forEach(id=>document.getElementById(id).style.display='none');
 }
-function closeAuth(){ document.getElementById('auth-overlay').classList.remove('on'); }
-function closeAuthOut(e){ if(e.target.id==='auth-overlay') closeAuth(); }
-
-function switchAuth(mode){
-  authMode = mode;
-  const isReg = mode==='register';
-  document.getElementById('auth-title').textContent = isReg ? 'Créer un compte' : 'Bon retour !';
-  document.getElementById('auth-sub').textContent   = isReg ? 'Rejoignez la communauté Core-IA.' : 'Connectez-vous pour accéder au forum.';
-  document.getElementById('field-uname').style.display = isReg ? 'block' : 'none';
-  document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('on', isReg?i===1:i===0));
-  ['auth-err','auth-ok'].forEach(id=>{ document.getElementById(id).style.display='none'; });
-}
-
 async function submitAuth(){
-  const email = document.getElementById('a-email').value.trim();
-  const pass  = document.getElementById('a-pass').value;
-  const uname = document.getElementById('a-uname').value.trim();
-  const errEl = document.getElementById('auth-err');
-  const okEl  = document.getElementById('auth-ok');
-  errEl.style.display='none'; okEl.style.display='none';
-
-  if (!email||!pass){ errEl.textContent='Email et mot de passe requis.'; errEl.style.display='block'; return; }
-  if (!IS_CONFIGURED){ errEl.textContent='Supabase non configuré — ajoutez vos clés.'; errEl.style.display='block'; return; }
-
-  if (authMode==='register'){
-    const {error} = await sb.auth.signUp({ email, password:pass, options:{data:{username:uname||email.split('@')[0]}} });
-    if(error){ errEl.textContent=error.message; errEl.style.display='block'; }
-    else { okEl.textContent='✓ Vérifiez votre email pour confirmer votre compte !'; okEl.style.display='block'; }
+  const email=document.getElementById('a-email').value.trim();
+  const pass =document.getElementById('a-pass').value;
+  const uname=document.getElementById('a-uname').value.trim();
+  const err=document.getElementById('a-err'), ok=document.getElementById('a-ok');
+  err.style.display='none'; ok.style.display='none';
+  if(!email||!pass){err.textContent='Email et mot de passe requis.';err.style.display='block';return;}
+  if(!SUPA_OK){err.textContent='Supabase non configuré — ajoutez vos clés.';err.style.display='block';return;}
+  if(authMode==='register'){
+    const {error}=await sb.auth.signUp({email,password:pass,options:{data:{username:uname||email.split('@')[0]}}});
+    if(error){err.textContent=error.message;err.style.display='block';}
+    else{ok.textContent='✓ Vérifiez votre email pour confirmer votre compte !';ok.style.display='block';}
   } else {
-    const {error} = await sb.auth.signInWithPassword({email,password:pass});
-    if(error){ errEl.textContent='Email ou mot de passe incorrect.'; errEl.style.display='block'; }
+    const {error}=await sb.auth.signInWithPassword({email,password:pass});
+    if(error){err.textContent='Email ou mot de passe incorrect.';err.style.display='block';}
   }
 }
+async function logout(){ if(sb)await sb.auth.signOut(); currentUser=null; renderAuthArea(); document.getElementById('u-drop')?.classList.remove('on'); }
 
-async function logout(){
-  if(sb) await sb.auth.signOut();
-  currentUser=null; renderAuthArea();
-  document.getElementById('u-drop')?.classList.remove('on');
-}
+function avatarColor(s){const p=['linear-gradient(135deg,#2563ff,#7c3aed)','linear-gradient(135deg,#0891b2,#2563ff)','linear-gradient(135deg,#059669,#0891b2)','linear-gradient(135deg,#d97706,#ef4444)','linear-gradient(135deg,#7c3aed,#ec4899)'];let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))%p.length;return p[h];}
 
 function renderAuthArea(){
-  // Update mobile nav auth too
-  const mobAuth = document.getElementById('mob-auth-area');
-  if(mobAuth && currentUser){
-    const uname = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
-    mobAuth.innerHTML = `<div style="font-family:var(--mono);font-size:.6rem;color:var(--text2);margin-bottom:.8rem">${currentUser.email}</div><button class="btn-ghost" style="width:100%" onclick="logout();closeMobNav()">Déconnexion</button>`;
-  } else if(mobAuth){
-    mobAuth.innerHTML = `<button class="btn-primary" style="width:100%;justify-content:center;padding:12px" onclick="openAuth('login');closeMobNav()">CONNEXION / INSCRIPTION</button>`;
-  }
-  const area = document.getElementById('auth-area');
-  const area = document.getElementById('auth-area');
+  const area=document.getElementById('auth-area');
+  const mobAuth=document.getElementById('mob-auth');
   if(currentUser){
-    const uname = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
-    const init  = uname.slice(0,2).toUpperCase();
-    const color = avatarColor(uname);
-    area.innerHTML=`
-      <div class="u-menu">
-        <button class="u-btn" onclick="document.getElementById('u-drop').classList.toggle('on')">
-          <div class="u-sm-av" style="background:${color}">${init}</div>
-          ${uname} ▾
-        </button>
-        <div class="u-drop" id="u-drop">
-          <div class="u-drop-email">${currentUser.email}</div>
-          <button class="u-drop-item" onclick="showPage('forum')">💬 Forum</button>
-          <div class="u-drop-sep"></div>
-          <button class="u-drop-item danger" onclick="logout()">Déconnexion</button>
-        </div>
-      </div>`;
-    document.addEventListener('click', e=>{ if(!e.target.closest('.u-menu')) document.getElementById('u-drop')?.classList.remove('on'); }, {once:false});
+    const u=currentUser.user_metadata?.username||currentUser.email.split('@')[0];
+    const i=u.slice(0,2).toUpperCase();
+    area.innerHTML=`<button class="theme-btn" onclick="toggleTheme()"><span id="th-icon">${document.body.classList.contains('light')?'☀️':'🌙'}</span><span class="th-lbl" id="th-lbl">${document.body.classList.contains('light')?'CLAIR':'SOMBRE'}</span></button><div class="u-menu"><button class="u-btn" onclick="document.getElementById('u-drop').classList.toggle('on')"><div class="u-sm-av" style="background:${avatarColor(u)}">${i}</div>${u} ▾</button><div class="u-drop" id="u-drop"><div class="u-email">${currentUser.email}</div><button class="u-di" onclick="goPage('forum')">💬 Forum</button><div style="height:1px;background:var(--br);margin:3px 0"></div><button class="u-di danger" onclick="logout()">Déconnexion</button></div></div>`;
+    if(mobAuth) mobAuth.innerHTML=`<div style="font-family:var(--mono);font-size:.58rem;color:var(--tx2);margin-bottom:.8rem">${currentUser.email}</div><button class="btn-outline" style="width:100%" onclick="logout();closeMob()">Déconnexion</button>`;
   } else {
-    area.innerHTML=`<a href="#" class="btn-primary" onclick="openAuth('login');return false">CONNEXION</a>`;
+    area.innerHTML=`<button class="theme-btn" onclick="toggleTheme()"><span id="th-icon">${document.body.classList.contains('light')?'☀️':'🌙'}</span><span class="th-lbl" id="th-lbl">${document.body.classList.contains('light')?'CLAIR':'SOMBRE'}</span></button><a href="#" class="btn-cta" onclick="openAuth('login');return false">CONNEXION</a>`;
+    if(mobAuth) mobAuth.innerHTML=`<button class="btn-cta" style="width:100%;justify-content:center;padding:12px" onclick="openAuth('login');closeMob()">CONNEXION / INSCRIPTION</button>`;
   }
+  document.addEventListener('click',e=>{if(!e.target.closest('.u-menu'))document.getElementById('u-drop')?.classList.remove('on');});
 }
 
-/* ═══════════════════════════════════════
-   FORUM — STATS
-═══════════════════════════════════════ */
-async function loadStats(){
-  if(!sb){ setDemoStats(); return; }
-  const [a,b,c] = await Promise.all([
-    sb.from('topics').select('*',{count:'exact',head:true}),
-    sb.from('replies').select('*',{count:'exact',head:true}),
-    sb.from('profiles').select('*',{count:'exact',head:true}),
-  ]);
-  document.getElementById('st-topics').textContent  = a.count??'—';
-  document.getElementById('st-replies').textContent = b.count??'—';
-  document.getElementById('st-members').textContent = c.count??'—';
-  document.getElementById('st-online').innerHTML    = `${Math.floor(Math.random()*18)+4} <span class="on-dot"></span>`;
-
-  // Update nav counts
-  const cats = ['ia-locale','automation','sante','bi-data','souverainete'];
-  const ids  = ['fc-ia','fc-auto','fc-sante','fc-bi','fc-souv'];
-  for(let i=0;i<cats.length;i++){
-    const {count} = await sb.from('topics').select('*',{count:'exact',head:true}).eq('category',cats[i]);
-    document.getElementById(ids[i]).textContent = count??0;
-  }
-  document.getElementById('fc-all').textContent = a.count??'—';
+/* ═══ NAVIGATION ═══ */
+const PAGES = ['media','dossiers','ia','sante','auto','forum'];
+function goPage(n){
+  PAGES.forEach(p=>{
+    const el=document.getElementById('pg-'+p);
+    if(el) el.classList.toggle('on', p===n);
+  });
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('nb-'+n)?.classList.add('on');
+  if(['media','dossiers','ia','sante','auto'].includes(n)) document.getElementById('nb-media')?.classList.add('on');
+  if(n==='dossiers') document.getElementById('nb-dossiers')?.classList.add('on');
+  if(n==='forum') document.getElementById('nb-forum')?.classList.add('on');
+  document.getElementById('cat-bar').style.display = n==='forum'?'none':'block';
+  document.querySelectorAll('.mob-link').forEach(b=>b.classList.remove('on'));
+  document.getElementById('ml-'+n)?.classList.add('on');
+  if(n==='forum'){loadTopics();loadStats();}
+  window.scrollTo(0,0);
 }
+function setCat(btn){ document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); }
 
-function setDemoStats(){
-  document.getElementById('st-members').textContent='—';
-  document.getElementById('st-topics').textContent='—';
-  document.getElementById('st-replies').textContent='—';
-  document.getElementById('st-online').innerHTML='— <span class="on-dot"></span>';
+/* ═══ MOBILE NAV ═══ */
+function openMob(){ document.getElementById('mob-nav').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeMob(){ document.getElementById('mob-nav').classList.remove('open'); document.body.style.overflow=''; }
+
+/* ═══ THEME ═══ */
+function toggleTheme(){
+  const light=document.body.classList.toggle('light');
+  try{localStorage.setItem('cia-theme',light?'light':'dark');}catch(e){}
+  renderAuthArea();
 }
+try{ if(localStorage.getItem('cia-theme')==='light') document.body.classList.add('light'); }catch(e){}
 
-/* ═══════════════════════════════════════
-   FORUM — TOPICS LIST
-═══════════════════════════════════════ */
-const CAT_LABELS  = {'ia-locale':'🤖 IA Locale','automation':'⚙️ Automation','sante':'💊 Santé','bi-data':'📊 BI & Data','souverainete':'🔐 Souveraineté'};
-const CAT_CLASSES = {'ia-locale':'t-violet','automation':'t-blue','sante':'t-green','bi-data':'t-cyan','souverainete':'t-rose'};
-const DEMO_TOPICS = [
-  {id:'d1',title:'Mistral 7B vs Phi-3 Mini pour du RAG médical — comparatif',category:'ia-locale',uname:'alexandre_n',replies:24,ago:'il y a 1h',isNew:false},
-  {id:'d2',title:'Comment connecter n8n à mon CRM local sans cloud ?',category:'automation',uname:'m_kaddour',replies:12,ago:'il y a 2h',isNew:true},
-  {id:'d3',title:'Modèle prédictif VNI — partage de code Python + dataset',category:'sante',uname:'alexandre_n',replies:5,ago:'il y a 5h',isNew:true},
-  {id:'d4',title:'Comment quantifier un modèle en GGUF sans perte de qualité ?',category:'ia-locale',uname:'r_leconte',replies:7,ago:'il y a 3h',isNew:true},
-  {id:'d5',title:'RAG on-premise avec LangChain et PGVector — retour terrain',category:'bi-data',uname:'t_dupuis',replies:9,ago:'hier',isNew:false},
-  {id:'d6',title:'Agent IA pour triage email RH avec Mistral — mon retour',category:'automation',uname:'sarah_bwi',replies:6,ago:'hier',isNew:false},
-  {id:'d7',title:'RGPD & modèles LLM : cadre juridique 2026',category:'souverainete',uname:'j_martin',replies:15,ago:'il y a 2j',isNew:false},
-];
-
-function timeAgo(s){ const d=(Date.now()-new Date(s))/1000; if(d<60)return 'à l\'instant'; if(d<3600)return `${Math.floor(d/60)}min`; if(d<86400)return `${Math.floor(d/3600)}h`; return `${Math.floor(d/86400)}j`; }
-function avatarColor(s){ const p=['linear-gradient(135deg,#2563ff,#7c3aed)','linear-gradient(135deg,#0891b2,#2563ff)','linear-gradient(135deg,#059669,#0891b2)','linear-gradient(135deg,#d97706,#ef4444)','linear-gradient(135deg,#7c3aed,#ec4899)']; let h=0; for(const c of s) h=(h*31+c.charCodeAt(0))%p.length; return p[h]; }
-
-function topicHTML(t, uname, replies, ago, isNew, category){
-  const init  = (uname||'AN').slice(0,2).toUpperCase();
-  const catCls = CAT_CLASSES[category]||'t-blue';
-  const catLbl = CAT_LABELS[category]||category;
-  return `<div class="topic-row" onclick="openTopic('${t}','${(typeof replies==='string'?uname:uname).replace(/'/g,"\\'")}','${category}')">
-    <div class="t-left">
-      <div class="t-av" style="background:${avatarColor(uname)}">${init}</div>
-      <div class="t-body">
-        <h4>${typeof t==='object'?t.title:uname}</h4>
-        <div class="t-meta">
-          ${isNew?'<span class="art-tag t-green" style="font-size:.45rem">NOUVEAU</span>':''}
-          <span class="art-tag ${catCls}" style="font-size:.45rem">${catLbl}</span>
-          <span>${typeof t==='object'?t.uname:ago}</span>
-        </div>
-      </div>
-    </div>
-    <div class="t-right"><div class="t-replies"><strong>${typeof t==='object'?t.replies:replies}</strong> rép.</div></div>
-  </div>`;
-}
-
-async function loadTopics(){
-  const el = document.getElementById('topics-list');
-  if(!sb){
-    const filtered = activeCat==='all' ? DEMO_TOPICS : DEMO_TOPICS.filter(t=>t.category===activeCat);
-    el.innerHTML = filtered.length ? filtered.map(t=>`
-      <div class="topic-row" onclick="openTopic('${t.id}','${t.title.replace(/'/g,"\\'")}','${t.category}')">
-        <div class="t-left">
-          <div class="t-av" style="background:${avatarColor(t.uname)}">${t.uname.slice(0,2).toUpperCase()}</div>
-          <div class="t-body">
-            <h4>${t.title}</h4>
-            <div class="t-meta">
-              ${t.isNew?'<span class="art-tag t-green" style="font-size:.45rem">NOUVEAU</span>':''}
-              <span class="art-tag ${CAT_CLASSES[t.category]||'t-blue'}" style="font-size:.45rem">${CAT_LABELS[t.category]||t.category}</span>
-              <span>${t.uname}</span><span>·</span><span>${t.ago}</span>
-            </div>
-          </div>
-        </div>
-        <div class="t-right"><div class="t-replies"><strong>${t.replies}</strong> rép.</div></div>
-      </div>`).join('') : `<div class="f-empty"><span class="f-empty-icon">💬</span>Aucun sujet dans cette catégorie.</div>`;
-    renderOnlineDemo();
-    return;
-  }
-  el.innerHTML = '<div class="f-empty"><span class="f-empty-icon">⏳</span>Chargement…</div>';
-  let q = sb.from('topics').select('*,profiles(username),reply_count:replies(count)').order('created_at',{ascending:false}).limit(40);
-  if(activeCat!=='all') q=q.eq('category',activeCat);
-  const {data,error} = await q;
-  if(error||!data?.length){ el.innerHTML='<div class="f-empty"><span class="f-empty-icon">💬</span>Aucun sujet pour l\'instant.<br>Soyez le premier à poster !</div>'; return; }
-  el.innerHTML = data.map(t=>{
-    const uname = t.profiles?.username||'anonyme';
-    const cnt   = t.reply_count?.[0]?.count??0;
-    const isNew = (Date.now()-new Date(t.created_at))<86400000;
-    return `<div class="topic-row" onclick="openTopic('${t.id}','${t.title.replace(/'/g,"\\'")}','${t.category}')">
-      <div class="t-left">
-        <div class="t-av" style="background:${avatarColor(uname)}">${uname.slice(0,2).toUpperCase()}</div>
-        <div class="t-body">
-          <h4>${t.title}</h4>
-          <div class="t-meta">
-            ${isNew?'<span class="art-tag t-green" style="font-size:.45rem">NOUVEAU</span>':''}
-            <span class="art-tag ${CAT_CLASSES[t.category]||'t-blue'}" style="font-size:.45rem">${CAT_LABELS[t.category]||t.category}</span>
-            <span>${uname}</span><span>·</span><span>${timeAgo(t.created_at)}</span>
-          </div>
-        </div>
-      </div>
-      <div class="t-right"><div class="t-replies"><strong>${cnt}</strong> rép.</div></div>
-    </div>`;
-  }).join('');
-  loadOnlineUsers();
-}
-
-function renderOnlineDemo(){
-  const bar = document.getElementById('online-bar');
-  const users = ['alexandre_n','m_kaddour','sarah_bwi','r_leconte','t_dupuis'];
-  bar.innerHTML = users.map(u=>`<div class="u-chip"><div class="u-av" style="background:${avatarColor(u)}">${u.slice(0,2).toUpperCase()}</div>${u}</div>`).join('') + '<div class="u-chip" style="color:var(--text3)">+18</div>';
-}
-async function loadOnlineUsers(){
-  if(!sb){ renderOnlineDemo(); return; }
-  const {data} = await sb.from('profiles').select('username').order('created_at',{ascending:false}).limit(5);
-  if(!data?.length){ renderOnlineDemo(); return; }
-  const bar = document.getElementById('online-bar');
-  bar.innerHTML = data.map(p=>`<div class="u-chip"><div class="u-av" style="background:${avatarColor(p.username)}">${p.username.slice(0,2).toUpperCase()}</div>${p.username}</div>`).join('');
-}
-
-/* ═══════════════════════════════════════
-   FORUM — TOPIC DETAIL
-═══════════════════════════════════════ */
-async function openTopic(id, title, category){
-  activeTopicId    = id;
-  activeTopicTitle = title;
-
-  document.getElementById('f-list').style.display='none';
-  document.getElementById('f-detail').classList.add('on');
-
-  const postsEl = document.getElementById('detail-posts');
-  postsEl.innerHTML=`<h2 style="font-family:var(--serif);font-size:1.5rem;font-weight:900;margin-bottom:1.2rem">${title}</h2><div class="f-empty"><span class="f-empty-icon">⏳</span>Chargement…</div>`;
-
-  if(!sb){
-    postsEl.innerHTML=`<h2 style="font-family:var(--serif);font-size:1.5rem;font-weight:900;margin-bottom:1.2rem">${title}</h2>
-      <div class="post-card is-op"><div class="post-head"><div class="post-av" style="background:${avatarColor('alexandre_n')}">AL</div><div class="post-info"><strong>alexandre_n</strong> · il y a 1h · <span style="color:var(--acid)">OP</span></div></div><div class="post-body">Ceci est un exemple de post en mode démo. Connectez Supabase pour voir les vrais messages.</div></div>`;
-    showReplyArea();
-    return;
-  }
-
-  const [{data:topic},{data:replies}] = await Promise.all([
-    sb.from('topics').select('*,profiles(username)').eq('id',id).single(),
-    sb.from('replies').select('*,profiles(username)').eq('topic_id',id).order('created_at'),
-  ]);
-
-  const all=[...(topic?[{...topic,is_op:true}]:[]),...(replies||[])];
-  postsEl.innerHTML=`<h2 style="font-family:var(--serif);font-size:1.5rem;font-weight:900;margin-bottom:1.2rem">${title}</h2>`
-    + (all.length ? all.map(p=>{
-      const u=p.profiles?.username||'anonyme';
-      return `<div class="post-card ${p.is_op?'is-op':''}">
-        <div class="post-head"><div class="post-av" style="background:${avatarColor(u)}">${u.slice(0,2).toUpperCase()}</div>
-        <div class="post-info"><strong>${u}</strong> · ${timeAgo(p.created_at)}${p.is_op?' · <span style="color:var(--acid)">OP</span>':''}</div></div>
-        <div class="post-body">${escHtml(p.body||p.content||'')}</div>
-      </div>`;}).join('')
-    : '<div class="f-empty"><span class="f-empty-icon">💬</span>Aucune réponse pour l\'instant.</div>');
-
-  showReplyArea();
-}
-
-function escHtml(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
-
-function showReplyArea(){
-  document.getElementById('reply-box').style.display    = currentUser ? 'block' : 'none';
-  document.getElementById('reply-prompt').style.display = currentUser ? 'none'  : 'block';
-}
-
-function backToList(){
-  document.getElementById('f-list').style.display='block';
-  document.getElementById('f-detail').classList.remove('on');
-  activeTopicId=null;
-}
-
-async function submitReply(){
-  if(!currentUser||!activeTopicId) return;
-  const body=document.getElementById('reply-input').value.trim();
-  if(!body) return;
-  if(!sb) return;
-  const {error}=await sb.from('replies').insert({topic_id:activeTopicId,body,user_id:currentUser.id});
-  if(!error){ document.getElementById('reply-input').value=''; openTopic(activeTopicId,activeTopicTitle,''); }
-}
-
-/* ═══════════════════════════════════════
-   FORUM — NEW TOPIC
-═══════════════════════════════════════ */
-function openNewTopic(){ if(!currentUser){ openAuth('login'); return; } document.getElementById('topic-modal').classList.add('on'); }
-function closeTopic(){ document.getElementById('topic-modal').classList.remove('on'); }
-function closeTopicOut(e){ if(e.target.id==='topic-modal') closeTopic(); }
-
-async function submitTopic(){
-  const title=document.getElementById('t-title').value.trim();
-  const cat  =document.getElementById('t-cat').value;
-  const body =document.getElementById('t-body').value.trim();
-  const errEl=document.getElementById('topic-err');
-  errEl.style.display='none';
-  if(!title||!cat||!body){ errEl.textContent='Tous les champs sont requis.'; errEl.style.display='block'; return; }
-  if(!sb){ errEl.textContent='Supabase non configuré.'; errEl.style.display='block'; return; }
-  const {error}=await sb.from('topics').insert({title,category:cat,body,user_id:currentUser.id});
-  if(error){ errEl.textContent=error.message; errEl.style.display='block'; }
-  else { closeTopic(); ['t-title','t-body'].forEach(id=>document.getElementById(id).value=''); document.getElementById('t-cat').value=''; loadTopics(); loadStats(); }
-}
-
-/* ═══════════════════════════════════════
-   FORUM — FILTERS
-═══════════════════════════════════════ */
-function filterForum(cat, btn){
-  activeCat=cat;
-  document.querySelectorAll('.f-nav-item').forEach(b=>b.classList.remove('on'));
-  if(btn) btn.classList.add('on');
-  document.querySelectorAll('#f-filters .pill').forEach(b=>b.classList.toggle('on',b.dataset.cat===cat));
-  loadTopics();
-}
-
-document.getElementById('f-filters').addEventListener('click',e=>{
-  const b=e.target.closest('.pill'); if(!b) return;
-  filterForum(b.dataset.cat, null);
-  document.querySelectorAll('.f-nav-item').forEach(n=>n.classList.remove('on'));
-});
-
-/* Realtime */
-if(sb) sb.channel('forum')
-  .on('postgres_changes',{event:'INSERT',schema:'public',table:'topics'},()=>{ loadTopics(); loadStats(); })
-  .on('postgres_changes',{event:'INSERT',schema:'public',table:'replies'},p=>{ if(activeTopicId&&p.new.topic_id===activeTopicId) openTopic(activeTopicId,activeTopicTitle,''); })
-  .subscribe();
-
-/* ═══════════════════════════════════════
-   RSS
-═══════════════════════════════════════ */
-const SOURCES=[
+/* ═══ RSS ═══ */
+const SRCS=[
   {url:'https://www.numerama.com/tag/intelligence-artificielle/feed/',                   tag:'NUMERAMA',     cls:'t-green'},
   {url:'https://www.lemondeinformatique.fr/flux-rss/intelligence-artificielle/rss.xml', tag:'LE MONDE INFO',cls:'t-green'},
   {url:'https://www.01net.com/rss/actualites/',                                          tag:'01NET',        cls:'t-green'},
@@ -1322,226 +881,247 @@ const SOURCES=[
   {url:'https://openai.com/news/rss.xml',                                                tag:'OPENAI',       cls:'t-blue'},
 ];
 const PROXY='https://api.rss2json.com/v1/api.json?rss_url=';
-const FALLBACK_IMGS=[
-  'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/7567444/pexels-photo-7567444.jpeg?auto=compress&cs=tinysrgb&w=600',
-];
+const FBIMGS=['https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=600','https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=600','https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=600','https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=600','https://images.pexels.com/photos/7567444/pexels-photo-7567444.jpeg?auto=compress&cs=tinysrgb&w=600'];
+const fmtD=s=>{const d=new Date(s);return isNaN(d)?'':d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'});};
+const getImg=(item,i)=>{if(item.thumbnail?.startsWith('http'))return item.thumbnail;if(item.enclosure?.link)return item.enclosure.link;const m=(item.content||item.description||'').match(/<img[^>]+src=["']([^"']+)["']/i);return m?m[1]:FBIMGS[i%FBIMGS.length];};
+const strip=h=>{const d=document.createElement('div');d.innerHTML=h||'';return(d.textContent||'').trim().slice(0,110)+'…';};
 
-const fmtD = s=>{ const d=new Date(s); return isNaN(d)?'':d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}); };
-const getI = (item,i)=>{ if(item.thumbnail?.startsWith('http')) return item.thumbnail; if(item.enclosure?.link) return item.enclosure.link; const m=(item.content||item.description||'').match(/<img[^>]+src=["']([^"']+)["']/i); return m?m[1]:FALLBACK_IMGS[i%FALLBACK_IMGS.length]; };
-const strip = h=>{ const d=document.createElement('div'); d.innerHTML=h||''; return (d.textContent||'').trim().slice(0,110)+'…'; };
-
-let heroPool=[], heroIdx=0, heroTimer=null, heroLoaded=false;
-const INTERVAL=7000;
-
-/* ── Trending sidebar ── */
-function renderTrending(items, src){
-  const list = document.getElementById('trending-list');
-  const lbl  = document.getElementById('trending-src-label');
-  if(!list||!items?.length) return;
-  lbl.textContent = src.tag;
-  const nums = ['01','02','03','04'];
-  list.innerHTML = items.slice(0,4).map((item,i)=>{
-    const d = fmtD(item.pubDate);
-    const title = (item.title||'Sans titre').slice(0,62) + ((item.title||'').length>62?'…':'');
-    return `<a href="${item.link||'#'}" target="_blank" rel="noopener" class="trend-item" style="animation:fadeUp .4s ease ${i*.07}s both">
-      <span class="trend-n">${nums[i]}</span>
-      <div class="trend-body">
-        <h4>${title}</h4>
-        <span>${src.tag}${d?' · '+d:''}</span>
-      </div>
-    </a>`;
-  }).join('');
-}
-
-function renderFeed(items,src){
-  document.getElementById('feed-loading').style.display='none';
+function renderFeed(items, src){
+  document.getElementById('feed-sk').style.display='none';
+  document.getElementById('feed-err').style.display='none';
   const list=document.getElementById('feed-list');
   list.innerHTML='';
-  if(!items?.length){ document.getElementById('feed-err').style.display='block'; return; }
+  if(!items?.length){document.getElementById('feed-err').style.display='block';return;}
   items.slice(0,8).forEach((item,i)=>{
     const a=document.createElement('a');
-    a.href=item.link||'#'; a.target='_blank'; a.rel='noopener';
-    a.className='art-card fu'; a.style.animationDelay=(i*.06)+'s';
-    a.innerHTML=`<div class="art-thumb" style="background-image:url('${getI(item,i)}')"></div>
-      <div class="art-body">
-        <div>
-          <span class="art-tag ${src.cls}">${src.tag}</span>
-          <h3>${item.title||'Sans titre'}</h3>
-          <p>${strip(item.description||item.content)}</p>
-        </div>
-        <div class="art-meta"><span>${item.author||src.tag}</span>${fmtD(item.pubDate)?`<span>·</span><span>${fmtD(item.pubDate)}</span>`:''}</div>
-      </div>`;
+    a.href=item.link||'#';a.target='_blank';a.rel='noopener';
+    a.className='art-card fu';a.style.animationDelay=(i*.06)+'s';
+    a.innerHTML=`<div class="art-img" style="background-image:url('${getImg(item,i)}')"></div><div class="art-body"><div><span class="tag ${src.cls}">${src.tag}</span><h3>${item.title||'Sans titre'}</h3><p>${strip(item.description||item.content)}</p></div><div class="art-meta"><span>${item.author||src.tag}</span>${fmtD(item.pubDate)?`<span>·</span><span>${fmtD(item.pubDate)}</span>`:''}</div></div>`;
     list.appendChild(a);
   });
-  // Update ticker with live titles
-  const tt=document.getElementById('ticker-track');
-  if(tt){
-    const t=items.slice(0,6).map(x=>`<span>${x.title}</span><span class="sep">◆</span>`).join('');
-    tt.innerHTML=t+t;
+  // Trending sidebar
+  const tl=document.getElementById('trend-list'), ts=document.getElementById('trend-src');
+  if(tl){
+    ts.textContent=src.tag;
+    tl.innerHTML=items.slice(0,4).map((item,i)=>`<a href="${item.link||'#'}" target="_blank" rel="noopener" class="trend-item" style="animation:fadeUp .4s ease ${i*.06}s both"><span class="trend-n">${['01','02','03','04'][i]}</span><div class="trend-body"><h4>${(item.title||'').slice(0,58)}${item.title?.length>58?'…':''}</h4><span>${src.tag}${fmtD(item.pubDate)?' · '+fmtD(item.pubDate):''}</span></div></a>`).join('');
   }
+  // Ticker update
+  const tk=document.getElementById('ticker');
+  if(tk){const t=items.slice(0,6).map(x=>`<span>${x.title}</span><span class="sep">◆</span>`).join('');tk.innerHTML=t+t;}
 }
 
-let activeSrcIdx=0;
+/* ═══ HERO CAROUSEL ═══ */
+let hPool=[], hIdx=0, hTimer=null, hReady=false;
+const H_INT=7000;
+
+function hRender(i){
+  if(!hPool.length)return;
+  const item=hPool[i], src=item._src||SRCS[0];
+  const bg=document.getElementById('hbg');
+  bg.style.opacity=0;
+  setTimeout(()=>{
+    bg.style.backgroundImage=`url('${item._img||FBIMGS[0]}')`;
+    bg.style.transition='opacity .6s ease';
+    bg.style.opacity=1;
+  },120);
+  const t=document.getElementById('h-title');
+  t.textContent=item.title||'Sans titre';
+  t.className='hero-title h-anim';
+  document.getElementById('h-desc').textContent=strip(item.description||item.content);
+  document.getElementById('h-tag').textContent=src.tag;
+  document.getElementById('h-tag').className='tag '+src.cls;
+  document.getElementById('h-author').textContent=item.author?`Par ${item.author}`:'';
+  const dd=fmtD(item.pubDate);
+  document.getElementById('h-date').textContent=dd?`· ${dd}`:'';
+  document.getElementById('h-link').href=item.link||'#';
+  document.querySelectorAll('.h-dot').forEach((d,j)=>d.classList.toggle('on',j===i));
+  // progress bar
+  const fill=document.getElementById('h-fill');
+  fill.style.transition='none';fill.style.width='0%';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{fill.style.transition=`width ${H_INT}ms linear`;fill.style.width='100%';}));
+}
+function hRebuildDots(){
+  const dots=document.getElementById('h-dots');
+  if(!dots)return;
+  dots.innerHTML=hPool.map((_,i)=>`<button class="h-dot${i===hIdx?' on':''}" onclick="hGoto(${i})"></button>`).join('');
+}
+function hInit(items, src){
+  hPool=items.map((it,j)=>({...it,_src:src,_img:getImg(it,j)}));
+  hIdx=0; hReady=true;
+  hRebuildDots(); hRender(0);
+  clearInterval(hTimer);
+  hTimer=setInterval(()=>{hIdx=(hIdx+1)%hPool.length;hRender(hIdx);},H_INT);
+}
+function hAddItems(items, src){
+  // silently add to pool without restarting
+  hPool.push(...items.slice(0,4).map((it,j)=>({...it,_src:src,_img:getImg(it,j)})));
+  hRebuildDots();
+}
+function hStep(dir){clearInterval(hTimer);hIdx=(hIdx+dir+hPool.length)%hPool.length;hRender(hIdx);hTimer=setInterval(()=>{hIdx=(hIdx+1)%hPool.length;hRender(hIdx);},H_INT);}
+function hGoto(i){clearInterval(hTimer);hIdx=i;hRender(i);hTimer=setInterval(()=>{hIdx=(hIdx+1)%hPool.length;hRender(hIdx);},H_INT);}
+
+/* ── RSS Loader ── */
+let activeSrc=0;
 async function loadRSS(idx){
-  activeSrcIdx=idx;
-  const src=SOURCES[idx];
-  document.getElementById('feed-loading').style.display='flex';
-  document.getElementById('feed-list').innerHTML='';
-  document.getElementById('feed-err').style.display='none';
+  activeSrc=idx;
+  const src=SRCS[idx];
+  if(idx===0){
+    document.getElementById('feed-sk').style.display='block';
+    document.getElementById('feed-list').innerHTML='';
+    document.getElementById('feed-err').style.display='none';
+  }
   try{
     const r=await fetch(PROXY+encodeURIComponent(src.url)+'&count=10');
     const d=await r.json();
-    if(activeSrcIdx!==idx) return;
-    document.getElementById('feed-loading').style.display='none';
+    if(activeSrc!==idx)return;
     if(d.status==='ok'&&d.items?.length){
-      renderFeed(d.items,src);
-      renderTrending(d.items,src);
-      // Feed hero pool from FR sources (0-3) — stable init
-      if(idx<=3){
-        // Precompute images before pushing
-        const newItems = d.items.slice(0,5).map((it,j)=>({...it,_src:src,_img:getI(it,j)}));
-        if(!heroLoaded){
-          // First source: init immediately with what we have
-          heroPool = newItems;
-          heroLoaded = true;
-          heroInit();
-        } else {
-          // Subsequent sources: silently append, no restart
-          heroPool.push(...newItems);
-          // Just rebuild dots quietly without resetting position or timer
-          heroRebuildDots();
-        }
-      }
-    } else { document.getElementById('feed-err').style.display='block'; }
-  } catch(e){ if(activeSrcIdx===idx){ document.getElementById('feed-loading').style.display='none'; document.getElementById('feed-err').style.display='block'; } }
-}
-
-document.querySelectorAll('#src-pills .pill').forEach(b=>b.addEventListener('click',function(){
-  document.querySelectorAll('#src-pills .pill').forEach(x=>x.classList.remove('on'));
-  this.classList.add('on'); loadRSS(+this.dataset.src);
-}));
-
-/* ═══════════════════════════════════════
-   HERO CAROUSEL
-═══════════════════════════════════════ */
-function heroInit(){ heroRefresh(); }
-function heroRefresh(){
-  if(!heroPool.length) return;
-  // Shuffle once at first init only — keep order stable after
-  heroIdx=0;
-  const dots=document.getElementById('hero-dots');
-  dots.innerHTML=heroPool.map((_,i)=>`<button class="hero-dot${i===0?' on':''}" onclick="heroGoto(${i})"></button>`).join('');
-  heroRender(0); clearInterval(heroTimer); heroAutoPlay();
-}
-function heroRender(i){
-  if(!heroPool.length) return;
-  const item=heroPool[i], src=item._src||SOURCES[0];
-  const bg=document.getElementById('hero-bg');
-  bg.style.opacity=0;
-  setTimeout(()=>{
-    bg.style.backgroundImage=`url('${item._img||FALLBACK_IMGS[i%5]}')`;
-    bg.style.transition='opacity .7s ease'; bg.style.opacity=1;
-  },120);
-  const h1=document.getElementById('hero-title');
-  h1.textContent=item.title||'Sans titre';
-  h1.className='hero-anim';
-  document.getElementById('hero-desc').textContent=strip(item.description||item.content);
-  document.getElementById('hero-tag').textContent=src.tag;
-  document.getElementById('hero-tag').className=`art-tag ${src.cls}`;
-  document.getElementById('hero-eyebrow').textContent=src.tag+' · VEILLE IA';
-  document.getElementById('hero-author').textContent=item.author?`Par ${item.author}`:'';
-  const dd=fmtD(item.pubDate);
-  document.getElementById('hero-date').textContent=dd?`· ${dd}`:'';
-  document.getElementById('hero-link').href=item.link||'#';
-  document.querySelectorAll('.hero-dot').forEach((d,j)=>d.classList.toggle('on',j===i));
-  // Progress bar reset
-  const fill=document.getElementById('hero-fill');
-  fill.style.transition='none'; fill.style.width='0%';
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{ fill.style.transition=`width ${INTERVAL}ms linear`; fill.style.width='100%'; }));
-}
-function heroStep(dir){ clearInterval(heroTimer); heroIdx=(heroIdx+dir+heroPool.length)%heroPool.length; heroRender(heroIdx); heroAutoPlay(); }
-function heroGoto(i){ clearInterval(heroTimer); heroIdx=i; heroRender(i); heroAutoPlay(); }
-function heroAutoPlay(){ clearInterval(heroTimer); heroTimer=setInterval(()=>{ heroIdx=(heroIdx+1)%heroPool.length; heroRender(heroIdx); },INTERVAL); }
-function heroRebuildDots(){
-  // Add new dots without resetting current slide or timer
-  const dots=document.getElementById('hero-dots');
-  if(!dots) return;
-  dots.innerHTML=heroPool.map((_,i)=>`<button class="hero-dot${i===heroIdx?' on':''}" onclick="heroGoto(${i})"></button>`).join('');
-}
-
-/* ═══════════════════════════════════════
-   NAVIGATION
-═══════════════════════════════════════ */
-const MEDIA_FAMILY = ['media','dossiers','ia-locale','sante','automation'];
-
-function showPage(n){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(l=>l.classList.remove('active'));
-  const pg = document.getElementById('page-'+n);
-  if(pg) pg.classList.add('active');
-  const nav = document.getElementById('nav-'+n);
-  if(nav) nav.classList.add('active');
-  const isMedia = MEDIA_FAMILY.includes(n);
-  document.getElementById('cat-bar').style.display = isMedia ? 'block' : 'none';
-  if(isMedia) document.getElementById('nav-media')?.classList.add('active');
-  if(n==='forum'){ loadTopics(); loadStats(); if(sb) sb.auth.getSession().then(({data:{session}})=>{ currentUser=session?.user??null; renderAuthArea(); showReplyArea?.(); }); }
-  window.scrollTo(0,0);
-}
-
-function filterMedia(cat, btn){
-  showPage('media');
-  document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-}
-
-/* ═══ THEME TOGGLE ═══ */
-function toggleTheme(){
-  const isLight = document.body.classList.toggle('light');
-  document.getElementById('theme-icon').textContent = isLight ? '☀️' : '🌙';
-  document.getElementById('theme-label').textContent = isLight ? 'CLAIR' : 'SOMBRE';
-  try{ localStorage.setItem('cia-theme', isLight ? 'light' : 'dark'); }catch(e){}
-}
-try{
-  if(localStorage.getItem('cia-theme')==='light'){
-    document.body.classList.add('light');
-    document.getElementById('theme-icon').textContent='☀️';
-    document.getElementById('theme-label').textContent='CLAIR';
-  }
-}catch(e){}
-
-/* ═══ HAMBURGER MOBILE NAV ═══ */
-function openMobNav(){ document.getElementById('mob-nav').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeMobNav(){ document.getElementById('mob-nav').classList.remove('open'); document.body.style.overflow=''; }
-// Close on outside tap
-document.getElementById('mob-nav').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeMobNav(); });
-
-/* ═══════════════════════════════════════
-   INIT
-═══════════════════════════════════════ */
-// Load session silently
-if(sb) sb.auth.getSession().then(({data:{session}})=>{ currentUser=session?.user??null; renderAuthArea(); });
-
-// Load primary source immediately, others lazily after hero is stable
-loadRSS(0);
-// Additional FR sources load silently in background after hero renders
-setTimeout(()=>{ if(heroLoaded) loadHeroBackground(1); },3000);
-setTimeout(()=>{ if(heroLoaded) loadHeroBackground(2); },5000);
-setTimeout(()=>{ if(heroLoaded) loadHeroBackground(3); },7000);
-
-// Background loader — enriches hero pool without touching the feed UI
-async function loadHeroBackground(idx){
-  const src = SOURCES[idx];
-  try{
-    const r = await fetch(PROXY+encodeURIComponent(src.url)+'&count=6');
-    const d = await r.json();
-    if(d.status==='ok'&&d.items?.length){
-      heroPool.push(...d.items.slice(0,4).map((it,j)=>({...it,_src:src,_img:getI(it,j)})));
-      heroRebuildDots(); // silently add dots, no restart
+      if(idx===activeSrc) renderFeed(d.items,src);
+      if(!hReady) hInit(d.items,src);
+      else hAddItems(d.items,src);
+    } else if(idx===0){
+      document.getElementById('feed-sk').style.display='none';
+      document.getElementById('feed-err').style.display='block';
     }
+  }catch(e){
+    if(idx===0){document.getElementById('feed-sk').style.display='none';document.getElementById('feed-err').style.display='block';}
+  }
+}
+
+document.getElementById('src-pills').addEventListener('click',e=>{
+  const b=e.target.closest('.pill');if(!b||b.dataset.i===undefined)return;
+  document.querySelectorAll('#src-pills .pill').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  loadRSS(+b.dataset.i);
+});
+
+/* ═══ FORUM ═══ */
+const CAT_L={'ia-locale':'🤖 IA Locale','automation':'⚙️ Automation','sante':'💊 Santé','bi-data':'📊 BI & Data','souverainete':'🔐 Souveraineté'};
+const CAT_C={'ia-locale':'t-violet','automation':'t-blue','sante':'t-green','bi-data':'t-cyan','souverainete':'t-rose'};
+const DEMO=[
+  {id:'d1',title:'Mistral 7B vs Phi-3 Mini pour du RAG médical — comparatif',category:'ia-locale',uname:'alexandre_n',replies:24,ago:'il y a 1h'},
+  {id:'d2',title:'Comment connecter n8n à mon CRM local sans cloud ?',category:'automation',uname:'m_kaddour',replies:12,ago:'il y a 2h'},
+  {id:'d3',title:'Modèle prédictif VNI — partage de code Python + dataset',category:'sante',uname:'alexandre_n',replies:5,ago:'il y a 5h'},
+  {id:'d4',title:'Comment quantifier un modèle en GGUF sans perte de qualité ?',category:'ia-locale',uname:'r_leconte',replies:7,ago:'il y a 3h'},
+  {id:'d5',title:'RAG on-premise avec LangChain et PGVector — retour terrain',category:'bi-data',uname:'t_dupuis',replies:9,ago:'hier'},
+  {id:'d6',title:'Agent IA pour triage email RH avec Mistral — mon retour',category:'automation',uname:'sarah_bwi',replies:6,ago:'hier'},
+  {id:'d7',title:'RGPD & modèles LLM : cadre juridique 2026',category:'souverainete',uname:'j_martin',replies:15,ago:'il y a 2j'},
+];
+const timeAgo=s=>{const d=(Date.now()-new Date(s))/1000;if(d<60)return 'à l\'instant';if(d<3600)return`${Math.floor(d/60)}min`;if(d<86400)return`${Math.floor(d/3600)}h`;return`${Math.floor(d/86400)}j`;};
+const escH=s=>{const d=document.createElement('div');d.textContent=s;return d.innerHTML;};
+
+async function loadStats(){
+  if(!sb){['st-m','st-t','st-r'].forEach(id=>document.getElementById(id).textContent='—');document.getElementById('st-o').innerHTML='— <span class="on-dot"></span>';renderOnlineDemo();return;}
+  const [a,b,c]=await Promise.all([sb.from('topics').select('*',{count:'exact',head:true}),sb.from('replies').select('*',{count:'exact',head:true}),sb.from('profiles').select('*',{count:'exact',head:true})]);
+  document.getElementById('st-t').textContent=a.count??'—';
+  document.getElementById('st-r').textContent=b.count??'—';
+  document.getElementById('st-m').textContent=c.count??'—';
+  document.getElementById('st-o').innerHTML=`${Math.floor(Math.random()*18)+4} <span class="on-dot"></span>`;
+  loadOnline();
+}
+function renderOnlineDemo(){
+  const chips=document.getElementById('online-chips');
+  if(!chips)return;
+  chips.innerHTML=['alexandre_n','m_kaddour','sarah_bwi','r_leconte','t_dupuis'].map(u=>`<div class="u-chip"><div class="u-av" style="background:${avatarColor(u)}">${u.slice(0,2).toUpperCase()}</div>${u}</div>`).join('')+'<div class="u-chip" style="color:var(--tx3)">+18</div>';
+}
+async function loadOnline(){
+  if(!sb){renderOnlineDemo();return;}
+  const{data}=await sb.from('profiles').select('username').order('created_at',{ascending:false}).limit(5);
+  if(!data?.length){renderOnlineDemo();return;}
+  document.getElementById('online-chips').innerHTML=data.map(p=>`<div class="u-chip"><div class="u-av" style="background:${avatarColor(p.username)}">${p.username.slice(0,2).toUpperCase()}</div>${p.username}</div>`).join('');
+}
+
+async function loadTopics(){
+  const el=document.getElementById('topics-list');
+  if(!sb){
+    const items=activeCat==='all'?DEMO:DEMO.filter(t=>t.category===activeCat);
+    el.innerHTML=items.length?items.map(t=>`<div class="topic-row" onclick="openTopic('${t.id}','${t.title.replace(/'/g,"\\'")}','${t.category}')"><div class="t-left"><div class="t-av" style="background:${avatarColor(t.uname)}">${t.uname.slice(0,2).toUpperCase()}</div><div class="t-body"><h4>${t.title}</h4><div class="t-meta"><span class="tag ${CAT_C[t.category]||'t-blue'}" style="font-size:.45rem">${CAT_L[t.category]||t.category}</span><span>${t.uname}</span><span>·</span><span>${t.ago}</span></div></div></div><div class="t-right"><div class="t-reps"><strong>${t.replies}</strong> rép.</div></div></div>`).join(''):`<div class="f-empty"><span class="f-empty-ico">💬</span>Aucun sujet dans cette catégorie.</div>`;
+    return;
+  }
+  el.innerHTML='<div class="f-empty"><span class="f-empty-ico">⏳</span>Chargement…</div>';
+  let q=sb.from('topics').select('*,profiles(username),rc:replies(count)').order('created_at',{ascending:false}).limit(40);
+  if(activeCat!=='all')q=q.eq('category',activeCat);
+  const{data,error}=await q;
+  if(error||!data?.length){el.innerHTML='<div class="f-empty"><span class="f-empty-ico">💬</span>Aucun sujet pour l\'instant.<br>Soyez le premier à poster !</div>';return;}
+  el.innerHTML=data.map(t=>{
+    const u=t.profiles?.username||'anonyme',cnt=t.rc?.[0]?.count??0,isN=(Date.now()-new Date(t.created_at))<86400000;
+    return`<div class="topic-row" onclick="openTopic('${t.id}','${t.title.replace(/'/g,"\\'")}','${t.category}')"><div class="t-left"><div class="t-av" style="background:${avatarColor(u)}">${u.slice(0,2).toUpperCase()}</div><div class="t-body"><h4>${t.title}</h4><div class="t-meta">${isN?'<span class="tag t-green" style="font-size:.45rem">NOUVEAU</span>':''}<span class="tag ${CAT_C[t.category]||'t-blue'}" style="font-size:.45rem">${CAT_L[t.category]||t.category}</span><span>${u}</span><span>·</span><span>${timeAgo(t.created_at)}</span></div></div></div><div class="t-right"><div class="t-reps"><strong>${cnt}</strong> rép.</div></div></div>`;
+  }).join('');
+}
+
+async function openTopic(id,title,cat){
+  activeTopicId=id; activeTopicTitle=title;
+  document.getElementById('f-list').style.display='none';
+  document.getElementById('f-detail').classList.add('on');
+  const posts=document.getElementById('detail-posts');
+  posts.innerHTML=`<h2 style="font-family:var(--serif);font-size:1.4rem;font-weight:900;margin-bottom:1.1rem">${title}</h2><div class="f-empty"><span class="f-empty-ico">⏳</span>Chargement…</div>`;
+  if(!sb){
+    posts.innerHTML=`<h2 style="font-family:var(--serif);font-size:1.4rem;font-weight:900;margin-bottom:1.1rem">${title}</h2><div class="post-card is-op"><div class="post-head"><div class="post-av" style="background:${avatarColor('alexandre_n')}">AL</div><div class="post-info"><strong>alexandre_n</strong> · il y a 1h · <span style="color:var(--acid)">OP</span></div></div><div class="post-body">Exemple de post en mode démo. Connectez Supabase pour afficher les vrais messages.</div></div>`;
+    showReply();return;
+  }
+  const [{data:topic},{data:replies}]=await Promise.all([sb.from('topics').select('*,profiles(username)').eq('id',id).single(),sb.from('replies').select('*,profiles(username)').eq('topic_id',id).order('created_at')]);
+  const all=[...(topic?[{...topic,is_op:true}]:[]),...(replies||[])];
+  posts.innerHTML=`<h2 style="font-family:var(--serif);font-size:1.4rem;font-weight:900;margin-bottom:1.1rem">${title}</h2>`+(all.length?all.map(p=>{const u=p.profiles?.username||'anonyme';return`<div class="post-card ${p.is_op?'is-op':''}"><div class="post-head"><div class="post-av" style="background:${avatarColor(u)}">${u.slice(0,2).toUpperCase()}</div><div class="post-info"><strong>${u}</strong> · ${timeAgo(p.created_at)}${p.is_op?' · <span style="color:var(--acid)">OP</span>':''}</div></div><div class="post-body">${escH(p.body||p.content||'')}</div></div>`;}).join(''):'<div class="f-empty"><span class="f-empty-ico">💬</span>Aucune réponse pour l\'instant.</div>');
+  showReply();
+}
+function showReply(){
+  document.getElementById('reply-box').style.display=currentUser?'block':'none';
+  document.getElementById('reply-prompt').style.display=currentUser?'none':'block';
+}
+function backToList(){document.getElementById('f-list').style.display='block';document.getElementById('f-detail').classList.remove('on');activeTopicId=null;}
+async function submitReply(){
+  if(!currentUser||!activeTopicId||!sb)return;
+  const body=document.getElementById('reply-input').value.trim();
+  if(!body)return;
+  const{error}=await sb.from('replies').insert({topic_id:activeTopicId,body,user_id:currentUser.id});
+  if(!error){document.getElementById('reply-input').value='';openTopic(activeTopicId,activeTopicTitle,'');}
+}
+
+/* forum filters */
+function fFilter(cat,btn){
+  activeCat=cat;
+  document.querySelectorAll('.f-nav-btn').forEach(b=>b.classList.remove('on'));
+  if(btn)btn.classList.add('on');
+  document.querySelectorAll('#f-filters .pill').forEach(b=>b.classList.toggle('on',b.dataset.cat===cat));
+  loadTopics();
+}
+document.getElementById('f-filters').addEventListener('click',e=>{
+  const b=e.target.closest('.pill');if(!b)return;
+  fFilter(b.dataset.cat,null);
+  document.querySelectorAll('.f-nav-btn').forEach(b=>b.classList.remove('on'));
+});
+
+/* new topic modal */
+function openNewTopic(){if(!currentUser){openAuth('login');return;}document.getElementById('topic-modal').classList.add('on');}
+function closeTopic(){document.getElementById('topic-modal').classList.remove('on');}
+async function submitTopic(){
+  const title=document.getElementById('t-title').value.trim(),cat=document.getElementById('t-cat').value,body=document.getElementById('t-body').value.trim();
+  const err=document.getElementById('t-err');err.style.display='none';
+  if(!title||!cat||!body){err.textContent='Tous les champs sont requis.';err.style.display='block';return;}
+  if(!sb){err.textContent='Supabase non configuré.';err.style.display='block';return;}
+  const{error}=await sb.from('topics').insert({title,category:cat,body,user_id:currentUser.id});
+  if(error){err.textContent=error.message;err.style.display='block';}
+  else{closeTopic();['t-title','t-body'].forEach(id=>document.getElementById(id).value='');document.getElementById('t-cat').value='';loadTopics();loadStats();}
+}
+
+/* realtime */
+if(sb)sb.channel('forum').on('postgres_changes',{event:'INSERT',schema:'public',table:'topics'},()=>{loadTopics();loadStats();}).on('postgres_changes',{event:'INSERT',schema:'public',table:'replies'},p=>{if(activeTopicId&&p.new.topic_id===activeTopicId)openTopic(activeTopicId,activeTopicTitle,'');}).subscribe();
+
+/* ═══ INIT ═══ */
+if(sb)sb.auth.getSession().then(({data:{session}})=>{currentUser=session?.user??null;renderAuthArea();});
+
+// Load primary RSS source immediately
+loadRSS(0);
+// Silently enrich hero with 3 more FR sources after hero is stable
+setTimeout(()=>loadHeroBg(1),4000);
+setTimeout(()=>loadHeroBg(2),7000);
+setTimeout(()=>loadHeroBg(3),10000);
+
+async function loadHeroBg(idx){
+  if(!hReady)return;
+  try{
+    const r=await fetch(PROXY+encodeURIComponent(SRCS[idx].url)+'&count=6');
+    const d=await r.json();
+    if(d.status==='ok'&&d.items?.length) hAddItems(d.items,SRCS[idx]);
   }catch(e){}
 }
 </script>
