@@ -5,141 +5,864 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Core-IA Hub · Le Média de l'IA Souveraine</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;1,9..40,300&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #03040b;
-    --bg-card: rgba(13, 15, 43, 0.5);
+    --bg2: #070a18;
+    --bg-card: rgba(13, 15, 43, 0.6);
     --blue: #3b5bff;
+    --blue-dim: rgba(59,91,255,0.12);
     --violet: #7c5cfc;
+    --violet-dim: rgba(124,92,252,0.12);
     --cyan: #4fc3f7;
     --green: #00ff88;
+    --green-dim: rgba(0,255,136,0.1);
+    --red: #ff4757;
     --text: #e8eaff;
-    --muted: #7b82c0;
+    --muted: #6b72a8;
     --border: rgba(124, 92, 252, 0.15);
+    --border-bright: rgba(59,91,255,0.4);
     --mono: 'Space Mono', monospace;
-    --sans: 'Inter', sans-serif;
+    --display: 'Syne', sans-serif;
+    --body: 'DM Sans', sans-serif;
+    --radius: 12px;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.5; overflow-x: hidden; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--body); line-height: 1.6; overflow-x: hidden; }
 
-  /* BARRE TENDANCE (BREAKING) */
-  .breaking-news {
-    background: var(--blue);
-    color: white;
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    padding: 8px;
-    overflow: hidden;
-    white-space: nowrap;
-    position: relative;
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: 0.4;
   }
-  .breaking-news span { display: inline-block; padding-left: 100%; animation: scroll 30s linear infinite; }
-  @keyframes scroll { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
-  /* HEADER */
-  header { padding: 1.5rem 4rem; border-bottom: 1px solid var(--border); background: rgba(3, 4, 11, 0.9); backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
-  .logo { font-size: 1.8rem; font-weight: 900; color: #fff; text-decoration: none; letter-spacing: -1px; }
-  .logo span { color: var(--blue); }
+  /* ── GLOW ORBS ── */
+  .orb {
+    position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0;
+  }
+  .orb1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(59,91,255,0.12) 0%, transparent 70%); top: -200px; left: -200px; }
+  .orb2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(124,92,252,0.1) 0%, transparent 70%); bottom: -100px; right: -100px; }
 
-  /* CONTAINER */
-  .container { max-width: 1400px; margin: 0 auto; padding: 2rem 4rem; display: grid; grid-template-columns: 1fr 350px; gap: 3rem; }
+  /* ── SCROLLING BREAKING BAR ── */
+  .breaking-bar {
+    background: linear-gradient(90deg, var(--blue) 0%, var(--violet) 100%);
+    padding: 7px 0; overflow: hidden; position: relative; z-index: 10;
+  }
+  .breaking-bar::before {
+    content: 'LIVE'; position: absolute; left: 0; top: 0; bottom: 0; padding: 0 14px;
+    background: rgba(0,0,0,0.35); display: flex; align-items: center;
+    font-family: var(--mono); font-size: 0.65rem; font-weight: 700; z-index: 2;
+    border-right: 1px solid rgba(255,255,255,0.2); letter-spacing: 2px;
+    color: #fff;
+  }
+  .breaking-bar .ticker { display: flex; white-space: nowrap; padding-left: 70px; animation: ticker 35s linear infinite; }
+  .breaking-bar .ticker span { font-family: var(--mono); font-size: 0.68rem; color: rgba(255,255,255,0.92); padding-right: 4rem; }
+  .ticker-sep { color: rgba(255,255,255,0.4) !important; padding-right: 1.5rem !important; }
+  @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-  /* LA UNE (BIG HERO) */
-  .hero-article { grid-column: span 2; position: relative; border-radius: 20px; overflow: hidden; height: 500px; margin-bottom: 2rem; border: 1px solid var(--border); }
-  .hero-img { width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 30%, rgba(3,4,11,0.9)), url('https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); background-size: cover; background-position: center; transition: 0.5s; }
-  .hero-article:hover .hero-img { transform: scale(1.02); }
-  .hero-content { position: absolute; bottom: 0; padding: 3rem; max-width: 800px; }
-  .cat-tag { background: var(--blue); color: white; padding: 4px 12px; border-radius: 4px; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; margin-bottom: 1rem; display: inline-block; }
+  /* ── HEADER ── */
+  header {
+    padding: 1.2rem 3rem; border-bottom: 1px solid var(--border);
+    background: rgba(3,4,11,0.85); backdrop-filter: blur(20px);
+    position: sticky; top: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .logo { font-family: var(--display); font-size: 1.6rem; font-weight: 800; color: #fff; text-decoration: none; letter-spacing: -1px; display: flex; align-items: center; gap: 8px; }
+  .logo-badge { background: var(--blue); color: #fff; font-family: var(--mono); font-size: 0.55rem; padding: 3px 7px; border-radius: 4px; letter-spacing: 1px; margin-top: 2px; }
+  nav { display: flex; gap: 4px; align-items: center; }
+  .nav-link {
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 1px; padding: 6px 14px;
+    border-radius: 6px; text-decoration: none; color: var(--muted); transition: all 0.2s;
+  }
+  .nav-link:hover, .nav-link.active { color: #fff; background: var(--blue-dim); }
+  .nav-link.active { color: var(--cyan); }
+  .nav-cta { background: var(--blue); color: #fff !important; padding: 7px 18px; border-radius: 7px; margin-left: 8px; font-family: var(--mono); font-size: 0.7rem; text-decoration: none; transition: all 0.2s; }
+  .nav-cta:hover { background: var(--violet); transform: translateY(-1px); }
 
-  /* GRILLE ARTICLES */
-  .news-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
-  .small-card { display: grid; grid-template-columns: 150px 1fr; gap: 1.5rem; text-decoration: none; color: inherit; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); transition: 0.2s; }
-  .small-card:hover { opacity: 0.8; }
-  .thumb { width: 150px; height: 100px; border-radius: 8px; background-size: cover; background-position: center; border: 1px solid var(--border); }
+  /* ── PAGE TABS ── */
+  .page-tabs {
+    position: relative; z-index: 1;
+    border-bottom: 1px solid var(--border);
+    background: rgba(7,10,24,0.8); backdrop-filter: blur(10px);
+    display: flex; padding: 0 3rem;
+  }
+  .tab-btn {
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 1px;
+    padding: 14px 20px; background: none; border: none; color: var(--muted);
+    cursor: pointer; transition: all 0.2s; border-bottom: 2px solid transparent; position: relative; top: 1px;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+
+  /* ── PAGE SECTIONS ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── MEDIA PAGE ── */
+  .media-layout {
+    max-width: 1400px; margin: 0 auto; padding: 2.5rem 3rem;
+    display: grid; grid-template-columns: 1fr 320px; gap: 2.5rem; position: relative; z-index: 1;
+  }
+
+  /* HERO */
+  .hero {
+    grid-column: span 2; position: relative; border-radius: 20px; overflow: hidden;
+    height: 520px; border: 1px solid var(--border); cursor: pointer; display: block; text-decoration: none; color: inherit;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(3,4,11,0.1) 0%, rgba(3,4,11,0.8) 60%, var(--bg) 100%),
+    url('https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1260') center/cover;
+    transition: transform 0.6s ease;
+  }
+  .hero:hover .hero-bg { transform: scale(1.03); }
+  .hero-content { position: absolute; bottom: 0; padding: 3rem; max-width: 780px; }
+  .hero-content h1 { font-family: var(--display); font-size: 2.6rem; font-weight: 800; line-height: 1.1; margin-bottom: 1rem; }
+  .hero-content p { color: var(--muted); font-size: 1rem; max-width: 600px; }
+  .hero-meta { display: flex; align-items: center; gap: 1rem; margin-top: 1.2rem; }
+  .hero-meta span { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); }
+  .read-btn {
+    background: var(--blue); color: #fff; padding: 8px 20px; border-radius: 7px;
+    font-family: var(--mono); font-size: 0.7rem; margin-left: auto;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase; display: flex; align-items: center; gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ARTICLES GRID */
+  .articles-col {}
+  .article-card {
+    display: grid; grid-template-columns: 130px 1fr; gap: 1.2rem;
+    padding: 1.2rem 0; border-bottom: 1px solid var(--border);
+    text-decoration: none; color: inherit; transition: all 0.2s;
+  }
+  .article-card:hover { opacity: 0.85; }
+  .article-card:first-of-type { padding-top: 0; }
+  .card-thumb {
+    width: 130px; height: 90px; border-radius: 8px;
+    background-size: cover; background-position: center;
+    border: 1px solid var(--border); overflow: hidden; position: relative;
+  }
+  .card-thumb::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(59,91,255,0.1), transparent); }
+  .card-body { display: flex; flex-direction: column; justify-content: space-between; }
+  .card-body h3 { font-family: var(--display); font-size: 0.95rem; font-weight: 700; line-height: 1.3; }
+  .card-body p { font-size: 0.78rem; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+  .card-footer { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+  .card-footer span { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); }
+
+  /* TAGS */
+  .tag {
+    display: inline-block; padding: 3px 10px; border-radius: 4px;
+    font-family: var(--mono); font-size: 0.63rem; font-weight: 700; letter-spacing: 0.5px;
+  }
+  .tag-blue { background: rgba(59,91,255,0.2); color: var(--cyan); border: 1px solid rgba(59,91,255,0.3); }
+  .tag-violet { background: rgba(124,92,252,0.2); color: #c4b5fd; border: 1px solid rgba(124,92,252,0.3); }
+  .tag-green { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid rgba(0,255,136,0.25); }
+  .tag-red { background: rgba(255,71,87,0.15); color: #ff8a96; border: 1px solid rgba(255,71,87,0.3); }
+  .tag-cyan { background: rgba(79,195,247,0.1); color: var(--cyan); border: 1px solid rgba(79,195,247,0.25); }
 
   /* SIDEBAR */
-  .sidebar { background: var(--bg-card); border-radius: 16px; border: 1px solid var(--border); padding: 1.5rem; height: fit-content; }
-  .side-title { font-family: var(--mono); font-size: 0.8rem; border-bottom: 2px solid var(--blue); display: inline-block; margin-bottom: 1.5rem; padding-bottom: 5px; }
-  .side-post { margin-bottom: 1.5rem; display: block; text-decoration: none; color: inherit; }
-  .side-post h4 { font-size: 0.95rem; line-height: 1.3; margin-top: 5px; }
-
-  @media (max-width: 1024px) {
-    .container { grid-template-columns: 1fr; padding: 2rem; }
-    .hero-article { grid-column: span 1; height: 400px; }
-    .news-grid { grid-template-columns: 1fr; }
+  aside { display: flex; flex-direction: column; gap: 1.5rem; }
+  .widget {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.4rem; backdrop-filter: blur(10px);
   }
+  .widget-title {
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--cyan); margin-bottom: 1.2rem; padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .trend-item {
+    display: flex; align-items: flex-start; gap: 12px; padding: 10px 0;
+    border-bottom: 1px solid var(--border); text-decoration: none; color: inherit; transition: 0.2s;
+  }
+  .trend-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .trend-item:hover { opacity: 0.8; }
+  .trend-num { font-family: var(--mono); font-size: 1.4rem; font-weight: 700; color: var(--border-bright); line-height: 1; min-width: 28px; }
+  .trend-text h4 { font-family: var(--display); font-size: 0.85rem; font-weight: 600; line-height: 1.3; }
+  .trend-text span { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); }
+
+  /* NEWSLETTER WIDGET */
+  .nl-widget { background: linear-gradient(135deg, rgba(59,91,255,0.15), rgba(124,92,252,0.1)); border-color: rgba(59,91,255,0.3); }
+  .nl-widget p { font-size: 0.82rem; color: var(--muted); margin-bottom: 1rem; line-height: 1.5; }
+  .nl-input { width: 100%; background: rgba(3,4,11,0.8); border: 1px solid var(--border); border-radius: 7px; padding: 9px 14px; color: var(--text); font-family: var(--body); font-size: 0.82rem; margin-bottom: 8px; outline: none; transition: border 0.2s; }
+  .nl-input:focus { border-color: var(--blue); }
+  .nl-btn { width: 100%; background: var(--blue); color: #fff; border: none; border-radius: 7px; padding: 9px; font-family: var(--mono); font-size: 0.72rem; cursor: pointer; transition: 0.2s; }
+  .nl-btn:hover { background: var(--violet); }
+
+  /* ── FORUM PAGE ── */
+  .forum-layout {
+    max-width: 1200px; margin: 0 auto; padding: 2.5rem 3rem;
+    display: grid; grid-template-columns: 240px 1fr; gap: 2rem; position: relative; z-index: 1;
+  }
+
+  /* FORUM SIDEBAR */
+  .forum-nav { display: flex; flex-direction: column; gap: 6px; position: sticky; top: 80px; height: fit-content; }
+  .forum-nav-title { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 2px; color: var(--muted); padding: 0 12px 8px; text-transform: uppercase; }
+  .forum-nav-link {
+    display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px;
+    text-decoration: none; color: var(--muted); font-size: 0.85rem; transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+  .forum-nav-link:hover { color: var(--text); background: var(--blue-dim); }
+  .forum-nav-link.active { color: var(--cyan); background: rgba(79,195,247,0.08); border-color: rgba(79,195,247,0.2); }
+  .forum-nav-link .icon { font-size: 1rem; min-width: 20px; text-align: center; }
+  .forum-nav-link .count { margin-left: auto; font-family: var(--mono); font-size: 0.62rem; background: var(--blue-dim); padding: 2px 7px; border-radius: 10px; color: var(--cyan); }
+  .forum-divider { height: 1px; background: var(--border); margin: 8px 0; }
+
+  /* FORUM MAIN */
+  .forum-main {}
+  .forum-header {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;
+  }
+  .forum-header h2 { font-family: var(--display); font-size: 1.4rem; font-weight: 700; }
+  .forum-header p { font-size: 0.82rem; color: var(--muted); }
+  .new-topic-btn {
+    background: var(--blue); color: #fff; border: none; border-radius: 8px;
+    padding: 9px 18px; font-family: var(--mono); font-size: 0.72rem; cursor: pointer;
+    transition: all 0.2s; display: flex; align-items: center; gap: 6px; white-space: nowrap;
+  }
+  .new-topic-btn:hover { background: var(--violet); transform: translateY(-1px); }
+
+  /* STATS BAR */
+  .forum-stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;
+  }
+  .stat-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem;
+    text-align: center;
+  }
+  .stat-card .stat-num { font-family: var(--mono); font-size: 1.4rem; font-weight: 700; color: var(--cyan); }
+  .stat-card .stat-lbl { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
+
+  /* FORUM CATEGORIES */
+  .category-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+    margin-bottom: 1rem; overflow: hidden; transition: border-color 0.2s;
+  }
+  .category-card:hover { border-color: var(--border-bright); }
+  .category-header {
+    display: flex; align-items: center; gap: 14px; padding: 1rem 1.4rem;
+    cursor: pointer; border-bottom: 1px solid var(--border);
+  }
+  .cat-icon { font-size: 1.5rem; min-width: 32px; text-align: center; }
+  .cat-info { flex: 1; }
+  .cat-info h3 { font-family: var(--display); font-size: 0.98rem; font-weight: 700; }
+  .cat-info p { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+  .cat-counts { display: flex; gap: 12px; text-align: center; }
+  .cat-count-item .num { font-family: var(--mono); font-size: 0.95rem; font-weight: 700; color: var(--text); }
+  .cat-count-item .lbl { font-family: var(--mono); font-size: 0.58rem; color: var(--muted); display: block; }
+
+  /* TOPICS LIST */
+  .topics-list { border-top: none; }
+  .topic-row {
+    display: grid; grid-template-columns: 1fr auto; gap: 1rem;
+    padding: 12px 1.4rem; border-bottom: 1px solid var(--border);
+    cursor: pointer; transition: background 0.15s; text-decoration: none; color: inherit;
+    align-items: center;
+  }
+  .topic-row:last-child { border-bottom: none; }
+  .topic-row:hover { background: rgba(59,91,255,0.05); }
+  .topic-left { display: flex; align-items: flex-start; gap: 12px; }
+  .topic-avatar {
+    width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--violet));
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 0.7rem; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  .topic-body h4 { font-size: 0.88rem; font-weight: 600; line-height: 1.3; margin-bottom: 4px; }
+  .topic-body .topic-meta { display: flex; align-items: center; gap: 8px; }
+  .topic-body .topic-meta span { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); }
+  .topic-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; text-align: right; }
+  .topic-replies { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+  .topic-replies strong { color: var(--text); }
+  .hot-badge { background: rgba(255,71,87,0.15); color: #ff8a96; border: 1px solid rgba(255,71,87,0.3); padding: 2px 7px; border-radius: 4px; font-family: var(--mono); font-size: 0.58rem; }
+  .new-badge { background: var(--green-dim); color: var(--green); border: 1px solid rgba(0,255,136,0.25); padding: 2px 7px; border-radius: 4px; font-family: var(--mono); font-size: 0.58rem; }
+
+  /* NEW TOPIC MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(3,4,11,0.85); backdrop-filter: blur(8px);
+    z-index: 200; display: none; align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #0a0d1f; border: 1px solid var(--border-bright); border-radius: 16px;
+    padding: 2rem; width: 100%; max-width: 600px; position: relative;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-title { font-family: var(--display); font-size: 1.3rem; font-weight: 700; margin-bottom: 1.5rem; }
+  .modal-close { position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.2rem; transition: color 0.2s; }
+  .modal-close:hover { color: var(--text); }
+  .form-group { margin-bottom: 1.2rem; }
+  .form-label { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); letter-spacing: 1px; display: block; margin-bottom: 6px; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%; background: rgba(3,4,11,0.9); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 14px; color: var(--text); font-family: var(--body); font-size: 0.88rem; outline: none; transition: border 0.2s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--blue); }
+  .form-textarea { resize: vertical; min-height: 120px; }
+  .form-select option { background: #0a0d1f; }
+  .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1.5rem; }
+  .btn-cancel { background: none; border: 1px solid var(--border); color: var(--muted); border-radius: 7px; padding: 9px 18px; font-family: var(--mono); font-size: 0.7rem; cursor: pointer; transition: 0.2s; }
+  .btn-cancel:hover { border-color: var(--muted); color: var(--text); }
+  .btn-submit { background: var(--blue); color: #fff; border: none; border-radius: 7px; padding: 9px 18px; font-family: var(--mono); font-size: 0.7rem; cursor: pointer; transition: 0.2s; }
+  .btn-submit:hover { background: var(--violet); }
+
+  /* ONLINE USERS */
+  .online-indicator { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); display: inline-block; }
+  .user-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .user-chip { display: flex; align-items: center; gap: 5px; background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px 3px 6px; font-size: 0.75rem; }
+  .user-avatar { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--violet)); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 0.55rem; color: #fff; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    header { padding: 1rem 1.5rem; }
+    .media-layout, .forum-layout { padding: 1.5rem; grid-template-columns: 1fr; }
+    .hero { grid-column: span 1; height: 380px; }
+    .hero-content h1 { font-size: 1.8rem; }
+    .forum-nav { display: none; }
+    .forum-stats { grid-template-columns: repeat(2,1fr); }
+  }
+
+  /* ── SCROLL ANIMATIONS ── */
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { animation: fadeInUp 0.5s ease both; }
+  .fade-in:nth-child(1) { animation-delay: 0.05s; }
+  .fade-in:nth-child(2) { animation-delay: 0.1s; }
+  .fade-in:nth-child(3) { animation-delay: 0.15s; }
+  .fade-in:nth-child(4) { animation-delay: 0.2s; }
+  .fade-in:nth-child(5) { animation-delay: 0.25s; }
 </style>
 </head>
 <body>
 
-<div class="breaking-news">
-  <span>L'IA Act officiellement adopté par l'UE • Mistral Large 2 disponible en local • NVIDIA dépasse les 3000 milliards de capitalisation • Le forum Core-IA ouvre ses portes prochainement •</span>
+<!-- BG ORBS -->
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<!-- BREAKING BAR -->
+<div class="breaking-bar">
+  <div class="ticker">
+    <span>L'IA Act officiellement adopté par l'UE</span><span class="ticker-sep">◆</span>
+    <span>Mistral Large 2 disponible en local</span><span class="ticker-sep">◆</span>
+    <span>NVIDIA franchit les 3 000 Mds de capitalisation</span><span class="ticker-sep">◆</span>
+    <span>DeepSeek R2 annoncé pour Q2 2026</span><span class="ticker-sep">◆</span>
+    <span>Llama 4 Scout disponible en open-source</span><span class="ticker-sep">◆</span>
+    <span>Le forum Core-IA est maintenant ouvert !</span><span class="ticker-sep">◆</span>
+    <!-- repeat for seamless loop -->
+    <span>L'IA Act officiellement adopté par l'UE</span><span class="ticker-sep">◆</span>
+    <span>Mistral Large 2 disponible en local</span><span class="ticker-sep">◆</span>
+    <span>NVIDIA franchit les 3 000 Mds de capitalisation</span><span class="ticker-sep">◆</span>
+    <span>DeepSeek R2 annoncé pour Q2 2026</span><span class="ticker-sep">◆</span>
+    <span>Llama 4 Scout disponible en open-source</span><span class="ticker-sep">◆</span>
+    <span>Le forum Core-IA est maintenant ouvert !</span><span class="ticker-sep">◆</span>
+  </div>
 </div>
 
+<!-- HEADER -->
 <header>
-  <a href="#" class="logo">CORE-IA<span>HUB</span></a>
-  <nav style="font-family: var(--mono); font-size: 0.8rem; display: flex; gap: 20px;">
-    <a href="#" style="color: var(--cyan); text-decoration: none;">ACTUS</a>
-    <a href="#" style="color: var(--text); text-decoration: none;">DOSSIERS</a>
-    <a href="#" style="color: var(--text); text-decoration: none;">FORUM</a>
+  <a href="#" class="logo" onclick="showPage('media')">
+    CORE-IA HUB
+    <span class="logo-badge">BETA</span>
+  </a>
+  <nav>
+    <a href="#" class="nav-link active" id="nav-media" onclick="showPage('media'); return false;">ACTUS</a>
+    <a href="#" class="nav-link" id="nav-dossiers" onclick="showPage('dossiers'); return false;">DOSSIERS</a>
+    <a href="#" class="nav-link" id="nav-forum" onclick="showPage('forum'); return false;">FORUM</a>
+    <a href="#" class="nav-cta">S'INSCRIRE</a>
   </nav>
 </header>
 
-<div class="container">
-  
-  <main>
-    <a href="#" class="hero-article">
-      <div class="hero-img"></div>
+<!-- PAGE TABS -->
+<div class="page-tabs" id="tabs-media" style="display:none">
+  <button class="tab-btn active">Tout</button>
+  <button class="tab-btn">IA Locale</button>
+  <button class="tab-btn">Santé</button>
+  <button class="tab-btn">BI & Data</button>
+  <button class="tab-btn">Réglementation</button>
+  <button class="tab-btn">Tutoriels</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE : MÉDIA
+═══════════════════════════════════════ -->
+<div class="page active" id="page-media">
+  <div class="media-layout">
+
+    <!-- HERO -->
+    <a href="#" class="hero fade-in">
+      <div class="hero-bg"></div>
       <div class="hero-content">
-        <span class="cat-tag" style="background: var(--violet);">DOSSIER EXCLUSIF</span>
-        <h1 style="font-size: 2.8rem; line-height: 1.1; margin-bottom: 1rem;">IA Locale vs Cloud : Pourquoi votre PME doit choisir la souveraineté en 2026</h1>
-        <p style="color: var(--muted); font-size: 1.1rem;">Analyse technique sur le déploiement de Llama 3 on-premise pour sécuriser les données de santé et industrielles.</p>
+        <span class="tag tag-violet" style="margin-bottom:1rem; display:inline-block;">DOSSIER EXCLUSIF</span>
+        <h1>IA Locale vs Cloud&nbsp;: Pourquoi votre PME doit choisir la souveraineté en 2026</h1>
+        <p>Analyse technique sur le déploiement de Llama 3 on-premise pour sécuriser les données de santé et industrielles.</p>
+        <div class="hero-meta">
+          <span>Par Alexandre N.</span>
+          <span>·</span>
+          <span>24 Mars 2026</span>
+          <span>·</span>
+          <span>8 min de lecture</span>
+          <span class="read-btn">LIRE →</span>
+        </div>
       </div>
     </a>
 
-    <div class="news-grid">
-      
-      <a href="#" class="small-card">
-        <div class="thumb" style="background-image: url('https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=400');"></div>
-        <div>
-          <span class="cat-tag" style="background: var(--blue);">BI & DATA</span>
-          <h4>Power BI : 5 KPIs pour sauver votre logistique</h4>
-          <p style="font-size: 0.8rem; color: var(--muted); margin-top: 5px;">Par Alexandre N. · 24 Mars</p>
+    <!-- MAIN COL -->
+    <main>
+      <div class="section-label">DERNIERS ARTICLES</div>
+
+      <a href="#" class="article-card fade-in">
+        <div class="card-thumb" style="background-image:url('https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=400')"></div>
+        <div class="card-body">
+          <div>
+            <span class="tag tag-blue">BI & DATA</span>
+            <h3>Power BI : 5 KPIs pour révolutionner votre logistique</h3>
+            <p>Comment connecter vos flux OMS et WMS pour un tableau de bord en temps réel.</p>
+          </div>
+          <div class="card-footer">
+            <span class="tag tag-cyan">TUTORIEL</span>
+            <span>Alexandre N. · 24 Mars</span>
+            <span>·</span>
+            <span>5 min</span>
+          </div>
         </div>
       </a>
 
-      <a href="#" class="small-card">
-        <div class="thumb" style="background-image: url('https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=400');"></div>
-        <div>
-          <span class="cat-tag" style="background: var(--green);">SANTÉ</span>
-          <h4>VNI : Comment l'IA prédit les besoins en oxygène</h4>
-          <p style="font-size: 0.8rem; color: var(--muted); margin-top: 5px;">Par Alexandre N. · 22 Mars</p>
+      <a href="#" class="article-card fade-in">
+        <div class="card-thumb" style="background-image:url('https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=400')"></div>
+        <div class="card-body">
+          <div>
+            <span class="tag tag-green">SANTÉ</span>
+            <h3>VNI : Comment l'IA prédit les besoins en oxygène en soins intensifs</h3>
+            <p>Étude de cas sur un modèle LSTM entraîné sur 3 ans de données CPAP.</p>
+          </div>
+          <div class="card-footer">
+            <span>Alexandre N. · 22 Mars</span>
+            <span>·</span>
+            <span>7 min</span>
+          </div>
         </div>
       </a>
 
-    </div>
-  </main>
-
-  <aside>
-    <div class="sidebar">
-      <h2 class="side-title">DERNIERS ÉCHANGES</h2>
-      
-      <a href="#" class="side-post">
-        <span style="color: var(--blue); font-size: 0.7rem; font-family: var(--mono);">[FORUM]</span>
-        <h4>Comment connecter n8n à mon CRM local sans cloud ?</h4>
+      <a href="#" class="article-card fade-in">
+        <div class="card-thumb" style="background-image:url('https://images.pexels.com/photos/7567444/pexels-photo-7567444.jpeg?auto=compress&cs=tinysrgb&w=400')"></div>
+        <div class="card-body">
+          <div>
+            <span class="tag tag-red">RÉGLEMENTATION</span>
+            <h3>IA Act : Ce que les entreprises françaises doivent mettre en place avant juin</h3>
+            <p>Obligations, délais et risques de non-conformité — guide pratique.</p>
+          </div>
+          <div class="card-footer">
+            <span>Rédaction Core-IA · 20 Mars</span>
+            <span>·</span>
+            <span>6 min</span>
+          </div>
+        </div>
       </a>
 
-      <a href="#" class="side-post">
-        <span style="color: var(--blue); font-size: 0.7rem; font-family: var(--mono);">[COMMUNAUTÉ]</span>
-        <h4>Retour d'expérience sur l'installation de Groq sur PC portable.</h4>
+      <a href="#" class="article-card fade-in">
+        <div class="card-thumb" style="background-image:url('https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=400')"></div>
+        <div class="card-body">
+          <div>
+            <span class="tag tag-violet">N8N</span>
+            <h3>Automatiser ses workflows métier avec n8n et Mistral : guide complet</h3>
+            <p>Déploiement self-hosted, connexion LLM local et cas d'usage RH/Finance.</p>
+          </div>
+          <div class="card-footer">
+            <span class="tag tag-cyan">TUTORIEL</span>
+            <span>Alexandre N. · 18 Mars</span>
+            <span>·</span>
+            <span>12 min</span>
+          </div>
+        </div>
       </a>
+    </main>
 
-    </div>
-  </aside>
+    <!-- SIDEBAR -->
+    <aside>
+      <!-- TRENDING -->
+      <div class="widget fade-in">
+        <div class="widget-title">TENDANCES</div>
+        <a href="#" class="trend-item">
+          <span class="trend-num">01</span>
+          <div class="trend-text">
+            <h4>Mistral Large 2 vs GPT-4o : benchmark complet</h4>
+            <span>3.2k vues · IA Locale</span>
+          </div>
+        </a>
+        <a href="#" class="trend-item">
+          <span class="trend-num">02</span>
+          <div class="trend-text">
+            <h4>Installer Ollama sur Ubuntu 24.04 en 10 minutes</h4>
+            <span>2.8k vues · Tutoriel</span>
+          </div>
+        </a>
+        <a href="#" class="trend-item">
+          <span class="trend-num">03</span>
+          <div class="trend-text">
+            <h4>RGPD & LLM : où stocker vos données patients ?</h4>
+            <span>1.9k vues · Santé</span>
+          </div>
+        </a>
+        <a href="#" class="trend-item">
+          <span class="trend-num">04</span>
+          <div class="trend-text">
+            <h4>RAG on-premise avec LangChain et PGVector</h4>
+            <span>1.5k vues · Dev</span>
+          </div>
+        </a>
+      </div>
 
+      <!-- NEWSLETTER -->
+      <div class="widget nl-widget fade-in">
+        <div class="widget-title">NEWSLETTER HEBDO</div>
+        <p>Chaque lundi, l'essentiel de l'IA souveraine dans votre boite mail.</p>
+        <input class="nl-input" type="email" placeholder="votre@email.com">
+        <button class="nl-btn">REJOINDRE → 1 200 ABONNÉS</button>
+      </div>
+
+      <!-- HOT ON FORUM -->
+      <div class="widget fade-in">
+        <div class="widget-title">💬 CHAUD SUR LE FORUM</div>
+        <a href="#" class="trend-item">
+          <div class="trend-text">
+            <span class="tag tag-violet" style="margin-bottom:5px">AUTOMATION</span>
+            <h4>Comment connecter n8n à mon CRM local sans cloud ?</h4>
+            <span>12 réponses · 2h</span>
+          </div>
+        </a>
+        <a href="#" class="trend-item">
+          <div class="trend-text">
+            <span class="tag tag-blue" style="margin-bottom:5px">HARDWARE</span>
+            <h4>Retour d'exp : Groq sur PC portable — résultats surprenants</h4>
+            <span>8 réponses · 5h</span>
+          </div>
+        </a>
+        <a href="#" class="trend-item">
+          <div class="trend-text">
+            <span class="tag tag-green" style="margin-bottom:5px">SANTÉ</span>
+            <h4>Modèle prédictif VNI — partage de code Python</h4>
+            <span>5 réponses · hier</span>
+          </div>
+        </a>
+      </div>
+    </aside>
+
+  </div>
 </div>
 
+<!-- ══════════════════════════════════════
+     PAGE : FORUM
+═══════════════════════════════════════ -->
+<div class="page" id="page-forum">
+  <div class="forum-layout">
+
+    <!-- FORUM NAV -->
+    <nav class="forum-nav">
+      <div class="forum-nav-title">Catégories</div>
+      <a href="#" class="forum-nav-link active">
+        <span class="icon">🏠</span> Accueil forum <span class="count">48</span>
+      </a>
+      <a href="#" class="forum-nav-link">
+        <span class="icon">🤖</span> IA Locale <span class="count">31</span>
+      </a>
+      <a href="#" class="forum-nav-link">
+        <span class="icon">⚙️</span> Automation <span class="count">19</span>
+      </a>
+      <a href="#" class="forum-nav-link">
+        <span class="icon">💊</span> Santé & IA <span class="count">12</span>
+      </a>
+      <a href="#" class="forum-nav-link">
+        <span class="icon">📊</span> BI & Data <span class="count">15</span>
+      </a>
+      <a href="#" class="forum-nav-link">
+        <span class="icon">🔐</span> Souveraineté <span class="count">9</span>
+      </a>
+      <div class="forum-divider"></div>
+      <div class="forum-nav-title">Mon compte</div>
+      <a href="#" class="forum-nav-link">
+        <span class="icon">🧑</span> Profil
+      </a>
+      <a href="#" class="forum-nav-link">
+        <span class="icon">🔔</span> Notifications
+      </a>
+    </nav>
+
+    <!-- FORUM CONTENT -->
+    <div class="forum-main">
+
+      <!-- HEADER -->
+      <div class="forum-header">
+        <div>
+          <h2>Forum Core-IA</h2>
+          <p>Échanges techniques entre praticiens de l'IA souveraine</p>
+        </div>
+        <button class="new-topic-btn" onclick="openModal()">
+          ✏️ &nbsp;NOUVEAU SUJET
+        </button>
+      </div>
+
+      <!-- STATS -->
+      <div class="forum-stats">
+        <div class="stat-card">
+          <div class="stat-num">1 247</div>
+          <div class="stat-lbl">Membres</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">348</div>
+          <div class="stat-lbl">Sujets</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">2 891</div>
+          <div class="stat-lbl">Réponses</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" style="color:var(--green)"><span class="online-indicator"></span> 23</div>
+          <div class="stat-lbl">En ligne</div>
+        </div>
+      </div>
+
+      <!-- ONLINE USERS -->
+      <div class="widget" style="margin-bottom:1.5rem">
+        <div class="widget-title" style="margin-bottom:0.8rem">EN LIGNE MAINTENANT</div>
+        <div class="user-list">
+          <div class="user-chip"><div class="user-avatar">AL</div>alexandre_n</div>
+          <div class="user-chip"><div class="user-avatar" style="background:linear-gradient(135deg,#00c6ff,#0072ff)">MK</div>m_kaddour</div>
+          <div class="user-chip"><div class="user-avatar" style="background:linear-gradient(135deg,#f093fb,#f5576c)">SB</div>sarah_bwi</div>
+          <div class="user-chip"><div class="user-avatar" style="background:linear-gradient(135deg,#43e97b,#38f9d7)">RL</div>r_leconte</div>
+          <div class="user-chip"><div class="user-avatar" style="background:linear-gradient(135deg,#f7971e,#ffd200)">TD</div>t_dupuis</div>
+          <div class="user-chip" style="background:transparent;border-color:var(--border);color:var(--muted)">+18 autres</div>
+        </div>
+      </div>
+
+      <!-- CATEGORY : IA LOCALE -->
+      <div class="category-card">
+        <div class="category-header" onclick="toggleCat('cat1')">
+          <span class="cat-icon">🤖</span>
+          <div class="cat-info">
+            <h3>IA Locale & Open Source</h3>
+            <p>Ollama, LM Studio, Llama, Mistral, déploiement on-premise</p>
+          </div>
+          <div class="cat-counts">
+            <div class="cat-count-item"><div class="num">31</div><span class="lbl">sujets</span></div>
+            <div class="cat-count-item"><div class="num">187</div><span class="lbl">réponses</span></div>
+          </div>
+        </div>
+        <div class="topics-list" id="cat1">
+          <a href="#" class="topic-row">
+            <div class="topic-left">
+              <div class="topic-avatar">AL</div>
+              <div class="topic-body">
+                <h4>Mistral 7B vs Phi-3 Mini pour du RAG médical — comparatif</h4>
+                <div class="topic-meta">
+                  <span class="tag tag-red" style="font-size:0.58rem; padding:2px 7px;">HOT</span>
+                  <span>alexandre_n</span><span>·</span><span>il y a 1h</span>
+                </div>
+              </div>
+            </div>
+            <div class="topic-right">
+              <div class="topic-replies"><strong>24</strong> rép.</div>
+              <div class="tag tag-violet" style="font-size:0.58rem;">IA LOCALE</div>
+            </div>
+          </a>
+          <a href="#" class="topic-row">
+            <div class="topic-left">
+              <div class="topic-avatar" style="background:linear-gradient(135deg,#43e97b,#38f9d7)">RL</div>
+              <div class="topic-body">
+                <h4>Comment quantifier un modèle en GGUF sans perte de qualité ?</h4>
+                <div class="topic-meta">
+                  <span class="tag tag-green" style="font-size:0.58rem; padding:2px 7px;">NOUVEAU</span>
+                  <span>r_leconte</span><span>·</span><span>il y a 3h</span>
+                </div>
+              </div>
+            </div>
+            <div class="topic-right">
+              <div class="topic-replies"><strong>7</strong> rép.</div>
+              <div class="tag tag-cyan" style="font-size:0.58rem;">TUTORIEL</div>
+            </div>
+          </a>
+          <a href="#" class="topic-row">
+            <div class="topic-left">
+              <div class="topic-avatar" style="background:linear-gradient(135deg,#f7971e,#ffd200)">TD</div>
+              <div class="topic-body">
+                <h4>LM Studio plante sur Windows 11 ARM — solution trouvée</h4>
+                <div class="topic-meta">
+                  <span>t_dupuis</span><span>·</span><span>hier</span>
+                </div>
+              </div>
+            </div>
+            <div class="topic-right">
+              <div class="topic-replies"><strong>12</strong> rép.</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- CATEGORY : AUTOMATION -->
+      <div class="category-card">
+        <div class="category-header" onclick="toggleCat('cat2')">
+          <span class="cat-icon">⚙️</span>
+          <div class="cat-info">
+            <h3>Automation & Workflows</h3>
+            <p>n8n, Make, Zapier, pipelines data, agents IA</p>
+          </div>
+          <div class="cat-counts">
+            <div class="cat-count-item"><div class="num">19</div><span class="lbl">sujets</span></div>
+            <div class="cat-count-item"><div class="num">94</div><span class="lbl">réponses</span></div>
+          </div>
+        </div>
+        <div class="topics-list" id="cat2">
+          <a href="#" class="topic-row">
+            <div class="topic-left">
+              <div class="topic-avatar" style="background:linear-gradient(135deg,#0072ff,#00c6ff)">MK</div>
+              <div class="topic-body">
+                <h4>Comment connecter n8n à mon CRM local sans cloud ?</h4>
+                <div class="topic-meta">
+                  <span class="tag tag-red" style="font-size:0.58rem; padding:2px 7px;">HOT</span>
+                  <span>m_kaddour</span><span>·</span><span>il y a 2h</span>
+                </div>
+              </div>
+            </div>
+            <div class="topic-right">
+              <div class="topic-replies"><strong>12</strong> rép.</div>
+              <div class="tag tag-blue" style="font-size:0.58rem;">N8N</div>
+            </div>
+          </a>
+          <a href="#" class="topic-row">
+            <div class="topic-left">
+              <div class="topic-avatar" style="background:linear-gradient(135deg,#f093fb,#f5576c)">SB</div>
+              <div class="topic-body">
+                <h4>Agent IA pour triage email RH avec Mistral — mon retour</h4>
+                <div class="topic-meta">
+                  <span>sarah_bwi</span><span>·</span><span>hier</span>
+                </div>
+              </div>
+            </div>
+            <div class="topic-right">
+              <div class="topic-replies"><strong>6</strong> rép.</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- CATEGORY : SANTÉ -->
+      <div class="category-card">
+        <div class="category-header" onclick="toggleCat('cat3')">
+          <span class="cat-icon">💊</span>
+          <div class="cat-info">
+            <h3>Santé & IA Médicale</h3>
+            <p>RGPD santé, modèles prédictifs, imagerie, VNI/réa</p>
+          </div>
+          <div class="cat-counts">
+            <div class="cat-count-item"><div class="num">12</div><span class="lbl">sujets</span></div>
+            <div class="cat-count-item"><div class="num">58</div><span class="lbl">réponses</span></div>
+          </div>
+        </div>
+        <div class="topics-list" id="cat3">
+          <a href="#" class="topic-row">
+            <div class="topic-left">
+              <div class="topic-avatar">AL</div>
+              <div class="topic-body">
+                <h4>Modèle prédictif VNI — partage de code Python + dataset</h4>
+                <div class="topic-meta">
+                  <span class="tag tag-green" style="font-size:0.58rem; padding:2px 7px;">RESSOURCE</span>
+                  <span>alexandre_n</span><span>·</span><span>il y a 5h</span>
+                </div>
+              </div>
+            </div>
+            <div class="topic-right">
+              <div class="topic-replies"><strong>5</strong> rép.</div>
+              <div class="tag tag-green" style="font-size:0.58rem;">SANTÉ</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MODAL NOUVEAU SUJET
+═══════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">✏️ Créer un nouveau sujet</div>
+
+    <div class="form-group">
+      <label class="form-label">TITRE DU SUJET</label>
+      <input class="form-input" type="text" placeholder="Ex : Comment déployer Ollama en production ?">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">CATÉGORIE</label>
+      <select class="form-select">
+        <option>Choisir une catégorie…</option>
+        <option>🤖 IA Locale & Open Source</option>
+        <option>⚙️ Automation & Workflows</option>
+        <option>💊 Santé & IA Médicale</option>
+        <option>📊 BI & Data</option>
+        <option>🔐 Souveraineté & Réglementation</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">VOTRE MESSAGE</label>
+      <textarea class="form-textarea" placeholder="Décrivez votre question ou partage en détail…"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">TAGS (optionnel)</label>
+      <input class="form-input" type="text" placeholder="Ex : ollama, mistral, déploiement">
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+      <button class="btn-submit">PUBLIER →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── PAGE NAVIGATION ──
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    document.getElementById('page-' + name)?.classList.add('active');
+    document.getElementById('nav-' + name)?.classList.add('active');
+    // Tabs bar only on media
+    const mediaTabs = document.getElementById('tabs-media');
+    if (mediaTabs) mediaTabs.style.display = name === 'media' ? 'flex' : 'none';
+  }
+  // ── TOGGLE CATEGORY ──
+  function toggleCat(id) {
+    const el = document.getElementById(id);
+    el.style.display = el.style.display === 'none' ? '' : 'none';
+  }
+  // ── MODAL ──
+  function openModal() { document.getElementById('modal-overlay').classList.add('open'); }
+  function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+  function closeModalOutside(e) { if (e.target.id === 'modal-overlay') closeModal(); }
+
+  // ── TAB BUTTONS ──
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+</script>
 </body>
 </html>
