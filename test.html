@@ -284,20 +284,25 @@
 <div class="page active" id="page-media">
   <div class="media-layout">
 
-    <a href="#" class="hero fade-in">
-      <div class="hero-bg"></div>
-      <div class="hero-content">
-        <span class="tag tag-violet">DOSSIER EXCLUSIF</span>
-        <h1><em>IA Locale</em> vs Cloud : Pourquoi votre PME doit choisir la souveraineté en 2026</h1>
-        <p>Analyse technique sur le déploiement de Llama 3 on-premise pour sécuriser les données de santé et industrielles.</p>
-        <div class="hero-meta">
-          <span>Par Alexandre N.</span><span>·</span>
-          <span>24 Mars 2026</span><span>·</span>
-          <span>8 min de lecture</span>
-          <span class="read-btn">LIRE →</span>
+    <!-- HERO CAROUSEL -->
+    <div class="hero fade-in" id="hero-carousel">
+      <div class="hero-bg" id="hero-bg" style="background-image:linear-gradient(to bottom,rgba(3,4,11,0.1),rgba(3,4,11,0.85)),url('https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1260')"></div>
+      <div class="hero-content" id="hero-content">
+        <span class="tag tag-green" id="hero-tag">NUMERAMA</span>
+        <h1 id="hero-title" style="margin:.8rem 0 1rem">Chargement des actualités…</h1>
+        <p id="hero-desc" style="font-family:var(--mono);font-size:.68rem;color:var(--muted);max-width:560px;line-height:1.75"></p>
+        <div class="hero-meta" id="hero-meta">
+          <span id="hero-author"></span>
+          <span id="hero-dot-sep" style="display:none">·</span>
+          <span id="hero-date"></span>
+          <a href="#" id="hero-link" target="_blank" rel="noopener" class="read-btn" style="margin-left:auto">LIRE →</a>
         </div>
       </div>
-    </a>
+      <div class="hero-dots" id="hero-dots"></div>
+      <button class="hero-nav hero-prev" onclick="heroStep(-1)">&#8249;</button>
+      <button class="hero-nav hero-next" onclick="heroStep(1)">&#8250;</button>
+      <div class="hero-progress"><div class="hero-progress-bar" id="hero-progress-bar"></div></div>
+    </div>
 
     <main>
       <div class="source-bar">
@@ -311,7 +316,7 @@
           <span style="font-family:var(--mono);font-size:0.52rem;color:var(--muted);letter-spacing:2px;margin-left:4px;">🌍</span>
           <button class="src-btn" data-src="4">Hugging Face</button>
           <button class="src-btn" data-src="5">MIT Tech</button>
-          <button class="src-btn" data-src="6">The Verge AI</button>
+          <button class="src-btn" data-src="6">VentureBeat AI</button>
           <button class="src-btn" data-src="7">OpenAI</button>
         </div>
       </div>
@@ -463,15 +468,15 @@
   /* ── RSS ── */
   const SOURCES = [
     // 🇫🇷 FRANÇAIS
-    { url:'https://www.numerama.com/tag/intelligence-artificielle/feed/',                       tag:'NUMERAMA',       cls:'tag-green',  lang:'fr' },
-    { url:'https://www.lemondeinformatique.fr/flux-rss/intelligence-artificielle/rss.xml',     tag:'LE MONDE INFO',  cls:'tag-green',  lang:'fr' },
-    { url:'https://www.01net.com/rss/actualites/',                                             tag:'01NET',          cls:'tag-green',  lang:'fr' },
-    { url:'https://www.journaldunet.com/rss/',                                                 tag:'JDN',            cls:'tag-green',  lang:'fr' },
+    { url:'https://www.numerama.com/tag/intelligence-artificielle/feed/',                   tag:'NUMERAMA',      cls:'tag-green',  lang:'fr' },
+    { url:'https://www.lemondeinformatique.fr/flux-rss/intelligence-artificielle/rss.xml', tag:'LE MONDE INFO', cls:'tag-green',  lang:'fr' },
+    { url:'https://www.01net.com/rss/actualites/',                                         tag:'01NET',         cls:'tag-green',  lang:'fr' },
+    { url:'https://www.journaldunet.com/rss/',                                             tag:'JDN',           cls:'tag-green',  lang:'fr' },
     // 🌍 INTERNATIONAL
-    { url:'https://huggingface.co/blog/feed.xml',                                              tag:'HUGGING FACE',   cls:'tag-violet', lang:'en' },
-    { url:'https://www.technologyreview.com/feed/',                                            tag:'MIT TECH',       cls:'tag-blue',   lang:'en' },
-    { url:'https://www.theverge.com/ai-artificial-intelligence/rss/index.xml',                tag:'THE VERGE AI',   cls:'tag-cyan',   lang:'en' },
-    { url:'https://openai.com/news/rss.xml',                                                   tag:'OPENAI',         cls:'tag-blue',   lang:'en' },
+    { url:'https://huggingface.co/blog/feed.xml',                                          tag:'HUGGING FACE',  cls:'tag-violet', lang:'en' },
+    { url:'https://www.technologyreview.com/feed/',                                        tag:'MIT TECH',      cls:'tag-blue',   lang:'en' },
+    { url:'https://venturebeat.com/category/ai/feed/',                                     tag:'VENTUREBEAT',   cls:'tag-cyan',   lang:'en' },
+    { url:'https://openai.com/news/rss.xml',                                               tag:'OPENAI',        cls:'tag-blue',   lang:'en' },
   ];
   const PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
   const IMGS = [
@@ -523,7 +528,10 @@
       const r = await fetch(PROXY+encodeURIComponent(src.url)+'&count=10');
       const d = await r.json();
       document.getElementById('rss-loading').style.display='none';
-      d.status==='ok'&&d.items?.length ? render(d.items,src) : (document.getElementById('rss-error').style.display='block');
+      if (d.status==='ok'&&d.items?.length) {
+        render(d.items, src);
+        if (idx === 0) heroInit(d.items); // feed hero with first source (Numerama)
+      } else { document.getElementById('rss-error').style.display='block'; }
     } catch { document.getElementById('rss-loading').style.display='none'; document.getElementById('rss-error').style.display='block'; }
   }
 
@@ -548,6 +556,112 @@
   document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',function(){
     document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active')); this.classList.add('active');
   }));
+
+
+  /* ── HERO CAROUSEL ── */
+  let heroItems = [];
+  let heroIdx = 0;
+  let heroTimer = null;
+  let heroProgressTimer = null;
+  const HERO_INTERVAL = 6000; // ms per slide
+
+  function heroRender(idx) {
+    if (!heroItems.length) return;
+    const item = heroItems[idx];
+    const src = SOURCES[0]; // always Numerama for hero
+
+    const bg = document.getElementById('hero-bg');
+    const title = document.getElementById('hero-title');
+    const desc = document.getElementById('hero-desc');
+    const tag = document.getElementById('hero-tag');
+    const author = document.getElementById('hero-author');
+    const date = document.getElementById('hero-date');
+    const sep = document.getElementById('hero-dot-sep');
+    const link = document.getElementById('hero-link');
+
+    // BG transition
+    bg.style.opacity = 0;
+    setTimeout(() => {
+      const img = item._img;
+      bg.style.backgroundImage = `linear-gradient(to bottom,rgba(3,4,11,0.05) 0%,rgba(3,4,11,0.78) 55%,var(--bg) 100%),url('${img}')`;
+      bg.style.transition = 'opacity 0.6s ease';
+      bg.style.opacity = 1;
+    }, 100);
+
+    // Content
+    title.className = 'hero-anim';
+    title.textContent = item.title || 'Sans titre';
+    desc.className = 'hero-anim';
+    desc.textContent = strip(item.description || item.content);
+    tag.textContent = src.tag;
+    tag.className = `tag ${src.cls}`;
+    author.textContent = item.author ? `Par ${item.author}` : '';
+    const d = fmtDate(item.pubDate);
+    date.textContent = d;
+    sep.style.display = d ? 'inline' : 'none';
+    link.href = item.link || '#';
+
+    // Dots
+    document.querySelectorAll('.hero-dot').forEach((dot, i) => {
+      dot.classList.toggle('active', i === idx);
+    });
+
+    // Progress bar reset
+    heroStartProgress();
+  }
+
+  function heroStartProgress() {
+    const bar = document.getElementById('hero-progress-bar');
+    if (!bar) return;
+    clearInterval(heroProgressTimer);
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        bar.style.transition = `width ${HERO_INTERVAL}ms linear`;
+        bar.style.width = '100%';
+      });
+    });
+  }
+
+  function heroStep(dir) {
+    clearInterval(heroTimer);
+    heroIdx = (heroIdx + dir + heroItems.length) % heroItems.length;
+    heroRender(heroIdx);
+    heroAutoPlay();
+  }
+
+  function heroAutoPlay() {
+    clearInterval(heroTimer);
+    heroTimer = setInterval(() => {
+      heroIdx = (heroIdx + 1) % heroItems.length;
+      heroRender(heroIdx);
+    }, HERO_INTERVAL);
+  }
+
+  function heroInit(items) {
+    heroItems = items.slice(0, 6);
+    heroIdx = 0;
+
+    // Preload images
+    heroItems.forEach((item, i) => { item._img = getImg(item, i); });
+
+    // Build dots
+    const dotsEl = document.getElementById('hero-dots');
+    dotsEl.innerHTML = heroItems.map((_, i) =>
+      `<button class="hero-dot${i===0?' active':''}" onclick="heroGoto(${i})"></button>`
+    ).join('');
+
+    heroRender(0);
+    heroAutoPlay();
+  }
+
+  function heroGoto(i) {
+    clearInterval(heroTimer);
+    heroIdx = i;
+    heroRender(heroIdx);
+    heroAutoPlay();
+  }
 
   loadRSS(0);
 </script>
