@@ -313,14 +313,94 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .fu:nth-child(1){animation-delay:.04s}.fu:nth-child(2){animation-delay:.08s}
 .fu:nth-child(3){animation-delay:.12s}.fu:nth-child(4){animation-delay:.16s}
 
-/* Responsive */
+/* ═══ RESPONSIVE TABLET ═══ */
 @media(max-width:1024px){
-  .header-inner{padding:0 1.5rem}
+  .header-inner{padding:0 1.2rem}
   .media-wrap,.forum-wrap{padding:1.5rem;grid-template-columns:1fr}
   .hero{grid-column:span 1;height:380px}
   .hero h1{font-size:1.9rem}
   .f-nav{display:none}
   .f-stats{grid-template-columns:repeat(2,1fr)}
+  .cat-bar-inner{padding:0 1.2rem;overflow-x:auto;scrollbar-width:none}
+  .cat-bar-inner::-webkit-scrollbar{display:none}
+}
+
+/* ═══ RESPONSIVE MOBILE ═══ */
+@media(max-width:640px){
+  /* Header */
+  .site-header{height:auto}
+  .header-inner{padding:0 1rem;height:52px;gap:0}
+  .logo{font-size:.62rem;letter-spacing:.15em;gap:6px}
+  .logo-mark{width:24px;height:24px;font-size:.48rem}
+  .logo-beta{display:none}
+  .header-nav{gap:0;margin-left:.6rem}
+  .nav-item{font-size:.52rem;letter-spacing:.08em;padding:5px 8px}
+  .header-right{margin-left:auto}
+  .btn-primary{padding:6px 10px;font-size:.5rem;letter-spacing:.06em}
+
+  /* Ticker */
+  .ticker-bar{height:28px}
+  .ticker-label{padding:0 10px;gap:4px}
+  .ticker-label span{font-size:.48rem;letter-spacing:.12em}
+  .ticker-track span{font-size:.55rem}
+
+  /* Cat tabs */
+  .cat-bar-inner{padding:0 1rem;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
+  .cat-bar-inner::-webkit-scrollbar{display:none}
+  .cat-tab{padding:10px 12px;font-size:.52rem;white-space:nowrap}
+
+  /* Media page */
+  .media-wrap{padding:1rem;gap:1.4rem}
+  .hero{height:300px;border-radius:10px}
+  .hero-content{padding:1.2rem 1.4rem}
+  .hero h1{font-size:1.35rem;margin:.5rem 0 .7rem}
+  .hero-summary{font-size:.58rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .hero-footer{gap:.6rem;margin-top:.8rem}
+  .hero-meta-item{font-size:.5rem}
+  .hero-cta{padding:7px 14px;font-size:.52rem}
+  .hero-arrow{width:34px;height:34px;font-size:1rem}
+  .hero-dots{bottom:.7rem}
+  .hero-dot{width:6px;height:6px}
+  .hero-dot.on{width:16px}
+
+  /* Feed */
+  .source-pills{gap:4px}
+  .pill{padding:3px 9px;font-size:.48rem}
+  .art-card{grid-template-columns:80px 1fr;gap:.8rem;padding:.9rem 0}
+  .art-thumb{width:80px;height:56px}
+  .art-body h3{font-size:.88rem}
+  .art-body p{display:none}
+
+  /* Sidebar — collapse tendances sur mobile */
+  .sidebar{gap:.9rem}
+  .widget{padding:1rem}
+  .trend-n{font-size:.9rem;min-width:20px}
+  .trend-body h4{font-size:.82rem}
+
+  /* Forum */
+  .forum-wrap{padding:1rem;gap:1rem}
+  .f-header{flex-direction:column;gap:.7rem;align-items:flex-start}
+  .f-header h1{font-size:1.5rem}
+  .f-stats{grid-template-columns:repeat(2,1fr);gap:.6rem}
+  .f-stat{padding:.7rem}
+  .f-stat-n{font-size:1.1rem}
+  .topic-row{padding:10px 1rem}
+  .t-body h4{font-size:.85rem}
+
+  /* Auth overlay */
+  .overlay-box{margin:2vh 1rem;padding:1.5rem}
+  .overlay-title{font-size:1.3rem}
+  .modal-box{margin:0 1rem;padding:1.5rem}
+
+  /* Forum filters pills scroll */
+  .f-filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+  .f-filters::-webkit-scrollbar{display:none}
+  .f-filters .pill{white-space:nowrap}
+
+  /* Source pills scroll on mobile */
+  .source-pills{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+  .source-pills::-webkit-scrollbar{display:none}
+  .pill-sep{flex-shrink:0}
 }
 </style>
 </head>
@@ -441,12 +521,15 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
     <!-- SIDEBAR -->
     <div class="sidebar">
-      <div class="widget fu">
-        <div class="widget-head">TENDANCES</div>
-        <a href="#" class="trend-item"><span class="trend-n">01</span><div class="trend-body"><h4>Mistral Large 2 vs GPT-4o : benchmark complet</h4><span>3.2k vues · IA Locale</span></div></a>
-        <a href="#" class="trend-item"><span class="trend-n">02</span><div class="trend-body"><h4>Installer Ollama sur Ubuntu 24.04 en 10 min</h4><span>2.8k vues · Tutoriel</span></div></a>
-        <a href="#" class="trend-item"><span class="trend-n">03</span><div class="trend-body"><h4>RGPD & LLM : où stocker vos données patients ?</h4><span>1.9k vues · Santé</span></div></a>
-        <a href="#" class="trend-item"><span class="trend-n">04</span><div class="trend-body"><h4>RAG on-premise avec LangChain et PGVector</h4><span>1.5k vues · Dev</span></div></a>
+      <div class="widget fu" id="trending-widget">
+        <div class="widget-head" id="trending-head">TENDANCES · <span id="trending-src-label" style="color:var(--text2);font-size:.48rem">NUMERAMA</span></div>
+        <div id="trending-list">
+          <!-- skeleton -->
+          <div class="trend-item" style="animation:sk 1.6s ease infinite"><span class="trend-n" style="color:var(--rule2)">01</span><div class="trend-body"><div style="height:10px;background:var(--surface2);border-radius:3px;width:90%;margin-bottom:5px"></div><div style="height:8px;background:var(--surface2);border-radius:3px;width:60%"></div></div></div>
+          <div class="trend-item" style="animation:sk 1.6s ease .15s infinite"><span class="trend-n" style="color:var(--rule2)">02</span><div class="trend-body"><div style="height:10px;background:var(--surface2);border-radius:3px;width:80%;margin-bottom:5px"></div><div style="height:8px;background:var(--surface2);border-radius:3px;width:55%"></div></div></div>
+          <div class="trend-item" style="animation:sk 1.6s ease .3s infinite"><span class="trend-n" style="color:var(--rule2)">03</span><div class="trend-body"><div style="height:10px;background:var(--surface2);border-radius:3px;width:85%;margin-bottom:5px"></div><div style="height:8px;background:var(--surface2);border-radius:3px;width:50%"></div></div></div>
+          <div class="trend-item" style="animation:sk 1.6s ease .45s infinite"><span class="trend-n" style="color:var(--rule2)">04</span><div class="trend-body"><div style="height:10px;background:var(--surface2);border-radius:3px;width:75%;margin-bottom:5px"></div><div style="height:8px;background:var(--surface2);border-radius:3px;width:45%"></div></div></div>
+        </div>
       </div>
       <div class="widget nl-widget fu">
         <div class="widget-head">NEWSLETTER HEBDO</div>
@@ -971,6 +1054,26 @@ const strip = h=>{ const d=document.createElement('div'); d.innerHTML=h||''; ret
 let heroPool=[], heroIdx=0, heroTimer=null, heroLoaded=false;
 const INTERVAL=7000;
 
+/* ── Trending sidebar ── */
+function renderTrending(items, src){
+  const list = document.getElementById('trending-list');
+  const lbl  = document.getElementById('trending-src-label');
+  if(!list||!items?.length) return;
+  lbl.textContent = src.tag;
+  const nums = ['01','02','03','04'];
+  list.innerHTML = items.slice(0,4).map((item,i)=>{
+    const d = fmtD(item.pubDate);
+    const title = (item.title||'Sans titre').slice(0,62) + ((item.title||'').length>62?'…':'');
+    return `<a href="${item.link||'#'}" target="_blank" rel="noopener" class="trend-item" style="animation:fadeUp .4s ease ${i*.07}s both">
+      <span class="trend-n">${nums[i]}</span>
+      <div class="trend-body">
+        <h4>${title}</h4>
+        <span>${src.tag}${d?' · '+d:''}</span>
+      </div>
+    </a>`;
+  }).join('');
+}
+
 function renderFeed(items,src){
   document.getElementById('feed-loading').style.display='none';
   const list=document.getElementById('feed-list');
@@ -1013,11 +1116,22 @@ async function loadRSS(idx){
     document.getElementById('feed-loading').style.display='none';
     if(d.status==='ok'&&d.items?.length){
       renderFeed(d.items,src);
-      // Feed hero pool from FR sources (0-3)
+      renderTrending(d.items,src);
+      // Feed hero pool from FR sources (0-3) — stable init
       if(idx<=3){
-        heroPool.push(...d.items.slice(0,5).map(it=>({...it,_src:src,_img:getI(it,0)})));
-        if(!heroLoaded){ heroLoaded=true; heroInit(); }
-        else heroRefresh();
+        // Precompute images before pushing
+        const newItems = d.items.slice(0,5).map((it,j)=>({...it,_src:src,_img:getI(it,j)}));
+        if(!heroLoaded){
+          // First source: init immediately with what we have
+          heroPool = newItems;
+          heroLoaded = true;
+          heroInit();
+        } else {
+          // Subsequent sources: silently append, no restart
+          heroPool.push(...newItems);
+          // Just rebuild dots quietly without resetting position or timer
+          heroRebuildDots();
+        }
       }
     } else { document.getElementById('feed-err').style.display='block'; }
   } catch(e){ if(activeSrcIdx===idx){ document.getElementById('feed-loading').style.display='none'; document.getElementById('feed-err').style.display='block'; } }
@@ -1034,10 +1148,10 @@ document.querySelectorAll('#src-pills .pill').forEach(b=>b.addEventListener('cli
 function heroInit(){ heroRefresh(); }
 function heroRefresh(){
   if(!heroPool.length) return;
-  const sh=[...heroPool].sort(()=>Math.random()-.5).slice(0,8);
-  heroPool=sh; heroIdx=0;
+  // Shuffle once at first init only — keep order stable after
+  heroIdx=0;
   const dots=document.getElementById('hero-dots');
-  dots.innerHTML=sh.map((_,i)=>`<button class="hero-dot${i===0?' on':''}" onclick="heroGoto(${i})"></button>`).join('');
+  dots.innerHTML=heroPool.map((_,i)=>`<button class="hero-dot${i===0?' on':''}" onclick="heroGoto(${i})"></button>`).join('');
   heroRender(0); clearInterval(heroTimer); heroAutoPlay();
 }
 function heroRender(i){
@@ -1069,6 +1183,12 @@ function heroRender(i){
 function heroStep(dir){ clearInterval(heroTimer); heroIdx=(heroIdx+dir+heroPool.length)%heroPool.length; heroRender(heroIdx); heroAutoPlay(); }
 function heroGoto(i){ clearInterval(heroTimer); heroIdx=i; heroRender(i); heroAutoPlay(); }
 function heroAutoPlay(){ clearInterval(heroTimer); heroTimer=setInterval(()=>{ heroIdx=(heroIdx+1)%heroPool.length; heroRender(heroIdx); },INTERVAL); }
+function heroRebuildDots(){
+  // Add new dots without resetting current slide or timer
+  const dots=document.getElementById('hero-dots');
+  if(!dots) return;
+  dots.innerHTML=heroPool.map((_,i)=>`<button class="hero-dot${i===heroIdx?' on':''}" onclick="heroGoto(${i})"></button>`).join('');
+}
 
 /* ═══════════════════════════════════════
    NAVIGATION
