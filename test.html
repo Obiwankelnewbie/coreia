@@ -374,7 +374,8 @@
 </div>
 
 <script>
-  /* ── RSS ── */
+ <script>
+  /* ── CONFIGURATION SOURCES ── */
   const SOURCES = [
     { url:'https://www.numerama.com/tag/intelligence-artificielle/feed/', tag:'NUMERAMA', cls:'tag-green' },
     { url:'https://www.lemondeinformatique.fr/flux-rss/intelligence-artificielle/rss.xml', tag:'LE MONDE INFO', cls:'tag-green' },
@@ -387,63 +388,83 @@
   ];
   const PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
 
-  const fmtDate = s => { const d=new Date(s); return isNaN(d)?'':d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}); };
-  const getImg = (item,i) => {
-    if (item.thumbnail?.startsWith('http')) return item.thumbnail;
-    if (item.enclosure?.link) return item.enclosure.link;
-    return 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=400';
-  };
-  const strip = h => { const d=document.createElement('div'); d.innerHTML=h||''; return d.textContent.trim().slice(0,108)+'…'; };
-
-  async function loadRSS(idx) {
-    const src = SOURCES[idx];
-    document.getElementById('rss-loading').style.display='block';
-    document.getElementById('rss-feed').innerHTML='';
-    try {
-      const r = await fetch(PROXY+encodeURIComponent(src.url)+'&count=10');
-      const d = await r.json();
-      document.getElementById('rss-loading').style.display='none';
-      if (d.status==='ok') {
-        render(d.items, src);
-        if (idx <= 3) {
-          heroPool = d.items.slice(0,5).map(it => ({...it, _src: src}));
-          if (!heroStarted) { heroStarted = true; heroInit(); }
-        }
-      }
-    } catch { document.getElementById('rss-loading').style.display='none'; }
-  }
-
-  function render(items, src) {
-    const feed = document.getElementById('rss-feed');
-    items.slice(0,8).forEach(item => {
-      feed.innerHTML += `
-        <a href="${item.link}" target="_blank" class="article-card fade-in">
-          <div class="card-thumb" style="background-image:url('${getImg(item)}')"></div>
-          <div class="card-body">
-            <div><span class="tag ${src.cls}">${src.tag}</span><h3>${item.title}</h3><p>${strip(item.description)}</p></div>
-            <div class="card-footer"><span>${fmtDate(item.pubDate)}</span></div>
-          </div>
-        </a>`;
-    });
-  }
-
-  /* ── NAV ── */
-  function showPage(n){
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
-    document.getElementById('page-'+n).classList.add('active');
-    document.getElementById('nav-'+n).classList.add('active');
-    document.getElementById('tabs-media').style.display=n==='media'?'flex':'none';
-  }
-
-  /* ── HERO CAROUSEL ── */
+  /* ── VARIABLES GLOBALES ── */
   let heroPool = [];
   let heroIdx = 0;
   let heroTimer = null;
   let heroStarted = false;
   const HERO_INTERVAL = 6000;
 
+  /* ── UTILITAIRES ── */
+  const fmtDate = s => { const d=new Date(s); return isNaN(d)?'':d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}); };
+  
+  // Fonction CRUCIALE pour extraire l'image du flux RSS
+  const getImg = (item) => {
+    if (item.thumbnail && item.thumbnail.includes('http')) return item.thumbnail;
+    if (item.enclosure && item.enclosure.link) return item.enclosure.link;
+    // Si pas d'image, on utilise une image tech dynamique pour que ça change tout de même
+    return `https://picsum.photos/seed/${encodeURIComponent(item.title)}/800/600`;
+  };
+
+  const strip = h => { 
+    const d = document.createElement('div'); 
+    d.innerHTML = h || ''; 
+    return d.textContent.trim().slice(0, 108) + '…'; 
+  };
+
+  /* ── CHARGEMENT RSS ── */
+  async function loadRSS(idx) {
+    const src = SOURCES[idx];
+    document.getElementById('rss-loading').style.display = 'block';
+    document.getElementById('rss-feed').innerHTML = '';
+    
+    try {
+      const r = await fetch(PROXY + encodeURIComponent(src.url) + '&count=15');
+      const d = await r.json();
+      document.getElementById('rss-loading').style.display = 'none';
+      
+      if (d.status === 'ok') {
+        renderFeed(d.items, src);
+        // Si c'est une source FR ou la première chargée, on alimente le Hero
+        if (idx <= 3 || heroPool.length === 0) {
+          heroPool = d.items.slice(0, 8).map(it => ({...it, _src: src}));
+          if (!heroStarted) {
+            heroStarted = true;
+            heroInit();
+          }
+        }
+      }
+    } catch (e) { 
+        console.error("Erreur flux:", e);
+        document.getElementById('rss-loading').style.display = 'none'; 
+    }
+  }
+
+  function renderFeed(items, src) {
+    const feed = document.getElementById('rss-feed');
+    feed.innerHTML = items.slice(0, 8).map(item => `
+      <a href="${item.link}" target="_blank" class="article-card fade-in">
+        <div class="card-thumb" style="background-image:url('${getImg(item)}')"></div>
+        <div class="card-body">
+          <div><span class="tag ${src.cls}">${src.tag}</span><h3>${item.title}</h3><p>${strip(item.description)}</p></div>
+          <div class="card-footer"><span>${fmtDate(item.pubDate)}</span></div>
+        </div>
+      </a>`).join('');
+  }
+
+  /* ── NAVIGATION PAGES ── */
+  function showPage(n){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+    document.getElementById('page-'+n).classList.add('active');
+    const targetNav = document.getElementById('nav-'+n);
+    if(targetNav) targetNav.classList.add('active');
+    document.getElementById('tabs-media').style.display = (n === 'media') ? 'flex' : 'none';
+  }
+
+  /* ── HERO CAROUSEL (DYNAMIQUE) ── */
   function heroInit() {
+    heroIdx = 0;
     renderHero();
     clearInterval(heroTimer);
     heroTimer = setInterval(() => heroStep(1), HERO_INTERVAL);
@@ -452,28 +473,64 @@
   function renderHero() {
     if (!heroPool.length) return;
     const it = heroPool[heroIdx];
-    document.getElementById('hero-bg').style.backgroundImage = `linear-gradient(to bottom,rgba(3,4,11,0.1),rgba(3,4,11,0.85)), url('${getImg(it)}')`;
+    const bgEl = document.getElementById('hero-bg');
+    const imgUrl = getImg(it);
+
+    // Transition fluide de l'image
+    bgEl.style.opacity = 0;
+    setTimeout(() => {
+      bgEl.style.backgroundImage = `linear-gradient(to bottom, rgba(3,4,11,0.1) 0%, rgba(3,4,11,0.85) 60%, var(--bg) 100%), url('${imgUrl}')`;
+      bgEl.style.opacity = 1;
+    }, 200);
+
     document.getElementById('hero-title').textContent = it.title;
     document.getElementById('hero-tag').textContent = it._src.tag;
+    document.getElementById('hero-tag').className = `tag ${it._src.cls}`;
     document.getElementById('hero-link').href = it.link;
     
+    // Mise à jour des points (dots)
     const dots = document.getElementById('hero-dots');
-    dots.innerHTML = heroPool.map((_, i) => `<button class="hero-dot ${i === heroIdx ? 'active' : ''}" onclick="heroGoto(${i})"></button>`).join('');
+    dots.innerHTML = heroPool.map((_, i) => 
+      `<button class="hero-dot ${i === heroIdx ? 'active' : ''}" onclick="heroGoto(${i})"></button>`
+    ).join('');
     
+    // Animation de la barre de progression
     const bar = document.getElementById('hero-progress-bar');
-    bar.style.transition = 'none'; bar.style.width = '0%';
-    setTimeout(() => { bar.style.transition = `width ${HERO_INTERVAL}ms linear`; bar.style.width = '100%'; }, 50);
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    setTimeout(() => {
+      bar.style.transition = `width ${HERO_INTERVAL}ms linear`;
+      bar.style.width = '100%';
+    }, 50);
   }
 
-  function heroStep(d) { heroIdx = (heroIdx + d + heroPool.length) % heroPool.length; renderHero(); }
-  function heroGoto(i) { heroIdx = i; renderHero(); }
+  function heroStep(d) {
+    heroIdx = (heroIdx + d + heroPool.length) % heroPool.length;
+    renderHero();
+  }
 
-  document.querySelectorAll('.src-btn').forEach(b=>b.addEventListener('click',function(){
-    document.querySelectorAll('.src-btn').forEach(x=>x.classList.remove('active'));
-    this.classList.add('active'); loadRSS(+this.dataset.src);
-  }));
+  function heroGoto(i) {
+    heroIdx = i;
+    renderHero();
+    // On réinitialise le timer pour ne pas sauter l'image immédiatement
+    clearInterval(heroTimer);
+    heroTimer = setInterval(() => heroStep(1), HERO_INTERVAL);
+  }
 
-  loadRSS(0);
+  /* ── ÉCOUTEURS D'ÉVÉNEMENTS ── */
+  document.querySelectorAll('#source-btns .src-btn').forEach(b => {
+    b.addEventListener('click', function() {
+      document.querySelectorAll('#source-btns .src-btn').forEach(x => x.classList.remove('active'));
+      this.classList.add('active');
+      loadRSS(parseInt(this.dataset.src));
+    });
+  });
+
+  // Initialisation au chargement
+  window.onload = () => {
+    loadRSS(0); // Charge Numerama par défaut
+  };
+
 </script>
 </body>
 </html>
