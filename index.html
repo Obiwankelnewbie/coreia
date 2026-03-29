@@ -377,18 +377,16 @@ strong.hi{color:var(--tx)}
   .art-card{grid-template-columns:68px 1fr;gap:.6rem;padding:.8rem 0;overflow:hidden}
   .art-img{width:68px;height:50px;flex-shrink:0}
   .art-body{min-width:0;overflow:hidden}
-  .art-body h3{
-    font-size:.8rem;
-    word-break:break-word;
-    overflow-wrap:break-word;
-    white-space:normal;
-    display:-webkit-box;
-    -webkit-line-clamp:3;
-    -webkit-box-orient:vertical;
-    overflow:hidden;
-  }
+  
   .art-body p{display:none}
-
+.art-body h3{
+  font-size:.8rem;
+  word-break:break-word;
+  overflow-wrap:break-word;
+  white-space:normal;
+  display:block;
+  overflow:visible;
+}
   /* sidebar */
   .widget{padding:.9rem}
   .trend-n{font-size:.9rem}
